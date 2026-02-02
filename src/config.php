@@ -1,5 +1,8 @@
 <?php
-session_start(); // Avviamo la sessione per gestire l'utente loggato
+// Avviamo la sessione per gestire l'utente loggato (se non è già attiva)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 return [
     'db_name' => 'app_professionale.db',

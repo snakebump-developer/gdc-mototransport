@@ -35,29 +35,43 @@ Un kit completo e professionale per iniziare rapidamente progetti web con PHP va
 ## 📦 Installazione
 
 1. **Clona o scarica il progetto**
+
    ```bash
    cd test-php
    ```
 
 2. **Inizializza il database**
+
    ```bash
    php src/setup.php
    ```
+
    Questo creerà il database SQLite con tutte le tabelle necessarie e un account admin predefinito.
 
 3. **Avvia il server PHP**
+
+   ```bash
+   php start-server.php
+   ```
+
+   Lo script troverà automaticamente una porta disponibile (partendo da 8000) e avvierà il server.
+
+   *Alternativa (porta fissa):*
+
    ```bash
    php -S localhost:8000 -t public
    ```
 
 4. **Apri il browser**
+
    ```
-   http://localhost:8000
+   L'URL verrà mostrato dallo script (es: http://localhost:8000)
    ```
 
 ## 🔑 Credenziali Predefinite
 
 **Admin:**
+
 - Username: `admin`
 - Password: `admin123`
 
@@ -97,18 +111,21 @@ test-php/
 ## 🗄️ Struttura Database
 
 ### Tabella `utenti`
+
 - id, username, email, password
 - nome, cognome, telefono, indirizzo, città, cap, paese
 - ruolo (user/admin)
 - creato_il, aggiornato_il
 
 ### Tabella `ordini`
+
 - id, user_id, totale
 - stato (pending/processing/completed/cancelled)
 - metodo_pagamento, transaction_id
 - note, creato_il, aggiornato_il
 
 ### Tabella `ordini_dettagli`
+
 - id, ordine_id
 - descrizione, quantità, prezzo_unitario
 
@@ -117,6 +134,7 @@ test-php/
 ### Stripe
 
 1. Installa la libreria Stripe:
+
    ```bash
    composer require stripe/stripe-php
    ```
@@ -124,6 +142,7 @@ test-php/
 2. Ottieni le API keys da [Stripe Dashboard](https://dashboard.stripe.com/apikeys)
 
 3. Configura le variabili d'ambiente:
+
    ```bash
    STRIPE_SECRET_KEY=sk_test_...
    STRIPE_WEBHOOK_SECRET=whsec_...
@@ -134,6 +153,7 @@ test-php/
 ### PayPal
 
 1. Installa la libreria PayPal:
+
    ```bash
    composer require paypal/rest-api-sdk-php
    ```
@@ -141,6 +161,7 @@ test-php/
 2. Ottieni le credenziali da [PayPal Developer](https://developer.paypal.com/)
 
 3. Configura le variabili d'ambiente:
+
    ```bash
    PAYPAL_CLIENT_ID=...
    PAYPAL_CLIENT_SECRET=...
@@ -151,23 +172,27 @@ test-php/
 ## 🎯 Funzionalità Principali
 
 ### Autenticazione
+
 - Registrazione con validazione (username 3-20 caratteri, password min 8 caratteri)
 - Login con username o email
 - Gestione sessioni sicura
 - Protezione CSRF
 
 ### Dashboard Utente
+
 - Modifica dati personali
 - Visualizzazione storico ordini
 - Interfaccia responsive
 
 ### Pannello Admin
+
 - Panoramica con statistiche
 - Gestione tutti gli ordini
 - Aggiornamento stato ordini
 - Gestione utenti (visualizza, elimina)
 
 ### Sistema Ordini
+
 - Creazione ordini con dettagli
 - Stati ordini (pending, processing, completed, cancelled)
 - Tracciamento transazioni
@@ -185,7 +210,9 @@ test-php/
 ## 🎨 Personalizzazione
 
 ### Colori
+
 Modifica le variabili CSS in `public/css/style.css`:
+
 ```css
 :root {
     --primary-color: #4f46e5;
@@ -195,7 +222,9 @@ Modifica le variabili CSS in `public/css/style.css`:
 ```
 
 ### Logo
+
 Sostituisci il testo "StarterKit" nel file `public/index.php` con il tuo logo:
+
 ```html
 <div class="nav-logo">
     <a href="index.php">
@@ -205,11 +234,13 @@ Sostituisci il testo "StarterKit" nel file `public/index.php` con il tuo logo:
 ```
 
 ### Contenuti
+
 Modifica le sezioni nella landing page (`public/index.php`) per adattarle al tuo progetto.
 
 ## 📱 Responsive Design
 
 Il design è ottimizzato per:
+
 - 📱 Mobile (< 768px)
 - 💻 Tablet (768px - 1024px)
 - 🖥️ Desktop (> 1024px)
@@ -217,12 +248,14 @@ Il design è ottimizzato per:
 ## 🚀 Deployment
 
 ### Prerequisiti per Produzione
+
 - PHP 7.4+
 - Modulo PDO SQLite abilitato
 - HTTPS obbligatorio per pagamenti
 - Composer per le dipendenze
 
 ### Checklist Deployment
+
 1. ✅ Cambia credenziali admin predefinite
 2. ✅ Configura variabili d'ambiente per API keys
 3. ✅ Abilita HTTPS
@@ -234,6 +267,7 @@ Il design è ottimizzato per:
 ## 🤝 Contributi
 
 Questo è uno starter kit generico. Sentiti libero di:
+
 - Personalizzarlo per il tuo progetto
 - Aggiungere nuove funzionalità
 - Migliorare la sicurezza
@@ -249,6 +283,7 @@ Questo è uno starter kit generico. Sentiti libero di:
 ## 🆘 Troubleshooting
 
 **Problema: Database non si crea**
+
 ```bash
 # Verifica permessi directory
 chmod 755 database/
@@ -256,12 +291,14 @@ php src/setup.php
 ```
 
 **Problema: Sessioni non funzionano**
+
 ```bash
 # Verifica che session_start() sia chiamato
 # Controlla i permessi della directory sessioni PHP
 ```
 
 **Problema: CSS/JS non caricati**
+
 ```
 # Verifica di avviare il server dalla root del progetto
 # Controlla i percorsi nei file HTML
