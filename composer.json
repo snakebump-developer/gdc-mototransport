@@ -1,0 +1,24 @@
+{
+    "name": "starter-kit-php",
+    "description": "Starter kit professionale per progetti PHP con autenticazione, gestione ordini e pagamenti",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "ext-pdo": "*",
+        "ext-pdo_sqlite": "*"
+    },
+    "require-dev": {},
+    "suggest": {
+        "stripe/stripe-php": "Per integrazione pagamenti Stripe",
+        "paypal/rest-api-sdk-php": "Per integrazione pagamenti PayPal"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "scripts": {
+        "setup": "php src/setup.php",
+        "serve": "php -S localhost:8000 -t public"
+    }
+}

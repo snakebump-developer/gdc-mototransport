@@ -1,0 +1,29 @@
+# Database
+database/*.db
+database/*.db-*
+
+# Logs
+logs/
+*.log
+
+# Vendor (se usi Composer)
+vendor/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
