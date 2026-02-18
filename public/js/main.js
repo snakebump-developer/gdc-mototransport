@@ -17,6 +17,53 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+
+  // ===== MOBILE MENU =====
+  const hamburgerMenu = document.getElementById('hamburgerMenu');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+  const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+  if (hamburgerMenu && mobileMenu && mobileMenuOverlay) {
+    // Apri menu mobile
+    hamburgerMenu.addEventListener('click', function () {
+      hamburgerMenu.classList.toggle('active');
+      mobileMenu.classList.toggle('active');
+      mobileMenuOverlay.classList.toggle('active');
+      document.body.style.overflow = mobileMenu.classList.contains('active')
+        ? 'hidden'
+        : '';
+    });
+
+    // Chiudi menu mobile - bottone X
+    if (mobileMenuClose) {
+      mobileMenuClose.addEventListener('click', closeMobileMenu);
+    }
+
+    // Chiudi menu mobile - click su overlay
+    mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+    // Chiudi menu mobile - click sui link
+    const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+    mobileMenuLinks.forEach((link) => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+
+    // Funzione per chiudere il menu mobile
+    function closeMobileMenu() {
+      hamburgerMenu.classList.remove('active');
+      mobileMenu.classList.remove('active');
+      mobileMenuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Chiudi menu mobile su resize se si passa a desktop
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 768 && mobileMenu.classList.contains('active')) {
+        closeMobileMenu();
+      }
+    });
+  }
 });
 
 // ===== SMOOTH SCROLL =====
