@@ -4,12 +4,14 @@ $user = isLogged() ? getCurrentUser() : null;
 ?>
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Starter Kit - Home</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar">
@@ -20,7 +22,7 @@ $user = isLogged() ? getCurrentUser() : null;
                     <h2>MotoTransport</h2>
                 </a>
             </div>
-            
+
             <!-- Menu Desktop -->
             <div class="nav-menu">
                 <a href="#home">Come funziona</a>
@@ -29,17 +31,17 @@ $user = isLogged() ? getCurrentUser() : null;
                 <a href="#reviews">Recensioni</a>
                 <a href="#contact">Chi siamo</a>
             </div>
-            
+
             <!-- Preventivo Button Desktop -->
             <div class="nav-cta-desktop">
                 <a href="#preventivo" class="btn btn-primary">Preventivo Gratuito</a>
             </div>
-            
+
             <!-- Mobile Controls -->
             <div class="nav-mobile-controls">
                 <!-- Preventivo Button Mobile -->
                 <a href="#preventivo" class="btn btn-primary btn-mobile-cta">Preventivo Gratuito</a>
-                
+
                 <!-- Hamburger Menu -->
                 <button class="hamburger-menu" id="hamburgerMenu" aria-label="Menu">
                     <span></span>
@@ -48,10 +50,10 @@ $user = isLogged() ? getCurrentUser() : null;
                 </button>
             </div>
         </div>
-        
+
         <!-- Mobile Menu Overlay -->
         <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-        
+
         <!-- Mobile Menu Sidebar -->
         <div class="mobile-menu" id="mobileMenu">
             <div class="mobile-menu-header">
@@ -167,4 +169,5 @@ $user = isLogged() ? getCurrentUser() : null;
 
     <script src="js/main.js"></script>
 </body>
+
 </html>
