@@ -2,7 +2,15 @@
 $config = require __DIR__ . '/config.php';
 if (!file_exists($config['db_dir'])) mkdir($config['db_dir'], 0777, true);
 
-require __DIR__ . '/db.php';
+// Connessione diretta al database per lo setup (senza i controlli di db.php)
+$dbPath = $config['db_dir'] . '/' . $config['db_name'];
+try {
+    $pdo = new PDO("sqlite:$dbPath");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Errore critico del database: " . $e->getMessage() . "\n");
+}
 
 // Tabella utenti con ruoli
 $sqlUtenti = "CREATE TABLE IF NOT EXISTS utenti (
@@ -54,7 +62,7 @@ $pdo->exec($sqlDettagliOrdini);
 try {
     $stmt = $pdo->query("SELECT COUNT(*) as count FROM utenti WHERE ruolo = 'admin'");
     $result = $stmt->fetch();
-    
+
     if ($result['count'] == 0) {
         $adminPassword = password_hash('admin123', PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("INSERT INTO utenti (username, email, password, ruolo) VALUES (?, ?, ?, ?)");
