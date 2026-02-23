@@ -1066,3 +1066,599 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ===== MODALE PREVENTIVO MULTI-STEP ===== */
+
+/* Overlay scuro */
+.quote-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(17, 24, 39, 0.65);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.quote-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Box modale */
+.quote-modal {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem 2rem 1.5rem;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+    transform: translateY(20px) scale(0.98);
+    transition: transform 0.3s ease;
+}
+
+.quote-overlay.is-open .quote-modal {
+    transform: translateY(0) scale(1);
+}
+
+/* Pulsante chiudi */
+.quote-modal__close {
+    position: absolute;
+    top: 1.1rem;
+    right: 1.1rem;
+    background: var(--bg-light);
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.quote-modal__close:hover {
+    background: var(--border-color);
+    color: var(--text-primary);
+}
+
+/* Intestazione */
+.quote-modal__header {
+    margin-bottom: 1.5rem;
+}
+
+.quote-modal__title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    padding-right: 2.5rem;
+}
+
+/* ===== STEPPER ===== */
+.quote-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 0;
+}
+
+.quote-stepper__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+.quote-stepper__circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-light);
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+    position: relative;
+}
+
+.quote-stepper__check {
+    display: none;
+    position: absolute;
+}
+
+.quote-stepper__icon {
+    display: block;
+}
+
+/* Stato: attivo */
+.quote-stepper__step.active .quote-stepper__circle {
+    background: #eff6ff;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Stato: completato */
+.quote-stepper__step.completed .quote-stepper__circle {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.quote-stepper__step.completed .quote-stepper__icon {
+    display: none;
+}
+
+.quote-stepper__step.completed .quote-stepper__check {
+    display: block;
+}
+
+.quote-stepper__label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    transition: color 0.3s;
+}
+
+.quote-stepper__step.active .quote-stepper__label,
+.quote-stepper__step.completed .quote-stepper__label {
+    color: var(--primary-color);
+}
+
+/* Linea tra step */
+.quote-stepper__line {
+    flex: 1;
+    height: 2px;
+    background: var(--border-color);
+    margin: 0 4px;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+    min-width: 20px;
+}
+
+.quote-stepper__line.completed {
+    background: var(--primary-color);
+}
+
+/* ===== BODY STEP ===== */
+.quote-modal__body {
+    min-height: 220px;
+}
+
+.quote-step {
+    animation: stepFadeIn 0.25s ease;
+}
+
+.quote-step--hidden {
+    display: none;
+}
+
+@keyframes stepFadeIn {
+    from { opacity: 0; transform: translateX(12px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.quote-step__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+}
+
+/* ===== FORM FIELDS ===== */
+.quote-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quote-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.quote-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.quote-form__label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+}
+
+.quote-form__required {
+    color: var(--danger-color);
+}
+
+.quote-form__input,
+.quote-form__select {
+    width: 100%;
+    padding: 0.675rem 0.875rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    background: var(--card-bg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    font-family: inherit;
+}
+
+.quote-form__input:focus,
+.quote-form__select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(91, 139, 245, 0.15);
+}
+
+.quote-form__input.is-error,
+.quote-form__select.is-error {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.quote-form__select-wrapper {
+    position: relative;
+}
+
+.quote-form__select {
+    appearance: none;
+    padding-right: 2.5rem;
+}
+
+.quote-form__select-arrow {
+    position: absolute;
+    right: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-secondary);
+}
+
+/* Checkbox */
+.quote-form__checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    cursor: pointer;
+}
+
+.quote-form__checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.quote-form__checkbox-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--card-bg);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.quote-form__checkbox input[type="checkbox"]:checked + .quote-form__checkbox-box {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.quote-form__checkbox input[type="checkbox"]:checked + .quote-form__checkbox-box::after {
+    content: '';
+    width: 5px;
+    height: 9px;
+    border: 2px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+    display: block;
+}
+
+.quote-form__checkbox-label {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.quote-form__link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.quote-form__link:hover {
+    text-decoration: underline;
+}
+
+/* ===== OPZIONI CONSEGNA ===== */
+.quote-delivery-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.quote-delivery-option {
+    display: block;
+    border: 1.5px solid var(--border-color);
+    border-radius: 0.6rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    overflow: hidden;
+}
+
+.quote-delivery-option input[type="radio"] {
+    display: none;
+}
+
+.quote-delivery-option__content {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    gap: 0.75rem;
+}
+
+.quote-delivery-option__radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.2s;
+}
+
+.quote-delivery-option__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.quote-delivery-option__info {
+    flex: 1;
+}
+
+.quote-delivery-option__name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.quote-delivery-option__price {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+/* Stato selezionato */
+.quote-delivery-option--selected {
+    border-color: var(--primary-color);
+    background: #f0f5ff;
+}
+
+.quote-delivery-option--selected .quote-delivery-option__radio {
+    border-color: var(--primary-color);
+}
+
+.quote-delivery-option--selected .quote-delivery-option__dot {
+    background: var(--primary-color);
+}
+
+.quote-delivery-option--selected .quote-delivery-option__price {
+    color: var(--primary-color);
+}
+
+/* ===== RIEPILOGO ===== */
+.quote-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quote-summary__card {
+    border: 1.5px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 0.5rem 0;
+    overflow: hidden;
+}
+
+.quote-summary__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0.8rem 1.1rem;
+    gap: 1rem;
+}
+
+.quote-summary__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.quote-summary__sublabel {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.quote-summary__value {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.quote-summary__desc {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.quote-summary__icon {
+    color: var(--primary-color);
+    flex-shrink: 0;
+    margin-top: 2px;
+    opacity: 0.7;
+}
+
+.quote-summary__divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 0;
+}
+
+.quote-summary__price-card {
+    background: #f0f5ff;
+    border: 1.5px solid #c7d9fc;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.quote-summary__price-label {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.quote-summary__price-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    letter-spacing: -0.02em;
+}
+
+.quote-summary__price-note {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.quote-summary__disclaimer {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* ===== FOOTER NAVIGAZIONE ===== */
+.quote-modal__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.quote-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.3rem;
+    border-radius: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.quote-btn--back {
+    background: var(--bg-light);
+    color: var(--text-primary);
+    border: 1.5px solid var(--border-color);
+}
+
+.quote-btn--back:hover {
+    background: var(--border-color);
+}
+
+.quote-btn--next {
+    background: var(--primary-color);
+    color: white;
+    margin-left: auto;
+}
+
+.quote-btn--next:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.quote-btn--next:disabled {
+    background: var(--border-color);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.quote-btn--confirm {
+    background: var(--primary-color);
+    color: white;
+    margin-left: auto;
+}
+
+.quote-btn--confirm:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ===== RESPONSIVE MODALE ===== */
+@media (max-width: 600px) {
+    .quote-modal {
+        padding: 1.5rem 1.25rem 1.25rem;
+        border-radius: 1rem;
+    }
+
+    .quote-form__row {
+        grid-template-columns: 1fr;
+    }
+
+    .quote-stepper__label {
+        font-size: 0.62rem;
+    }
+
+    .quote-stepper__circle {
+        width: 34px;
+        height: 34px;
+    }
+
+    .quote-stepper__line {
+        min-width: 10px;
+    }
+
+    .quote-summary__price-value {
+        font-size: 1.6rem;
+    }
+}
