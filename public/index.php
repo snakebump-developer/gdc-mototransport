@@ -151,7 +151,7 @@ $user = isLogged() ? getCurrentUser() : null;
         <div class="how-it-works__container">
             <h2 class="how-it-works__title">Come Funziona</h2>
             <p class="how-it-works__subtitle">Trasportare la tua moto non è mai stato così facile. Tre semplici passi per un servizio impeccabile.</p>
-            
+
             <div class="how-it-works__grid">
                 <div class="how-it-works__card">
                     <div class="how-it-works__card-icon">
@@ -205,7 +205,7 @@ $user = isLogged() ? getCurrentUser() : null;
         <div class="why-choose-us__container">
             <h2 class="why-choose-us__title">Perché Sceglierci</h2>
             <p class="why-choose-us__subtitle">
-                Affidati solo ai migliori per la cura del tuo veicolo. 
+                Affidati solo ai migliori per la cura del tuo veicolo.
                 Anni di esperienza e migliaia di clienti soddisfatti ci rendono il partner ideale.
             </p>
 
@@ -297,7 +297,7 @@ $user = isLogged() ? getCurrentUser() : null;
         <div class="gallery__container">
             <h2 class="gallery__title">Gallery</h2>
             <p class="gallery__subtitle">Scopri come curiamo ogni dettaglio del trasporto della tua moto.</p>
-            
+
             <div class="gallery__grid">
                 <div class="gallery__item">
                     <img src="https://via.placeholder.com/400x300/667eea/ffffff?text=Trasporto+Moto+1" alt="Trasporto moto 1" class="gallery__image">
@@ -424,7 +424,7 @@ $user = isLogged() ? getCurrentUser() : null;
                 <p class="about__text">
                     Utilizziamo solo mezzi certificati e assicurati, con personale altamente qualificato e formato per gestire ogni tipo di moto, dalle piccole cilindrate alle moto custom di alto valore. Il nostro impegno quotidiano è la soddisfazione completa di ogni cliente.
                 </p>
-                
+
                 <ul class="about__features">
                     <li class="about__feature">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -476,7 +476,7 @@ $user = isLogged() ? getCurrentUser() : null;
         <div class="cta-final__container">
             <h2 class="cta-final__title">Pronto a Trasportare la Tua Moto?</h2>
             <p class="cta-final__subtitle">Richiedi subito un preventivo gratuito e senza impegno. Ti ricontattiamo in pochi minuti!</p>
-            
+
             <div class="cta-final__buttons">
                 <a href="#contact" class="btn btn--dark btn--large">Preventivo Gratuito</a>
                 <a href="#come-funziona" class="btn btn--white btn--large">Inizia Ora</a>
