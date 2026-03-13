@@ -402,72 +402,107 @@ body {
 
 /* ===== HOW IT WORKS (BEM) ===== */
 .how-it-works {
-    padding: 5rem 2rem;
-    background-color: var(--bg-light);
+    padding: 6rem 2rem;
+    background-color: #f8fafc; /* very light blue/gray matching the image */
 }
 
 .how-it-works__container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.how-it-works__badge {
+    background-color: #e0f2fe;
+    color: #4fa0f0;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: inline-block;
 }
 
 .how-it-works__title {
     font-size: 2.5rem;
     text-align: center;
     margin-bottom: 1rem;
-    color: var(--text-primary);
+    color: #1f2937;
+    font-weight: 700;
 }
 
 .how-it-works__subtitle {
     text-align: center;
-    font-size: 1.125rem;
-    color: var(--text-secondary);
+    font-size: 1.1rem;
+    color: #4b5563;
     margin-bottom: 4rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    line-height: 1.6;
 }
 
 .how-it-works__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
+    width: 100%;
 }
 
 .how-it-works__card {
-    background-color: var(--card-bg);
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: var(--shadow-md);
+    background-color: #ffffff;
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    position: relative;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.how-it-works__number {
+    position: absolute;
+    top: -15px;
+    left: 2rem;
+    background-color: #4fa0f0;
+    color: white;
+    width: 40px;
+    height: 30px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 6px -1px rgba(79, 160, 240, 0.3);
 }
 
 .how-it-works__card:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .how-it-works__card-icon {
-    width: 64px;
-    height: 64px;
-    background-color: #eff6ff;
-    color: var(--primary-color);
-    border-radius: 1rem;
+    width: 50px;
+    height: 50px;
+    background-color: #e0f2fe;
+    color: #4fa0f0;
+    border-radius: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 1.5rem;
+    font-size: 1.5rem;
 }
 
 .how-it-works__card-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     margin-bottom: 1rem;
-    color: var(--text-primary);
+    color: #1f2937;
+    font-weight: 700;
 }
 
 .how-it-works__card-description {
-    color: var(--text-secondary);
-    line-height: 1.7;
+    color: #6b7280;
+    line-height: 1.6;
+    font-size: 0.95rem;
 }
 
 /* ===== WHY CHOOSE US (BEM) ===== */

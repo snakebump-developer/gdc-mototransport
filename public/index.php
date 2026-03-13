@@ -9,6 +9,7 @@ $user = isLogged() ? getCurrentUser() : null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Starter Kit - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -151,51 +152,41 @@ $user = isLogged() ? getCurrentUser() : null;
     <!-- Come Funziona Section -->
     <section class="how-it-works" id="come-funziona">
         <div class="how-it-works__container">
+            <div class="how-it-works__badge">Processo Semplice</div>
             <h2 class="how-it-works__title">Come Funziona</h2>
-            <p class="how-it-works__subtitle">Trasportare la tua moto non è mai stato così facile. Tre semplici passi per un servizio impeccabile.</p>
+            <p class="how-it-works__subtitle">Trasportare la tua moto non è mai stato così facile.<br>Tre semplici passi per un servizio impeccabile.</p>
 
             <div class="how-it-works__grid">
                 <div class="how-it-works__card">
+                    <div class="how-it-works__number">01</div>
                     <div class="how-it-works__card-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
+                        <i class="fa-solid fa-file-contract"></i>
                     </div>
                     <h3 class="how-it-works__card-title">Richiedi Preventivo</h3>
                     <p class="how-it-works__card-description">
-                        Compila il nostro semplice modulo oppure inviaci le foto della tua moto. Ricevi un preventivo immediato e senza impegno in pochi minuti.
+                        Compila il modulo con i dettagli del trasporto: tipo di moto, città di ritiro e consegna. Ricevi un preventivo immediato e personalizzato.
                     </p>
                 </div>
 
                 <div class="how-it-works__card">
+                    <div class="how-it-works__number">02</div>
                     <div class="how-it-works__card-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="1" y="3" width="15" height="13"></rect>
-                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                        </svg>
+                        <i class="fa-solid fa-truck"></i>
                     </div>
-                    <h3 class="how-it-works__card-title">Ritiro e Consegna</h3>
+                    <h3 class="how-it-works__card-title">Ritiro a Domicilio</h3>
                     <p class="how-it-works__card-description">
-                        I nostri esperti ritirano la tua moto nel luogo e orario concordato. Utilizziamo solo mezzi certificati e assicurati per il massimo della sicurezza.
+                        Il nostro team ritira la moto direttamente a casa tua o dove preferisci. La carichiamo con cura sul nostro mezzo specializzato.
                     </p>
                 </div>
 
                 <div class="how-it-works__card">
+                    <div class="how-it-works__number">03</div>
                     <div class="how-it-works__card-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        </svg>
+                        <i class="fa-solid fa-stopwatch"></i>
                     </div>
                     <h3 class="how-it-works__card-title">Consegna Garantita</h3>
                     <p class="how-it-works__card-description">
-                        Monitora la spedizione in tempo reale e ricevi la tua moto nella destinazione concordata in perfette condizioni e documentazione completa.
+                        Monitora il trasporto in tempo reale. Consegniamo la tua moto in perfette condizioni, con documentazione completa.
                     </p>
                 </div>
             </div>
