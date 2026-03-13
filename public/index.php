@@ -196,89 +196,71 @@ $user = isLogged() ? getCurrentUser() : null;
     <!-- Perché Sceglierci Section -->
     <section class="why-choose-us" id="vantaggi">
         <div class="why-choose-us__container">
+            <div class="why-choose-us__badge">I Nostri Punti di Forza</div>
             <h2 class="why-choose-us__title">Perché Sceglierci</h2>
             <p class="why-choose-us__subtitle">
-                Affidati solo ai migliori per la cura del tuo veicolo.
-                Anni di esperienza e migliaia di clienti soddisfatti ci rendono il partner ideale.
+                Affidabilità, professionalità e cura del dettaglio.<br>
+                Ecco cosa ci distingue dalla concorrenza.
             </p>
 
             <div class="why-choose-us__grid">
                 <div class="why-choose-us__card">
                     <div class="why-choose-us__card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                        </svg>
+                        <i class="fa-solid fa-shield-halved"></i>
                     </div>
                     <h3 class="why-choose-us__card-title">Assicurazione Totale</h3>
                     <p class="why-choose-us__card-description">
-                        Copertura assicurativa completa per ogni spedizione. La tua moto è sempre protetta da eventuali danni.
+                        Copertura assicurativa completa per ogni trasporto. La tua moto è protetta dal ritiro alla consegna.
                     </p>
                 </div>
 
                 <div class="why-choose-us__card">
                     <div class="why-choose-us__card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="16 18 22 12 16 6"></polyline>
-                            <polyline points="8 6 2 12 8 18"></polyline>
-                        </svg>
+                        <i class="fa-regular fa-clock"></i>
                     </div>
                     <h3 class="why-choose-us__card-title">Consegna Rapida</h3>
                     <p class="why-choose-us__card-description">
-                        Tempi di consegna da 24 a 72 ore in tutta Italia. Servizi express disponibili su richiesta per urgenze.
+                        Tempi di consegna da 24 a 72 ore in tutta Italia. Rispettiamo sempre le tempistiche concordate.
                     </p>
                 </div>
 
                 <div class="why-choose-us__card">
                     <div class="why-choose-us__card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
+                        <i class="fa-solid fa-location-dot"></i>
                     </div>
                     <h3 class="why-choose-us__card-title">Tracking in Tempo Reale</h3>
                     <p class="why-choose-us__card-description">
-                        Monitora la spedizione della tua moto in tempo reale. Ricevi aggiornamenti costanti sulla posizione del veicolo.
+                        Monitora la posizione della tua moto durante tutto il trasporto tramite la nostra piattaforma.
                     </p>
                 </div>
 
                 <div class="why-choose-us__card">
                     <div class="why-choose-us__card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <h3 class="why-choose-us__card-title">Team di Esperti</h3>
-                    <p class="why-choose-us__card-description">
-                        Professionisti certificati e formati con anni di esperienza nel settore del trasporto veicoli a due ruote.
-                    </p>
-                </div>
-
-                <div class="why-choose-us__card">
-                    <div class="why-choose-us__card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <h3 class="why-choose-us__card-title">Prezzi Trasparenti</h3>
-                    <p class="why-choose-us__card-description">
-                        Nessun costo nascosto. Solo tariffe chiare, fisse e competitive. Ottieni subito il preventivo definitivo.
-                    </p>
-                </div>
-
-                <div class="why-choose-us__card">
-                    <div class="why-choose-us__card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 6v6l4 2"></path>
-                        </svg>
+                        <i class="fa-solid fa-headset"></i>
                     </div>
                     <h3 class="why-choose-us__card-title">Supporto 24/7</h3>
                     <p class="why-choose-us__card-description">
-                        Team di supporto sempre disponibile per rispondere alle tue domande e risolvere qualsiasi problema.
+                        Team dedicato disponibile 24 ore su 24 per qualsiasi esigenza o informazione sul trasporto.
+                    </p>
+                </div>
+
+                <div class="why-choose-us__card">
+                    <div class="why-choose-us__card-icon">
+                        <i class="fa-solid fa-euro-sign"></i>
+                    </div>
+                    <h3 class="why-choose-us__card-title">Prezzi Trasparenti</h3>
+                    <p class="why-choose-us__card-description">
+                        Preventivo chiaro e dettagliato senza costi nascosti. Paghi esattamente quanto concordato.
+                    </p>
+                </div>
+
+                <div class="why-choose-us__card">
+                    <div class="why-choose-us__card-icon">
+                        <i class="fa-solid fa-medal"></i>
+                    </div>
+                    <h3 class="why-choose-us__card-title">Esperienza Decennale</h3>
+                    <p class="why-choose-us__card-description">
+                        Oltre 10 anni di esperienza nel settore con migliaia di trasporti completati con successo.
                     </p>
                 </div>
             </div>
@@ -288,22 +270,37 @@ $user = isLogged() ? getCurrentUser() : null;
     <!-- Gallery Section -->
     <section class="gallery" id="gallery">
         <div class="gallery__container">
+            <div class="gallery__badge">Il Nostro Lavoro</div>
             <h2 class="gallery__title">Gallery</h2>
             <p class="gallery__subtitle">Scopri come curiamo ogni dettaglio del trasporto della tua moto.</p>
 
-            <div class="gallery__grid">
-                <div class="gallery__item">
-                    <img src="https://via.placeholder.com/400x300/667eea/ffffff?text=Trasporto+Moto+1" alt="Trasporto moto 1" class="gallery__image">
+            <div class="gallery__slider-wrapper">
+                <button class="gallery__slider-btn gallery__slider-btn--prev" id="galleryPrev">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="gallery__slider" id="gallerySlider">
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
                 </div>
-                <div class="gallery__item">
-                    <img src="https://via.placeholder.com/400x300/764ba2/ffffff?text=Trasporto+Moto+2" alt="Trasporto moto 2" class="gallery__image">
-                </div>
-                <div class="gallery__item">
-                    <img src="https://via.placeholder.com/400x300/667eea/ffffff?text=Trasporto+Moto+3" alt="Trasporto moto 3" class="gallery__image">
-                </div>
-                <div class="gallery__item">
-                    <img src="https://via.placeholder.com/400x300/764ba2/ffffff?text=Trasporto+Moto+4" alt="Trasporto moto 4" class="gallery__image">
-                </div>
+                <button class="gallery__slider-btn gallery__slider-btn--next" id="galleryNext">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </section>
