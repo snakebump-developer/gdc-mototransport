@@ -93,52 +93,54 @@ $user = isLogged() ? getCurrentUser() : null;
         <div class="hero__container">
             <div class="hero__content">
                 <h1 class="hero__title">
-                    Trasportiamo la tua moto in <span class="hero__title--highlight">tutta sicurezza</span>
+                    Trasportiamo la tua<br>
+                    moto in <span class="hero__title--highlight">tutta<br>
+                    sicurezza</span>
                 </h1>
                 <p class="hero__subtitle">
-                    Servizio professionale di trasporto moto ovunque in tutta Italia.
-                    Veloci e sicuri con un servizio completamente garantito a un prezzo super conveniente.
+                    Servizio professionale di trasporto moto porta a porta in tutta Italia.<br>
+                    Ritiro e consegna rapida, assicurazione completa e tracking in tempo reale.
                 </p>
                 <div class="hero__buttons">
-                    <a href="#" class="btn btn--primary btn--large open-quote-modal">Richiedi preventivo</a>
-                    <a href="#contact" class="btn btn--secondary btn--large">Invia Foto</a>
+                    <a href="#" class="btn btn--primary open-quote-modal">Preventivo Gratuito &rarr;</a>
+                    <a href="#come-funziona" class="btn btn--white">Come funziona &darr;</a>
                 </div>
 
                 <!-- Hero Features -->
                 <div class="hero__features">
                     <div class="hero__feature">
                         <div class="hero__feature-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                             </svg>
                         </div>
                         <div class="hero__feature-text">
                             <strong>100%</strong>
-                            <span>Sicuro</span>
+                            <span>Assicurazione</span>
                         </div>
                     </div>
                     <div class="hero__feature">
                         <div class="hero__feature-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <polyline points="12 6 12 12 16 14"></polyline>
                             </svg>
                         </div>
                         <div class="hero__feature-text">
-                            <strong>24/7</strong>
-                            <span>Veloce</span>
+                            <strong>24h</strong>
+                            <span>Consegna</span>
                         </div>
                     </div>
                     <div class="hero__feature">
                         <div class="hero__feature-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                 <circle cx="12" cy="10" r="3"></circle>
                             </svg>
                         </div>
                         <div class="hero__feature-text">
-                            <strong>GPS</strong>
-                            <span>Tracciato</span>
+                            <strong>Italia</strong>
+                            <span>Copertura</span>
                         </div>
                     </div>
                 </div>
