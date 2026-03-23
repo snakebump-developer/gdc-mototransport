@@ -26,22 +26,22 @@ $user = isLogged() ? getCurrentUser() : null;
 
             <!-- Menu Desktop -->
             <div class="nav-menu">
-                <a href="#home">Come funziona</a>
-                <a href="#features">Vantaggi</a>
-                <a href="#pricing">Gallery</a>
-                <a href="#reviews">Recensioni</a>
-                <a href="#contact">Chi siamo</a>
+                <a href="#come-funziona" data-section="come-funziona">Come funziona</a>
+                <a href="#vantaggi" data-section="vantaggi">Vantaggi</a>
+                <a href="#gallery" data-section="gallery">Gallery</a>
+                <a href="#recensioni" data-section="recensioni">Recensioni</a>
+                <a href="#chi-siamo" data-section="chi-siamo">Chi siamo</a>
             </div>
 
             <!-- Preventivo Button Desktop -->
             <div class="nav-cta-desktop">
-                <a href="#" class="btn btn-primary open-quote-modal">Preventivo Gratuito</a>
+                <a href="#" class="nav-cta-btn open-quote-modal">Preventivo Gratuito</a>
             </div>
 
             <!-- Mobile Controls -->
             <div class="nav-mobile-controls">
                 <!-- Preventivo Button Mobile -->
-                <a href="#" class="btn btn-primary btn-mobile-cta open-quote-modal">Preventivo Gratuito</a>
+                <a href="#" class="nav-cta-btn btn--mobile-cta open-quote-modal">Preventivo Gratuito</a>
 
                 <!-- Hamburger Menu -->
                 <button class="hamburger-menu" id="hamburgerMenu" aria-label="Menu">
@@ -67,11 +67,11 @@ $user = isLogged() ? getCurrentUser() : null;
                 </button>
             </div>
             <div class="mobile-menu-content">
-                <a href="#home">Come funziona</a>
-                <a href="#features">Vantaggi</a>
-                <a href="#pricing">Gallery</a>
-                <a href="#reviews">Recensioni</a>
-                <a href="#contact">Chi siamo</a>
+                <a href="#come-funziona">Come funziona</a>
+                <a href="#vantaggi">Vantaggi</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#recensioni">Recensioni</a>
+                <a href="#chi-siamo">Chi siamo</a>
                 <?php if ($user): ?>
                     <hr>
                     <a href="dashboard.php">Il Mio Profilo</a>
@@ -96,7 +96,7 @@ $user = isLogged() ? getCurrentUser() : null;
                 <h1 class="hero__title">
                     Trasportiamo la tua<br>
                     moto in <span class="hero__title--highlight">tutta<br>
-                    sicurezza</span>
+                        sicurezza</span>
                 </h1>
                 <p class="hero__subtitle">
                     Servizio professionale di trasporto moto porta a porta in tutta Italia.<br>
@@ -308,75 +308,114 @@ $user = isLogged() ? getCurrentUser() : null;
     <!-- Recensioni Section -->
     <section class="reviews" id="recensioni">
         <div class="reviews__container">
-            <h2 class="reviews__title">Recensioni Clienti</h2>
-            <p class="reviews__subtitle">La soddisfazione dei nostri clienti è la nostra migliore pubblicità. Ecco cosa dicono di noi.</p>
+            <div class="reviews__header">
+                <span class="reviews__badge">Cosa Dicono di Noi</span>
+                <h2 class="reviews__title">Recensioni Clienti</h2>
+                <p class="reviews__subtitle">La soddisfazione dei nostri clienti è la nostra priorità.<br>Ecco alcune delle loro esperienze.</p>
+            </div>
 
             <div class="reviews__grid">
                 <div class="reviews__card">
-                    <div class="reviews__stars">
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
+                    <div class="reviews__card-header">
+                        <div class="reviews__stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <i class="fa-solid fa-quote-right reviews__quote-icon"></i>
                     </div>
                     <p class="reviews__text">
-                        "Servizio impeccabile! La mia Ducati è arrivata in perfette condizioni. Professionali e puntuali, super consigliati!"
+                        "Servizio impeccabile! La mia Ducati è arrivata in perfette condizioni. Comunicazione eccellente durante tutto il trasporto. Consigliato!"
                     </p>
                     <div class="reviews__author">
-                        <strong class="reviews__author-name">Marco Rossi</strong>
-                        <span class="reviews__author-role">Privato · Roma</span>
+                        <div class="reviews__author-info">
+                            <strong class="reviews__author-name">Marco Rossi</strong>
+                            <span class="reviews__author-route">Milano → Roma</span>
+                        </div>
+                        <div class="reviews__author-moto">
+                            <span class="reviews__moto-label">Moto trasportata:</span>
+                            <a href="#" class="reviews__moto-link">Ducati Panigale V4</a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="reviews__card">
-                    <div class="reviews__stars">
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
+                    <div class="reviews__card-header">
+                        <div class="reviews__stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <i class="fa-solid fa-quote-right reviews__quote-icon"></i>
                     </div>
                     <p class="reviews__text">
-                        "Ho trasportato la mia moto da Milano a Palermo. Tutto tracking è stato perfetto, molto professionali. Grazie ancora!"
+                        "Ho trasportato la mia Harley per oltre 900km e non potevo chiedere di meglio. Puntualissimi e professionali. Userò ancora il servizio."
                     </p>
                     <div class="reviews__author">
-                        <strong class="reviews__author-name">Luca Bianchi</strong>
-                        <span class="reviews__author-role">Appassionato · Milano</span>
+                        <div class="reviews__author-info">
+                            <strong class="reviews__author-name">Luca Bianchi</strong>
+                            <span class="reviews__author-route">Torino → Napoli</span>
+                        </div>
+                        <div class="reviews__author-moto">
+                            <span class="reviews__moto-label">Moto trasportata:</span>
+                            <a href="#" class="reviews__moto-link">Harley Davidson Sportster</a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="reviews__card">
-                    <div class="reviews__stars">
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
+                    <div class="reviews__card-header">
+                        <div class="reviews__stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <i class="fa-solid fa-quote-right reviews__quote-icon"></i>
                     </div>
                     <p class="reviews__text">
-                        "Che professionalità per la distanza mia il hanno fatto molto veloci. Moto arrivata intatta. Molto sodisfatto!"
+                        "Ero preoccupato per la distanza ma il team mi ha seguito passo dopo passo. Moto consegnata come nuova. Prezzi onesti e trasparenti."
                     </p>
                     <div class="reviews__author">
-                        <strong class="reviews__author-name">Alessandro Conti</strong>
-                        <span class="reviews__author-role">Moto concessionario</span>
+                        <div class="reviews__author-info">
+                            <strong class="reviews__author-name">Alessandro Conti</strong>
+                            <span class="reviews__author-route">Firenze → Palermo</span>
+                        </div>
+                        <div class="reviews__author-moto">
+                            <span class="reviews__moto-label">Moto trasportata:</span>
+                            <a href="#" class="reviews__moto-link">BMW R1250GS</a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="reviews__card">
-                    <div class="reviews__stars">
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
-                        <span class="reviews__star reviews__star--filled">★</span>
+                    <div class="reviews__card-header">
+                        <div class="reviews__stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <i class="fa-solid fa-quote-right reviews__quote-icon"></i>
                     </div>
                     <p class="reviews__text">
-                        "Finalmente un servizio serio! Prezzi trasparenti, nessun costo nascosto. Il tracking in tempo reale è geniale. 5 stelle!"
+                        "Finalmente un servizio serio! Ritiro puntuale, moto imballata con cura e consegna anticipata. Il tracking online è molto comodo."
                     </p>
                     <div class="reviews__author">
-                        <strong class="reviews__author-name">Giulia Martini</strong>
-                        <span class="reviews__author-role">Moto viaggiatore</span>
+                        <div class="reviews__author-info">
+                            <strong class="reviews__author-name">Giulia Ferrari</strong>
+                            <span class="reviews__author-route">Bologna → Venezia</span>
+                        </div>
+                        <div class="reviews__author-moto">
+                            <span class="reviews__moto-label">Moto trasportata:</span>
+                            <a href="#" class="reviews__moto-link">Yamaha MT-07</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -385,7 +424,7 @@ $user = isLogged() ? getCurrentUser() : null;
             <div class="reviews__stats">
                 <div class="reviews__stat">
                     <strong class="reviews__stat-number">5000+</strong>
-                    <span class="reviews__stat-label">Trasporti Effettuati</span>
+                    <span class="reviews__stat-label">Trasporti Completati</span>
                 </div>
                 <div class="reviews__stat">
                     <strong class="reviews__stat-number">4.9/5</strong>
@@ -396,7 +435,7 @@ $user = isLogged() ? getCurrentUser() : null;
                     <span class="reviews__stat-label">Clienti Soddisfatti</span>
                 </div>
                 <div class="reviews__stat">
-                    <strong class="reviews__stat-number">15+</strong>
+                    <strong class="reviews__stat-number">10+</strong>
                     <span class="reviews__stat-label">Anni di Esperienza</span>
                 </div>
             </div>
@@ -407,42 +446,49 @@ $user = isLogged() ? getCurrentUser() : null;
     <section class="about" id="chi-siamo">
         <div class="about__container">
             <div class="about__content">
+                <div class="about__badge">La Nostra Azienda</div>
                 <h2 class="about__title">Chi Siamo</h2>
                 <p class="about__text">
-                    Siamo un team di professionisti specializzati nel trasporto di veicoli a due ruote con anni di esperienza nel settore. La nostra missione è offrire un servizio di eccellenza, garantendo la massima sicurezza e affidabilità in ogni spedizione.
+                    Siamo un team di appassionati di moto con oltre 10 anni di esperienza nel trasporto veicoli. La nostra azienda nasce dalla volontà di offrire un servizio di trasporto moto professionale, sicuro e affidabile in tutta Italia.
                 </p>
                 <p class="about__text">
-                    Utilizziamo solo mezzi certificati e assicurati, con personale altamente qualificato e formato per gestire ogni tipo di moto, dalle piccole cilindrate alle moto custom di alto valore. Il nostro impegno quotidiano è la soddisfazione completa di ogni cliente.
+                    Ogni moto che trasportiamo viene trattata come se fosse la nostra. Utilizziamo mezzi specializzati, attrezzature di ultima generazione e sistemi di fissaggio certificati per garantire la massima sicurezza durante il trasporto.
                 </p>
 
                 <ul class="about__features">
                     <li class="about__feature">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        </svg>
-                        <span><strong>Team Esperto:</strong> Autisti certificati con esperienza nel trasporto motocicli</span>
+                        <div class="about__feature-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="about__feature-text">
+                            <strong class="about__feature-title">Team Esperto</strong>
+                            <span class="about__feature-description">Professionisti del settore con anni di esperienza nel trasporto moto.</span>
+                        </div>
                     </li>
                     <li class="about__feature">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        </svg>
-                        <span><strong>Sicurezza e copertura totale:</strong> Assicurazione completa, veicoli e GPS</span>
+                        <div class="about__feature-icon">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <div class="about__feature-text">
+                            <strong class="about__feature-title">Missione Chiara</strong>
+                            <span class="about__feature-description">Rendere il trasporto moto semplice, sicuro e accessibile a tutti.</span>
+                        </div>
                     </li>
                     <li class="about__feature">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        </svg>
-                        <span><strong>Trasparenza:</strong> Preventivi chiari senza costi nascosti, tracciamento in tempo reale</span>
+                        <div class="about__feature-icon">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="about__feature-text">
+                            <strong class="about__feature-title">Passione</strong>
+                            <span class="about__feature-description">Amiamo le moto quanto voi e le trattiamo con la massima cura.</span>
+                        </div>
                     </li>
                 </ul>
             </div>
 
             <div class="about__stats">
                 <div class="about__stat-card">
-                    <div class="about__stat-number">15+</div>
+                    <div class="about__stat-number">10+</div>
                     <div class="about__stat-label">Anni di Esperienza</div>
                 </div>
                 <div class="about__stat-card">
@@ -450,8 +496,8 @@ $user = isLogged() ? getCurrentUser() : null;
                     <div class="about__stat-label">Moto Trasportate</div>
                 </div>
                 <div class="about__stat-card">
-                    <div class="about__stat-number">25+</div>
-                    <div class="about__stat-label">Città Servite</div>
+                    <div class="about__stat-number">20+</div>
+                    <div class="about__stat-label">Regioni Coperte</div>
                 </div>
                 <div class="about__stat-card">
                     <div class="about__stat-number">24/7</div>
@@ -464,12 +510,14 @@ $user = isLogged() ? getCurrentUser() : null;
     <!-- CTA Finale Section -->
     <section class="cta-final" id="preventivo">
         <div class="cta-final__container">
-            <h2 class="cta-final__title">Pronto a Trasportare la Tua Moto?</h2>
-            <p class="cta-final__subtitle">Richiedi subito un preventivo gratuito e senza impegno. Ti ricontattiamo in pochi minuti!</p>
+            <div class="cta-final__card">
+                <h2 class="cta-final__title">Pronto a Trasportare la Tua Moto?</h2>
+                <p class="cta-final__subtitle">Richiedi ora il tuo preventivo gratuito e personalizzato.</p>
 
-            <div class="cta-final__buttons">
-                <a href="#" class="btn btn--dark btn--large open-quote-modal">Preventivo Gratuito</a>
-                <a href="#come-funziona" class="btn btn--white btn--large">Inizia Ora</a>
+                <div class="cta-final__buttons">
+                    <a href="#" class="cta-btn cta-btn--dark open-quote-modal">Preventivo Gratuito &rarr;</a>
+                    <a href="tel:+390000000000" class="cta-btn cta-btn--white">Chiama Ora <i class="fa-solid fa-phone"></i></a>
+                </div>
             </div>
         </div>
     </section>
@@ -480,9 +528,9 @@ $user = isLogged() ? getCurrentUser() : null;
             <div class="footer__grid">
                 <!-- Company Info -->
                 <div class="footer__column">
-                    <h3 class="footer__logo">MotoTransport</h3>
+                    <div class="footer__logo-box"></div>
                     <p class="footer__description">
-                        Il servizio di trasporto moto più affidabile e professionale in Italia. Sicurezza e puntualità garantita.
+                        Il servizio di trasporto moto più affidabile d'Italia. Sicurezza, professionalità e puntualità garantite.
                     </p>
                 </div>
 
@@ -491,7 +539,7 @@ $user = isLogged() ? getCurrentUser() : null;
                     <h4 class="footer__title">Link Rapidi</h4>
                     <ul class="footer__links">
                         <li><a href="#come-funziona">Come Funziona</a></li>
-                        <li><a href="#vantaggi">I Vantaggi</a></li>
+                        <li><a href="#vantaggi">Vantaggi</a></li>
                         <li><a href="#gallery">Gallery</a></li>
                         <li><a href="#recensioni">Recensioni</a></li>
                         <li><a href="#chi-siamo">Chi Siamo</a></li>
@@ -504,8 +552,6 @@ $user = isLogged() ? getCurrentUser() : null;
                     <ul class="footer__links">
                         <li><a href="#">Trasporto Moto</a></li>
                         <li><a href="#">Trasporto Scooter</a></li>
-                        <li><a href="#">Tracking GPS</a></li>
-                        <li><a href="#">Assicurazione</a></li>
                     </ul>
                 </div>
 
@@ -514,24 +560,22 @@ $user = isLogged() ? getCurrentUser() : null;
                     <h4 class="footer__title">Contatti</h4>
                     <ul class="footer__contacts">
                         <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
-                            Via Esempio 123, 20100 Milano
+                            <div class="footer__contact-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <span>Via Example 123, 20100 Milano (MI)</span>
                         </li>
                         <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                            </svg>
-                            +39 02 345 6789
+                            <div class="footer__contact-icon">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <span>+39 012 345 6789</span>
                         </li>
                         <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
-                            info@mototransport.it
+                            <div class="footer__contact-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <span>info@mototransport.it</span>
                         </li>
                     </ul>
                 </div>

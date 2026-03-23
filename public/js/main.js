@@ -1,3 +1,39 @@
+// ===== ACTIVE NAV LINK ON SCROLL =====
+(function () {
+  'use strict';
+
+  const sections = ['come-funziona', 'vantaggi', 'gallery', 'recensioni', 'chi-siamo'];
+  const navLinks = document.querySelectorAll('.nav-menu a[data-section]');
+  if (!navLinks.length) return;
+
+  function setActive(id) {
+    navLinks.forEach((a) => {
+      a.classList.toggle('nav-active', a.dataset.section === id);
+    });
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    },
+    { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
+  );
+
+  sections.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // Highlight on direct click
+  navLinks.forEach((a) => {
+    a.addEventListener('click', function () {
+      setActive(this.dataset.section);
+    });
+  });
+})();
+
 // ===== DROPDOWN MENU =====
 document.addEventListener('DOMContentLoaded', function () {
   const userButton = document.getElementById('userButton');
