@@ -8,16 +8,13 @@ $user = getCurrentUser();
 $section = $_GET['section'] ?? 'profile';
 $success = '';
 $error = '';
-$pageTitle = 'Dashboard - MotoTransport';
-$noFontAwesome = true;
-$extraCss = ['css/modules/dashboard.css'];
 
 // Gestione aggiornamento profilo
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $section === 'profile') {
     try {
         updateUserProfile($user['id'], $_POST);
         $success = "Profilo aggiornato con successo!";
-        $user = getCurrentUser();
+        $user = getCurrentUser(); // Ricarica i dati
     } catch (Exception $e) {
         $error = "Errore nell'aggiornamento: " . $e->getMessage();
     }
@@ -32,17 +29,75 @@ if ($section === 'orders') {
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <?php include 'includes/head.php'; ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Starter Kit</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <?php include 'includes/navbar-dashboard.php'; ?>
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.php">
+                    <h2>StarterKit</h2>
+                </a>
+            </div>
+            <div class="nav-auth">
+                <div class="user-dropdown">
+                    <button class="user-button" id="userButton">
+                        <?= htmlspecialchars($user['username']) ?>
+                        <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="dashboard.php">Il Mio Profilo</a>
+                        <a href="dashboard.php?section=orders">I Miei Ordini</a>
+                        <?php if (isAdmin()): ?>
+                            <hr>
+                            <a href="admin.php">Pannello Admin</a>
+                        <?php endif; ?>
+                        <hr>
+                        <a href="logout.php">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div class="dashboard-container">
-        <?php include 'includes/sidebar-dashboard.php'; ?>
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h3>Dashboard</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.php?section=profile" class="sidebar-link <?= $section === 'profile' ? 'active' : '' ?>">
+                    <span class="icon">👤</span>
+                    Il Mio Profilo
+                </a>
+                <a href="dashboard.php?section=orders" class="sidebar-link <?= $section === 'orders' ? 'active' : '' ?>">
+                    <span class="icon">📦</span>
+                    I Miei Ordini
+                </a>
+                <hr>
+                <a href="index.php" class="sidebar-link">
+                    <span class="icon">🏠</span>
+                    Torna alla Home
+                </a>
+            </nav>
+        </aside>
 
         <!-- Main Content -->
         <main class="dashboard-main">
-            <?php include 'includes/alerts.php'; ?>
+            <?php if ($success): ?>
+                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+            <?php endif; ?>
+            
+            <?php if ($error): ?>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
 
             <?php if ($section === 'profile'): ?>
                 <!-- Sezione Profilo -->
@@ -134,7 +189,7 @@ if ($section === 'orders') {
                                         <tr>
                                             <td>#<?= $ordine['id'] ?></td>
                                             <td><?= date('d/m/Y', strtotime($ordine['creato_il'])) ?></td>
-                                            <td>&euro;<?= number_format($ordine['totale'], 2, ',', '.') ?></td>
+                                            <td>€<?= number_format($ordine['totale'], 2, ',', '.') ?></td>
                                             <td>
                                                 <span class="badge badge-<?= $ordine['stato'] ?>">
                                                     <?= ucfirst($ordine['stato']) ?>
@@ -152,7 +207,6 @@ if ($section === 'orders') {
         </main>
     </div>
 
-    <script src="js/modules/nav.js"></script>
-    <script src="js/modules/forms.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

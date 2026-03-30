@@ -7,9 +7,6 @@ if (isLogged()) {
 }
 
 $error = '';
-$pageTitle = 'Login - MotoTransport';
-$noFontAwesome = true;
-$extraCss = ['css/modules/auth.css'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (loginUser($_POST['username'], $_POST['password'])) {
@@ -23,7 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <?php include 'includes/head.php'; ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Starter Kit</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="auth-container">
@@ -33,7 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p>Benvenuto! Inserisci le tue credenziali</p>
             </div>
             
-            <?php include 'includes/alerts.php'; ?>
+            <?php if($error): ?>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
             
             <form method="POST" class="auth-form">
                 <div class="form-group">

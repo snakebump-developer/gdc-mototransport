@@ -8,9 +8,6 @@ if (isLogged()) {
 
 $error = '';
 $success = '';
-$pageTitle = 'Registrazione - MotoTransport';
-$noFontAwesome = true;
-$extraCss = ['css/modules/auth.css'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -24,7 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <?php include 'includes/head.php'; ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione - Starter Kit</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="auth-container">
@@ -34,10 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p>Crea il tuo account gratuito</p>
             </div>
             
-            <?php include 'includes/alerts.php'; ?>
+            <?php if($error): ?>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
             
             <?php if($success): ?>
                 <div class="alert alert-success">
+                    <?= htmlspecialchars($success) ?>
                     <a href="login.php">Vai al login</a>
                 </div>
             <?php endif; ?>

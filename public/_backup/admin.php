@@ -9,10 +9,6 @@ $user = getCurrentUser();
 $section = $_GET['section'] ?? 'overview';
 $success = '';
 $error = '';
-$pageTitle = 'Admin Panel - MotoTransport';
-$noFontAwesome = true;
-$extraCss = ['css/modules/dashboard.css'];
-$isAdmin = true;
 
 // Gestione aggiornamento stato ordine
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
@@ -50,17 +46,74 @@ if ($section === 'overview') {
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <?php include 'includes/head.php'; ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Starter Kit</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <?php include 'includes/navbar-dashboard.php'; ?>
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.php">
+                    <h2>StarterKit</h2>
+                </a>
+            </div>
+            <div class="nav-auth">
+                <div class="user-dropdown">
+                    <button class="user-button" id="userButton">
+                        <?= htmlspecialchars($user['username']) ?> (Admin)
+                        <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="dashboard.php">Dashboard Utente</a>
+                        <hr>
+                        <a href="logout.php">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div class="dashboard-container">
-        <?php include 'includes/sidebar-admin.php'; ?>
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h3>Pannello Admin</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="admin.php?section=overview" class="sidebar-link <?= $section === 'overview' ? 'active' : '' ?>">
+                    <span class="icon">📊</span>
+                    Panoramica
+                </a>
+                <a href="admin.php?section=orders" class="sidebar-link <?= $section === 'orders' ? 'active' : '' ?>">
+                    <span class="icon">📦</span>
+                    Tutti gli Ordini
+                </a>
+                <a href="admin.php?section=users" class="sidebar-link <?= $section === 'users' ? 'active' : '' ?>">
+                    <span class="icon">👥</span>
+                    Gestione Utenti
+                </a>
+                <hr>
+                <a href="index.php" class="sidebar-link">
+                    <span class="icon">🏠</span>
+                    Torna alla Home
+                </a>
+            </nav>
+        </aside>
 
         <!-- Main Content -->
         <main class="dashboard-main">
-            <?php include 'includes/alerts.php'; ?>
+            <?php if ($success): ?>
+                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+            <?php endif; ?>
+            
+            <?php if ($error): ?>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
 
             <?php if ($section === 'overview'): ?>
                 <!-- Panoramica -->
@@ -86,7 +139,7 @@ if ($section === 'overview') {
                         <div class="stat-card">
                             <div class="stat-icon">💰</div>
                             <div class="stat-content">
-                                <h3>&euro;<?= number_format($stats['totale_vendite'], 2, ',', '.') ?></h3>
+                                <h3>€<?= number_format($stats['totale_vendite'], 2, ',', '.') ?></h3>
                                 <p>Vendite Totali</p>
                             </div>
                         </div>
@@ -132,7 +185,7 @@ if ($section === 'overview') {
                                             <td><?= htmlspecialchars($ordine['username']) ?></td>
                                             <td><?= htmlspecialchars($ordine['email']) ?></td>
                                             <td><?= date('d/m/Y H:i', strtotime($ordine['creato_il'])) ?></td>
-                                            <td>&euro;<?= number_format($ordine['totale'], 2, ',', '.') ?></td>
+                                            <td>€<?= number_format($ordine['totale'], 2, ',', '.') ?></td>
                                             <td>
                                                 <form method="POST" class="inline-form">
                                                     <input type="hidden" name="action" value="update_order_status">
@@ -216,7 +269,6 @@ if ($section === 'overview') {
         </main>
     </div>
 
-    <script src="js/modules/nav.js"></script>
-    <script src="js/modules/forms.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
