@@ -2023,3 +2023,253 @@ body {
         font-size: 1.6rem;
     }
 }
+
+/* ===== STEP 2: MAPPA & AUTOCOMPLETE ===== */
+
+/* Input wrapper con icona mirino */
+.quote-form__input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.quote-form__input--with-icon {
+    padding-right: 3rem;
+}
+
+.quote-form__input-icon {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 0.375rem;
+    transition: color 0.2s, background 0.2s;
+}
+
+.quote-form__input-icon:hover {
+    color: var(--primary-color);
+    background: rgba(91, 139, 245, 0.08);
+}
+
+/* Google Places Autocomplete dropdown - forza z-index sopra la modale */
+.pac-container {
+    z-index: 100001 !important;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    font-family: inherit;
+    margin-top: 4px;
+}
+
+.pac-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.pac-item:hover {
+    background: rgba(91, 139, 245, 0.06);
+}
+
+/* Contenitore mappa */
+.quote-map-container {
+    position: relative;
+    margin-top: 1rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1.5px solid var(--border-color);
+    background: var(--bg-light);
+}
+
+.quote-map__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 0.875rem;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.quote-map__header-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.quote-map__close-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.quote-map__close-btn:hover {
+    background: rgba(239, 68, 68, 0.08);
+    color: var(--danger-color);
+}
+
+.quote-map {
+    width: 100%;
+    height: 300px;
+}
+
+/* Pin/mirino fisso al centro della mappa */
+.quote-map__pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10;
+    /* Compensa header (44px circa) e footer (80px circa) → offset per centro area mappa */
+    margin-top: -22px;
+}
+
+.quote-map__footer {
+    padding: 0.75rem;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quote-map__address {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+    min-height: 1.2em;
+    line-height: 1.4;
+}
+
+.quote-map__confirm-btn {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Riepilogo tratta */
+.quote-route-summary {
+    margin-top: 1.25rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1.5px solid var(--border-color);
+    background: var(--card-bg);
+}
+
+.quote-route-summary__map {
+    width: 100%;
+    height: 200px;
+}
+
+/* Griglia costi */
+.quote-route-costs {
+    padding: 1rem;
+}
+
+.quote-route-costs__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+}
+
+.quote-route-costs__label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.quote-route-costs__label svg {
+    flex-shrink: 0;
+    color: var(--primary-color);
+}
+
+.quote-route-costs__value {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.quote-route-costs__divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 0.25rem 0;
+}
+
+.quote-route-costs__item--total {
+    padding-top: 0.625rem;
+}
+
+.quote-route-costs__item--total .quote-route-costs__label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.quote-route-costs__item--total .quote-route-costs__value {
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.quote-route-costs__note {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    text-align: right;
+    padding-top: 0.25rem;
+    font-style: italic;
+}
+
+/* Animazione loading su route summary */
+.quote-route-summary--loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.quote-route-summary--loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: quoteRouteSpinner 0.7s linear infinite;
+}
+
+@keyframes quoteRouteSpinner {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Responsive mappa */
+@media (max-width: 480px) {
+    .quote-map {
+        height: 250px;
+    }
+    .quote-route-summary__map {
+        height: 160px;
+    }
+}

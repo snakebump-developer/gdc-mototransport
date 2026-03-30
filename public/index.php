@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../src/auth.php';
+$config = require __DIR__ . '/../src/config.php';
 $user = isLogged() ? getCurrentUser() : null;
+$gmapsKey = htmlspecialchars($config['google_maps_api_key'] ?? '', ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -728,13 +730,114 @@ $user = isLogged() ? getCurrentUser() : null;
                 <div class="quote-step quote-step--hidden" id="quoteStep2">
                     <h3 class="quote-step__title">Tragitto</h3>
                     <div class="quote-form">
+                        <!-- Indirizzo di ritiro -->
                         <div class="quote-form__group">
                             <label class="quote-form__label" for="addressPickup">Indirizzo di ritiro <span class="quote-form__required">*</span></label>
-                            <input class="quote-form__input" type="text" id="addressPickup" name="addressPickup" placeholder="Via Pino pallino 12, Milano, 20070">
+                            <div class="quote-form__input-wrapper">
+                                <input class="quote-form__input quote-form__input--with-icon" type="text" id="addressPickup" name="addressPickup" placeholder="Via pinco pallino 12, Milano, 20070" autocomplete="off">
+                                <button type="button" class="quote-form__input-icon" id="pickupMapBtn" title="Seleziona sulla mappa">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
+                        <!-- Indirizzo di consegna -->
                         <div class="quote-form__group">
                             <label class="quote-form__label" for="addressDelivery">Indirizzo di consegna <span class="quote-form__required">*</span></label>
-                            <input class="quote-form__input" type="text" id="addressDelivery" name="addressDelivery" placeholder="Via Pino pallino 12, Milano, 20070">
+                            <div class="quote-form__input-wrapper">
+                                <input class="quote-form__input quote-form__input--with-icon" type="text" id="addressDelivery" name="addressDelivery" placeholder="Via pinco pallino 12, Milano, 20070" autocomplete="off">
+                                <button type="button" class="quote-form__input-icon" id="deliveryMapBtn" title="Seleziona sulla mappa">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Contenitore mappa per selezione indirizzo -->
+                        <div class="quote-map-container" id="quoteMapContainer" style="display:none;">
+                            <div class="quote-map__header">
+                                <span class="quote-map__header-label" id="quoteMapLabel">Seleziona indirizzo di ritiro</span>
+                                <button type="button" class="quote-map__close-btn" id="quoteMapCloseBtn" title="Chiudi mappa">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="quote-map" id="quoteMap"></div>
+                            <!-- Pin/mirino fisso al centro della mappa -->
+                            <div class="quote-map__pin" id="quoteMapPin">
+                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                    <circle cx="20" cy="20" r="6" fill="#0284c7" fill-opacity="0.2" stroke="#0284c7" stroke-width="2" />
+                                    <circle cx="20" cy="20" r="2" fill="#0284c7" />
+                                    <line x1="20" y1="6" x2="20" y2="14" stroke="#0284c7" stroke-width="2" stroke-linecap="round" />
+                                    <line x1="20" y1="26" x2="20" y2="34" stroke="#0284c7" stroke-width="2" stroke-linecap="round" />
+                                    <line x1="6" y1="20" x2="14" y2="20" stroke="#0284c7" stroke-width="2" stroke-linecap="round" />
+                                    <line x1="26" y1="20" x2="34" y2="20" stroke="#0284c7" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                            </div>
+                            <div class="quote-map__footer">
+                                <p class="quote-map__address" id="quoteMapAddress">Sposta la mappa per selezionare l'indirizzo</p>
+                                <button type="button" class="quote-btn quote-btn--next quote-map__confirm-btn" id="quoteMapConfirmBtn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Conferma posizione
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Riepilogo tratta (appare dopo selezione di entrambi gli indirizzi) -->
+                        <div class="quote-route-summary" id="routeSummary" style="display:none;">
+                            <div class="quote-route-summary__map" id="routePreviewMap"></div>
+                            <div class="quote-route-costs" id="routeCosts">
+                                <div class="quote-route-costs__item">
+                                    <span class="quote-route-costs__label">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                                        </svg>
+                                        Distanza
+                                    </span>
+                                    <strong class="quote-route-costs__value" id="routeDistance">—</strong>
+                                </div>
+                                <div class="quote-route-costs__item">
+                                    <span class="quote-route-costs__label">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <polyline points="12 6 12 12 16 14" />
+                                        </svg>
+                                        Durata stimata
+                                    </span>
+                                    <strong class="quote-route-costs__value" id="routeDuration">—</strong>
+                                </div>
+                                <div class="quote-route-costs__divider"></div>
+                                <div class="quote-route-costs__item">
+                                    <span class="quote-route-costs__label">Carburante (furgone benzina)</span>
+                                    <strong class="quote-route-costs__value" id="routeFuelCost">—</strong>
+                                </div>
+                                <div class="quote-route-costs__item">
+                                    <span class="quote-route-costs__label">Pedaggi autostradali</span>
+                                    <strong class="quote-route-costs__value" id="routeTollCost">—</strong>
+                                </div>
+                                <div class="quote-route-costs__divider"></div>
+                                <div class="quote-route-costs__item quote-route-costs__item--total">
+                                    <span class="quote-route-costs__label">Costo trasporto</span>
+                                    <strong class="quote-route-costs__value" id="routeTotalCost">—</strong>
+                                </div>
+                                <p class="quote-route-costs__note" id="routeMinNote" style="display:none;">* Spesa minima di €50 applicata</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -918,6 +1021,9 @@ $user = isLogged() ? getCurrentUser() : null;
     </div>
 
     <script src="js/main.js"></script>
+    <?php if ($gmapsKey): ?>
+        <script src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapsKey ?>&libraries=places,geometry&callback=initGoogleMaps" async defer></script>
+    <?php endif; ?>
 </body>
 
 </html>
