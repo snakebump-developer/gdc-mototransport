@@ -1676,6 +1676,25 @@ body {
     color: var(--text-secondary);
 }
 
+/* Separatore e sezione servizi aggiuntivi */
+.quote-form__separator {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 1.5rem 0 1rem;
+}
+
+.quote-form__section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1rem;
+}
+
+.quote-form__label--link {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
 /* Checkbox */
 .quote-form__checkbox {
     display: flex;

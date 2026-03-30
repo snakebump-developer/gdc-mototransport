@@ -263,6 +263,7 @@ console.log('StarterKit JS initialized');
   /* ---------- Configurazione prezzi ---------- */
   const BASE_PRICE = 175; // prezzo base stimato
   const DELIVERY_SURCHARGE = { Standard: 0, Express: 50, Urgente: 100 };
+  const BAGS_LABELS = { '0': 'Nessuna borsa laterale', '30': 'Borse smontate (+€30)', '70': 'Borse non smontabili (+€70)' };
   const DELIVERY_LABELS = {
     Standard: 'Standard',
     Express: 'Express',
@@ -309,7 +310,7 @@ console.log('StarterKit JS initialized');
   function resetForm() {
     currentStep = 1;
     // Reset campi
-    ['motoType', 'motoBrand', 'motoModel', 'addressPickup', 'addressDelivery',
+    ['motoBrand', 'motoModel', 'motoCc', 'motoBags', 'addressPickup', 'addressDelivery',
       'clientName', 'clientEmail', 'clientPhone', 'clientFiscal'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) { el.value = ''; el.classList.remove('is-error'); }
@@ -357,7 +358,8 @@ console.log('StarterKit JS initialized');
   function populateSummary() {
     const brand = val('motoBrand');
     const model = val('motoModel');
-    const motoType = val('motoType');
+    const cc = val('motoCc');
+    const bags = val('motoBags');
     const pickup = val('addressPickup');
     const delivery = val('addressDelivery');
     const deliveryType = selectedDelivery();
@@ -366,8 +368,9 @@ console.log('StarterKit JS initialized');
     const phone = val('clientPhone');
     const fiscal = val('clientFiscal');
 
-    setText('summaryMoto', brand && model ? brand + ' ' + model : brand || model || '—');
-    setText('summaryMotoType', motoType || '—');
+    const motoDesc = [brand, model, cc].filter(Boolean).join(' ');
+    setText('summaryMoto', motoDesc || '—');
+    setText('summaryMotoType', BAGS_LABELS[bags] || '—');
     setText('summaryRoute', pickup && delivery ? pickup + ' → ' + delivery : '—');
     setText('summaryDelivery', DELIVERY_LABELS[deliveryType] || deliveryType);
     setText('summaryDeliveryDesc', DELIVERY_DESC[deliveryType] || '');
@@ -375,7 +378,8 @@ console.log('StarterKit JS initialized');
     const contactLines = [email, phone, fiscal].filter(Boolean).join('\n');
     setText('summaryContact', contactLines || '—');
 
-    const total = BASE_PRICE + (DELIVERY_SURCHARGE[deliveryType] || 0);
+    const bagsPrice = parseInt(bags) || 0;
+    const total = BASE_PRICE + (DELIVERY_SURCHARGE[deliveryType] || 0) + bagsPrice;
     setText('summaryPrice', '€' + total);
   }
 
@@ -395,9 +399,9 @@ console.log('StarterKit JS initialized');
     };
 
     if (step === 1) {
-      require('motoType');
       require('motoBrand');
       require('motoModel');
+      require('motoCc');
     } else if (step === 2) {
       require('addressPickup');
       require('addressDelivery');

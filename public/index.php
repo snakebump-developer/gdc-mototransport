@@ -690,23 +690,6 @@ $user = isLogged() ? getCurrentUser() : null;
                 <div class="quote-step" id="quoteStep1">
                     <h3 class="quote-step__title">Dettagli della moto</h3>
                     <div class="quote-form">
-                        <div class="quote-form__group">
-                            <label class="quote-form__label" for="motoType">Tipo di moto <span class="quote-form__required">*</span></label>
-                            <div class="quote-form__select-wrapper">
-                                <select class="quote-form__select" id="motoType" name="motoType">
-                                    <option value="">Seleziona tipo</option>
-                                    <option value="Naked/Roadster">Naked / Roadster</option>
-                                    <option value="Sportiva">Sportiva</option>
-                                    <option value="Touring/Gran Turismo">Touring / Gran Turismo</option>
-                                    <option value="Enduro/Adventure">Enduro / Adventure</option>
-                                    <option value="Custom/Cruiser">Custom / Cruiser</option>
-                                    <option value="Scooter">Scooter</option>
-                                </select>
-                                <svg class="quote-form__select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </div>
-                        </div>
                         <div class="quote-form__row">
                             <div class="quote-form__group">
                                 <label class="quote-form__label" for="motoBrand">Marca <span class="quote-form__required">*</span></label>
@@ -715,6 +698,27 @@ $user = isLogged() ? getCurrentUser() : null;
                             <div class="quote-form__group">
                                 <label class="quote-form__label" for="motoModel">Modello <span class="quote-form__required">*</span></label>
                                 <input class="quote-form__input" type="text" id="motoModel" name="motoModel" placeholder="Es. Panigale V4">
+                            </div>
+                        </div>
+                        <div class="quote-form__group">
+                            <label class="quote-form__label" for="motoCc">Cilindrata <span class="quote-form__required">*</span></label>
+                            <input class="quote-form__input" type="text" id="motoCc" name="motoCc" placeholder="Es. 1103cc">
+                        </div>
+
+                        <div class="quote-form__separator"></div>
+
+                        <h4 class="quote-form__section-title">Servizi aggiuntivi a pagamento</h4>
+                        <div class="quote-form__group">
+                            <label class="quote-form__label quote-form__label--link" for="motoBags">La tua moto ha borse laterali?</label>
+                            <div class="quote-form__select-wrapper">
+                                <select class="quote-form__select" id="motoBags" name="motoBags">
+                                    <option value="0">No, non ci sono borse laterali - €0</option>
+                                    <option value="30">Sì, ma le faccio trovare smontate - €30</option>
+                                    <option value="70">Sì, ma non sono smontabili - €70</option>
+                                </select>
+                                <svg class="quote-form__select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
                             </div>
                         </div>
                     </div>
