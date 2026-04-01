@@ -304,6 +304,51 @@ php src/setup.php
 # Controlla i percorsi nei file HTML
 ```
 
+## 🧪 Utenti di Test
+
+Esegui lo script per popolare il database con utenti fittizi:
+
+```bash
+php src/seed-test-users.php
+```
+
+### Credenziali per test rapidi
+
+**Utente normale:**
+
+| Campo    | Valore                      |
+| -------- | --------------------------- |
+| Username | `marco.rossi92`             |
+| Password | `Test@User1`                |
+| Email    | `marco.rossi92@email.it`    |
+
+**Professionista:**
+
+| Campo    | Valore                          |
+| -------- | ------------------------------- |
+| Username | `trasporti.esposito`            |
+| Password | `Pro@Moto2025`                  |
+| Email    | `info@trasportiesposito.it`     |
+
+### Tutti gli utenti di test creati
+
+| Username               | Ruolo          | Città    |
+| ---------------------- | -------------- | -------- |
+| `marco.rossi92`        | user           | Milano   |
+| `giulia.ferrari`       | user           | Milano   |
+| `luca.bianchi`         | user           | Torino   |
+| `sara.colombo`         | user           | Bologna  |
+| `andrea.martini`       | user           | Roma     |
+| `trasporti.esposito`   | professional   | Napoli   |
+| `motoservice.milano`   | professional   | Milano   |
+| `garage.ricci`         | professional   | Firenze  |
+| `motoexpress.romano`   | professional   | Roma     |
+| `sportbike.conti`      | professional   | Bologna  |
+
+> ⚠️ Questi utenti sono solo per ambienti di sviluppo/test. Non usarli in produzione.
+
+---
+
 ## 📄 Licenza
 
 Starter kit libero per uso personale e commerciale.
