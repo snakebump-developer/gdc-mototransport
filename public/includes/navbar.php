@@ -26,8 +26,21 @@ $user = $user ?? null;
             <a href="#chi-siamo" data-section="chi-siamo">Chi siamo</a>
         </div>
 
-        <!-- Preventivo Button Desktop -->
+        <!-- Auth + Preventivo Button Desktop -->
         <div class="nav-cta-desktop">
+            <?php if ($user): ?>
+                <a href="<?= getDashboardUrl() ?>" class="nav-auth-link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                    </svg>
+                    <?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>
+                </a>
+                <a href="logout.php" class="nav-auth-link nav-auth-link--logout">Esci</a>
+            <?php else: ?>
+                <a href="login.php" class="nav-auth-link">Accedi</a>
+                <a href="register.php" class="nav-auth-btn">Registrati</a>
+            <?php endif; ?>
             <a href="#" class="nav-cta-btn open-quote-modal">Preventivo Gratuito</a>
         </div>
 

@@ -1,25 +1,26 @@
 <?php
 
 /**
- * Sidebar per la Dashboard utente.
+ * Sidebar per la Dashboard Professionista.
  * Variabili attese: $section
  */
 $section = $section ?? 'profile';
 ?>
 <aside class="dashboard-sidebar">
     <div class="sidebar-header">
-        <h3>Dashboard</h3>
+        <div class="sidebar-header__badge badge badge--professional">Professionista</div>
+        <h3>Dashboard Pro</h3>
     </div>
     <nav class="sidebar-nav">
-        <a href="dashboard.php?section=profile"
+        <a href="dashboard-pro.php?section=profile"
             class="sidebar-link <?= $section === 'profile' ? 'active' : '' ?>">
-            <span class="icon">👤</span> Il Mio Profilo
+            <span class="icon">👤</span> Profilo &amp; Fatturazione
         </a>
-        <a href="dashboard.php?section=motorcycles"
+        <a href="dashboard-pro.php?section=motorcycles"
             class="sidebar-link <?= $section === 'motorcycles' ? 'active' : '' ?>">
-            <span class="icon">🏍️</span> Le Mie Moto
+            <span class="icon">🏍️</span> Moto Clienti
         </a>
-        <a href="dashboard.php?section=orders"
+        <a href="dashboard-pro.php?section=orders"
             class="sidebar-link <?= $section === 'orders' ? 'active' : '' ?>">
             <span class="icon">📦</span> I Miei Ordini
         </a>
