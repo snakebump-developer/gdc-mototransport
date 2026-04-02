@@ -7,7 +7,23 @@ function getAllUsers($limit = 50, $offset = 0)
     $stmt = $pdo->prepare("
         SELECT id, username, email, nome, cognome, ruolo, creato_il 
         FROM utenti 
+        WHERE ruolo IN ('user', 'admin')
         ORDER BY creato_il DESC 
+        LIMIT ? OFFSET ?
+    ");
+    $stmt->execute([$limit, $offset]);
+    return $stmt->fetchAll();
+}
+
+function getAllProfessionals($limit = 50, $offset = 0)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT id, username, email, nome, cognome, ragione_sociale,
+               partita_iva, tipo_attivita, sconto_percentuale, citta, creato_il
+        FROM utenti
+        WHERE ruolo = 'professional'
+        ORDER BY creato_il DESC
         LIMIT ? OFFSET ?
     ");
     $stmt->execute([$limit, $offset]);

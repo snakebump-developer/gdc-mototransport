@@ -20,6 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         if ($_POST['action'] === 'update_order_status') {
             updateOrderStatus($_POST['order_id'], $_POST['status']);
             $success = "Stato ordine aggiornato!";
+        } elseif ($_POST['action'] === 'update_preventivo_stato') {
+            updatePreventivoStato($_POST['preventivo_id'], $_POST['stato']);
+            $success = "Stato preventivo aggiornato!";
         } elseif ($_POST['action'] === 'delete_user') {
             deleteUser($_POST['user_id']);
             $success = "Utente eliminato!";
@@ -37,6 +40,9 @@ $stats = null;
 $ordini = [];
 $utenti = [];
 
+$professionisti = [];
+$preventivi = [];
+
 if ($section === 'overview') {
     $orderStats = getOrderStats();
     $userStats = getUserStats();
@@ -44,9 +50,11 @@ if ($section === 'overview') {
     $ultimi_ordini = getAllOrders(5);
     $ultimi_utenti = getAllUsers(5);
 } elseif ($section === 'orders') {
-    $ordini = getAllOrders();
+    $preventivi = getAllPreventivi();
 } elseif ($section === 'users') {
     $utenti = getAllUsers();
+} elseif ($section === 'professionals') {
+    $professionisti = getAllProfessionals();
 }
 ?>
 <!DOCTYPE html>
@@ -204,15 +212,15 @@ if ($section === 'overview') {
                 </div>
 
             <?php elseif ($section === 'orders'): ?>
-                <!-- Gestione Ordini -->
+                <!-- Gestione Preventivi -->
                 <div class="dashboard-section">
-                    <h1>Tutti gli Ordini</h1>
-                    <p class="section-description">Gestisci tutti gli ordini del sistema</p>
+                    <h1>Tutti i Preventivi</h1>
+                    <p class="section-description">Gestisci tutti i preventivi di trasporto</p>
 
-                    <?php if (empty($ordini)): ?>
+                    <?php if (empty($preventivi)): ?>
                         <div class="empty-state">
-                            <div class="empty-icon">📦</div>
-                            <h3>Nessun ordine presente</h3>
+                            <div class="empty-icon">📋</div>
+                            <h3>Nessun preventivo presente</h3>
                         </div>
                     <?php else: ?>
                         <div class="orders-table">
@@ -220,36 +228,44 @@ if ($section === 'overview') {
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Utente</th>
-                                        <th>Email</th>
-                                        <th>Data</th>
-                                        <th>Totale</th>
+                                        <th>Cliente</th>
+                                        <th>Moto</th>
+                                        <th>Ritiro</th>
+                                        <th>Consegna</th>
+                                        <th>Km</th>
+                                        <th>Prezzo</th>
                                         <th>Stato</th>
+                                        <th>Data</th>
                                         <th>Azioni</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($ordini as $ordine): ?>
+                                    <?php foreach ($preventivi as $p): ?>
                                         <tr>
-                                            <td>#<?= $ordine['id'] ?></td>
-                                            <td><?= htmlspecialchars($ordine['username']) ?></td>
-                                            <td><?= htmlspecialchars($ordine['email']) ?></td>
-                                            <td><?= date('d/m/Y H:i', strtotime($ordine['creato_il'])) ?></td>
-                                            <td>&euro;<?= number_format($ordine['totale'], 2, ',', '.') ?></td>
+                                            <td>#<?= $p['id'] ?></td>
+                                            <td>
+                                                <?= htmlspecialchars($p['nome_cliente'] ?? ($p['username'] ?? 'Anonimo')) ?>
+                                            </td>
+                                            <td><?= htmlspecialchars(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? '')) ?></td>
+                                            <td><?= htmlspecialchars($p['indirizzo_ritiro']) ?></td>
+                                            <td><?= htmlspecialchars($p['indirizzo_consegna']) ?></td>
+                                            <td><?= $p['distanza_km'] ? number_format((float)$p['distanza_km'], 0, ',', '.') . ' km' : '-' ?></td>
+                                            <td>&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></td>
                                             <td>
                                                 <form method="POST" class="inline-form">
-                                                    <input type="hidden" name="action" value="update_order_status">
-                                                    <input type="hidden" name="order_id" value="<?= $ordine['id'] ?>">
-                                                    <select name="status" onchange="this.form.submit()" class="status-select">
-                                                        <option value="pending" <?= $ordine['stato'] === 'pending' ? 'selected' : '' ?>>Pending</option>
-                                                        <option value="processing" <?= $ordine['stato'] === 'processing' ? 'selected' : '' ?>>Processing</option>
-                                                        <option value="completed" <?= $ordine['stato'] === 'completed' ? 'selected' : '' ?>>Completed</option>
-                                                        <option value="cancelled" <?= $ordine['stato'] === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                                    <input type="hidden" name="action" value="update_preventivo_stato">
+                                                    <input type="hidden" name="preventivo_id" value="<?= $p['id'] ?>">
+                                                    <select name="stato" onchange="this.form.submit()" class="status-select">
+                                                        <?php foreach (['bozza', 'inviato', 'confermato', 'in_lavorazione', 'completato', 'annullato'] as $s): ?>
+                                                            <option value="<?= $s ?>" <?= $p['stato'] === $s ? 'selected' : '' ?>><?= ucfirst(str_replace('_', ' ', $s)) ?></option>
+                                                        <?php endforeach; ?>
                                                     </select>
                                                 </form>
                                             </td>
+                                            <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
                                             <td>
-                                                <button onclick="viewOrderDetails(<?= $ordine['id'] ?>)" class="btn btn-small">Dettagli</button>
+                                                <a href="admin-preventivo-detail.php?id=<?= $p['id'] ?>"
+                                                    class="btn btn-small">Dettaglio</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -299,7 +315,9 @@ if ($section === 'overview') {
                                                 </span>
                                             </td>
                                             <td><?= date('d/m/Y', strtotime($u['creato_il'])) ?></td>
-                                            <td>
+                                            <td style="display:flex;gap:.5rem;align-items:center;">
+                                                <a href="admin-user-detail.php?id=<?= $u['id'] ?>&back=users"
+                                                    class="btn btn-small">Dettaglio</a>
                                                 <?php if ($u['id'] != $user['id']): ?>
                                                     <form method="POST" class="inline-form" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente?')">
                                                         <input type="hidden" name="action" value="delete_user">
@@ -315,6 +333,65 @@ if ($section === 'overview') {
                         </div>
                     <?php endif; ?>
                 </div>
+            <?php elseif ($section === 'professionals'): ?>
+                <!-- Gestione Professionisti -->
+                <div class="dashboard-section">
+                    <h1>Professionisti</h1>
+                    <p class="section-description">Aziende e professionisti registrati</p>
+
+                    <?php if (empty($professionisti)): ?>
+                        <div class="empty-state">
+                            <div class="empty-icon">🏢</div>
+                            <h3>Nessun professionista registrato</h3>
+                        </div>
+                    <?php else: ?>
+                        <div class="orders-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Ragione Sociale</th>
+                                        <th>Referente</th>
+                                        <th>Email</th>
+                                        <th>P.IVA</th>
+                                        <th>Attività</th>
+                                        <th>Città</th>
+                                        <th>Sconto</th>
+                                        <th>Registrato</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($professionisti as $p): ?>
+                                        <tr>
+                                            <td><?= $p['id'] ?></td>
+                                            <td><?= htmlspecialchars($p['ragione_sociale'] ?? '-') ?></td>
+                                            <td><?= htmlspecialchars(trim(($p['nome'] ?? '') . ' ' . ($p['cognome'] ?? ''))) ?></td>
+                                            <td><?= htmlspecialchars($p['email']) ?></td>
+                                            <td><?= htmlspecialchars($p['partita_iva'] ?? '-') ?></td>
+                                            <td><?= htmlspecialchars($p['tipo_attivita'] ?? '-') ?></td>
+                                            <td><?= htmlspecialchars($p['citta'] ?? '-') ?></td>
+                                            <td><?= number_format((float)($p['sconto_percentuale'] ?? 0), 1) ?>%</td>
+                                            <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                            <td style="display:flex;gap:.5rem;align-items:center;">
+                                                <a href="admin-user-detail.php?id=<?= $p['id'] ?>&back=professionals"
+                                                    class="btn btn-small">Dettaglio</a>
+                                                <?php if ($p['id'] != $user['id']): ?>
+                                                    <form method="POST" class="inline-form" onsubmit="return confirm('Eliminare questo professionista?')">
+                                                        <input type="hidden" name="action" value="delete_user">
+                                                        <input type="hidden" name="user_id" value="<?= $p['id'] ?>">
+                                                        <button type="submit" class="btn btn-small btn-danger">Elimina</button>
+                                                    </form>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
             <?php endif; ?>
         </main>
     </div>

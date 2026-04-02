@@ -138,3 +138,54 @@ function getOrderStats()
 
     return $stmt->fetch();
 }
+
+function getAllPreventivi($limit = 100, $offset = 0)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT p.*, u.username
+        FROM preventivi p
+        LEFT JOIN utenti u ON p.user_id = u.id
+        ORDER BY p.creato_il DESC
+        LIMIT ? OFFSET ?
+    ");
+    $stmt->execute([$limit, $offset]);
+    return $stmt->fetchAll();
+}
+
+function getPreventivoById($id)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT p.*, u.username, u.email
+        FROM preventivi p
+        LEFT JOIN utenti u ON p.user_id = u.id
+        WHERE p.id = ?
+    ");
+    $stmt->execute([$id]);
+    return $stmt->fetch();
+}
+
+function updatePreventivoStato($id, $stato)
+{
+    global $pdo;
+    $stati = ['bozza', 'inviato', 'confermato', 'in_lavorazione', 'completato', 'annullato'];
+    if (!in_array($stato, $stati)) {
+        throw new Exception("Stato preventivo non valido");
+    }
+    $stmt = $pdo->prepare("UPDATE preventivi SET stato = ?, aggiornato_il = CURRENT_TIMESTAMP WHERE id = ?");
+    return $stmt->execute([$stato, $id]);
+}
+
+function getUserPreventivi($userId, $limit = 50)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT * FROM preventivi
+        WHERE user_id = ?
+        ORDER BY creato_il DESC
+        LIMIT ?
+    ");
+    $stmt->execute([$userId, $limit]);
+    return $stmt->fetchAll();
+}

@@ -412,3 +412,173 @@
 .ov-role--user         { background: #f3f4f6; color: #374151; }
 .ov-role--professional { background: #f5f3ff; color: #6d28d9; }
 .ov-role--admin        { background: #fef2f2; color: #dc2626; }
+
+/* ===================================================
+   USER DETAIL PAGE
+   =================================================== */
+
+.ud-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: #ffffff;
+    border-radius: 0.875rem;
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 14px rgba(0,0,0,.05);
+}
+
+.ud-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.ud-avatar--professional {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+.ud-header__info {
+    flex: 1;
+}
+
+.ud-header__name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 0.25rem;
+}
+
+.ud-header__sub {
+    font-size: 0.9rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.ud-header__actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Griglia 2 colonne per le sezioni */
+.ud-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+@media (max-width: 900px) { .ud-grid { grid-template-columns: 1fr; } }
+
+/* Sezione singola */
+.ud-section {
+    background: #ffffff;
+    border-radius: 0.875rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 14px rgba(0,0,0,.05);
+}
+
+.ud-section--full {
+    grid-column: 1 / -1;
+}
+
+.ud-section__title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #6b7280;
+    margin: 0 0 1.1rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ud-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem 1.5rem;
+}
+.ud-fields--single { grid-template-columns: 1fr; }
+
+.ud-field {}
+
+.ud-field__label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.ud-field__value {
+    font-size: 0.9rem;
+    color: #111827;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.ud-field__value--empty {
+    color: #d1d5db;
+    font-style: italic;
+    font-weight: 400;
+}
+
+/* Sezione preventivi dell'utente */
+.ud-preventivi-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.ud-preventivi-table th {
+    padding: 0.65rem 0.85rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    border-bottom: 2px solid #f3f4f6;
+    background: #fafafa;
+}
+
+.ud-preventivi-table td {
+    padding: 0.75rem 0.85rem;
+    border-bottom: 1px solid #f9fafb;
+    color: #374151;
+}
+
+.ud-preventivi-table tbody tr:last-child td { border-bottom: none; }
+.ud-preventivi-table tbody tr:hover { background: #fafafa; }
+
+/* Badge stato preventivo */
+.ud-stato {
+    display: inline-block;
+    font-size: 0.67rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+.ud-stato--bozza        { background: #f3f4f6; color: #374151; }
+.ud-stato--inviato      { background: #dbeafe; color: #1e40af; }
+.ud-stato--confermato   { background: #fef3c7; color: #92400e; }
+.ud-stato--in_lavorazione { background: #ede9fe; color: #5b21b6; }
+.ud-stato--completato   { background: #d1fae5; color: #065f46; }
+.ud-stato--annullato    { background: #fee2e2; color: #991b1b; }

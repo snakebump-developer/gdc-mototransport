@@ -26,7 +26,7 @@ $section = $section ?? 'overview';
         </a>
         <a href="admin.php?section=orders"
             class="sidebar-link <?= $section === 'orders' ? 'active' : '' ?>">
-            <span class="icon">📦</span> Tutti gli Ordini
+            <span class="icon">�</span> Preventivi
         </a>
         <hr>
         <a href="index.php" class="sidebar-link">
