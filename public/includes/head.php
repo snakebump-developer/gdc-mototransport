@@ -18,10 +18,10 @@ $noFontAwesome = $noFontAwesome ?? false;
 <?php if (!$noFontAwesome): ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <?php endif; ?>
-<link rel="stylesheet" href="css/modules/base.css">
-<link rel="stylesheet" href="css/modules/components.css">
-<link rel="stylesheet" href="css/modules/navbar.css">
+<link rel="stylesheet" href="/css/modules/base.css">
+<link rel="stylesheet" href="/css/modules/components.css">
+<link rel="stylesheet" href="/css/modules/navbar.css">
 <?php foreach ($extraCss as $css): ?>
-    <link rel="stylesheet" href="<?= htmlspecialchars($css) ?>">
+    <link rel="stylesheet" href="/<?= htmlspecialchars(ltrim($css, '/')) ?>">
 <?php endforeach; ?>
-<link rel="stylesheet" href="css/modules/responsive.css">
+<link rel="stylesheet" href="/css/modules/responsive.css">

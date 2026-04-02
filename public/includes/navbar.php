@@ -12,7 +12,7 @@ $user = $user ?? null;
     <div class="nav-container">
         <!-- Logo -->
         <div class="nav-logo">
-            <a href="index.php">
+            <a href="/">
                 <h2>MotoTransport</h2>
             </a>
         </div>
@@ -36,10 +36,10 @@ $user = $user ?? null;
                     </svg>
                     <?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>
                 </a>
-                <a href="logout.php" class="nav-auth-link nav-auth-link--logout">Esci</a>
+                <a href="/logout" class="nav-auth-link nav-auth-link--logout">Esci</a>
             <?php else: ?>
-                <a href="login.php" class="nav-auth-link">Accedi</a>
-                <a href="register.php" class="nav-auth-btn">Registrati</a>
+                <a href="/login" class="nav-auth-link">Accedi</a>
+                <a href="/registrati" class="nav-auth-btn">Registrati</a>
             <?php endif; ?>
             <a href="#" class="nav-cta-btn open-quote-modal">Preventivo Gratuito</a>
         </div>
@@ -77,16 +77,16 @@ $user = $user ?? null;
             <a href="#chi-siamo">Chi siamo</a>
             <?php if ($user): ?>
                 <hr>
-                <a href="dashboard.php">Il Mio Profilo</a>
-                <a href="dashboard.php?section=orders">I Miei Ordini</a>
+                <a href="/dashboard">Il Mio Profilo</a>
+                <a href="/dashboard/ordini">I Miei Ordini</a>
                 <?php if (isAdmin()): ?>
-                    <a href="admin.php">Pannello Admin</a>
+                    <a href="/admin">Pannello Admin</a>
                 <?php endif; ?>
-                <a href="logout.php">Logout</a>
+                <a href="/logout">Logout</a>
             <?php else: ?>
                 <hr>
-                <a href="login.php">Accedi</a>
-                <a href="register.php">Registrati</a>
+                <a href="/login">Accedi</a>
+                <a href="/registrati">Registrati</a>
             <?php endif; ?>
         </div>
     </div>

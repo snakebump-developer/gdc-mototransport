@@ -177,12 +177,24 @@ $extraCss = ['css/modules/home.css', 'css/modules/footer.css', 'css/modules/quot
                     <i class="fa-solid fa-chevron-left"></i>
                 </button>
                 <div class="gallery__slider" id="gallerySlider">
-                    <div class="gallery__item"><div class="gallery__placeholder"></div></div>
-                    <div class="gallery__item"><div class="gallery__placeholder"></div></div>
-                    <div class="gallery__item"><div class="gallery__placeholder"></div></div>
-                    <div class="gallery__item"><div class="gallery__placeholder"></div></div>
-                    <div class="gallery__item"><div class="gallery__placeholder"></div></div>
-                    <div class="gallery__item"><div class="gallery__placeholder"></div></div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
+                    <div class="gallery__item">
+                        <div class="gallery__placeholder"></div>
+                    </div>
                 </div>
                 <button class="gallery__slider-btn gallery__slider-btn--next" id="galleryNext">
                     <i class="fa-solid fa-chevron-right"></i>
@@ -381,11 +393,11 @@ $extraCss = ['css/modules/home.css', 'css/modules/footer.css', 'css/modules/quot
 
     <?php include 'includes/quote-modal.php'; ?>
 
-    <script src="js/modules/nav.js"></script>
-    <script src="js/modules/gallery.js"></script>
-    <script src="js/modules/forms.js"></script>
-    <script src="js/modules/quote-modal.js"></script>
-    <script src="js/modules/google-maps.js"></script>
+    <script src="/js/modules/nav.js"></script>
+    <script src="/js/modules/gallery.js"></script>
+    <script src="/js/modules/forms.js"></script>
+    <script src="/js/modules/quote-modal.js"></script>
+    <script src="/js/modules/google-maps.js"></script>
     <?php if ($gmapsKey): ?>
         <script src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapsKey ?>&libraries=places,geometry&callback=initGoogleMaps" async defer></script>
     <?php endif; ?>

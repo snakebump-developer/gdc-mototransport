@@ -79,7 +79,7 @@ function isAdmin()
 function requireLogin()
 {
     if (!isLogged()) {
-        header('Location: /login.php');
+        header('Location: /login');
         exit;
     }
 }
@@ -88,7 +88,7 @@ function requireAdmin()
 {
     requireLogin();
     if (!isAdmin()) {
-        header('Location: /index.php');
+        header('Location: /');
         exit;
     }
 }
@@ -110,9 +110,9 @@ function isProfessional()
 
 function getDashboardUrl()
 {
-    if (isAdmin()) return '/admin.php';
-    if (isProfessional()) return '/dashboard-pro.php';
-    return '/dashboard.php';
+    if (isAdmin()) return '/admin';
+    if (isProfessional()) return '/dashboard/pro';
+    return '/dashboard';
 }
 
 function updateUserProfile($userId, $data)

@@ -19,9 +19,11 @@ if ($sessionId) {
 ?>
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <?php include 'includes/head.php'; ?>
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-box" style="text-align: center;">
@@ -33,8 +35,8 @@ if ($sessionId) {
                     <p>Riceverai una conferma via email a breve.</p>
                 </div>
                 <div style="margin-top: 2rem;">
-                    <a href="dashboard.php?section=orders" class="btn btn-primary">Visualizza Ordini</a>
-                    <a href="index.php" class="btn btn-secondary">Torna alla Home</a>
+                    <a href="/dashboard/ordini" class="btn btn-primary">Visualizza Ordini</a>
+                    <a href="/" class="btn btn-secondary">Torna alla Home</a>
                 </div>
             <?php else: ?>
                 <div style="font-size: 4rem; margin-bottom: 1rem;">&#9888;&#65039;</div>
@@ -44,11 +46,12 @@ if ($sessionId) {
                     <p>Riprova o contatta il supporto se il problema persiste.</p>
                 </div>
                 <div style="margin-top: 2rem;">
-                    <a href="payment.php" class="btn btn-primary">Riprova</a>
-                    <a href="index.php" class="btn btn-secondary">Torna alla Home</a>
+                    <a href="/pagamento" class="btn btn-primary">Riprova</a>
+                    <a href="/" class="btn btn-secondary">Torna alla Home</a>
                 </div>
             <?php endif; ?>
         </div>
     </div>
 </body>
+
 </html>

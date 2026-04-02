@@ -6,7 +6,7 @@ require_once __DIR__ . '/../src/users.php';
 requireAdmin();
 
 $user = getCurrentUser();
-$section = $_GET['section'] ?? 'overview';
+$section = $_GET['sezione'] ?? 'panoramica';
 $success = '';
 $error = '';
 $pageTitle = 'Admin Panel - MotoTransport';
@@ -43,17 +43,17 @@ $utenti = [];
 $professionisti = [];
 $preventivi = [];
 
-if ($section === 'overview') {
+if ($section === 'panoramica') {
     $orderStats = getOrderStats();
     $userStats = getUserStats();
     $stats = array_merge($orderStats, $userStats);
     $ultimi_ordini = getAllOrders(5);
     $ultimi_utenti = getAllUsers(5);
-} elseif ($section === 'orders') {
+} elseif ($section === 'preventivi') {
     $preventivi = getAllPreventivi();
-} elseif ($section === 'users') {
+} elseif ($section === 'utenti') {
     $utenti = getAllUsers();
-} elseif ($section === 'professionals') {
+} elseif ($section === 'professionisti') {
     $professionisti = getAllProfessionals();
 }
 ?>
@@ -74,7 +74,7 @@ if ($section === 'overview') {
         <main class="dashboard-main">
             <?php include 'includes/alerts.php'; ?>
 
-            <?php if ($section === 'overview'): ?>
+            <?php if ($section === 'panoramica'): ?>
                 <!-- Panoramica -->
                 <div class="dashboard-section">
                     <div class="overview-header">
@@ -161,7 +161,7 @@ if ($section === 'overview') {
                         <div class="recent-block">
                             <div class="recent-block__header">
                                 <h3>Ultimi ordini</h3>
-                                <a href="admin.php?section=orders" class="recent-block__link">Vedi tutti →</a>
+                                <a href="/admin/preventivi" class="recent-block__link">Vedi tutti →</a>
                             </div>
                             <?php if (empty($ultimi_ordini)): ?>
                                 <p class="recent-block__empty">Nessun ordine ancora.</p>
@@ -187,7 +187,7 @@ if ($section === 'overview') {
                         <div class="recent-block">
                             <div class="recent-block__header">
                                 <h3>Ultimi utenti registrati</h3>
-                                <a href="admin.php?section=users" class="recent-block__link">Vedi tutti →</a>
+                                <a href="/admin/utenti" class="recent-block__link">Vedi tutti →</a>
                             </div>
                             <?php if (empty($ultimi_utenti)): ?>
                                 <p class="recent-block__empty">Nessun utente ancora.</p>
@@ -211,7 +211,7 @@ if ($section === 'overview') {
                     </div>
                 </div>
 
-            <?php elseif ($section === 'orders'): ?>
+            <?php elseif ($section === 'preventivi'): ?>
                 <!-- Gestione Preventivi -->
                 <div class="dashboard-section">
                     <h1>Tutti i Preventivi</h1>
@@ -236,14 +236,19 @@ if ($section === 'overview') {
                                         <th>Prezzo</th>
                                         <th>Stato</th>
                                         <th>Data</th>
-                                        <th>Azioni</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($preventivi as $p): ?>
                                         <tr>
-                                            <td>#<?= $p['id'] ?></td>
-                                            <td><?= htmlspecialchars($p['nome_cliente'] ?? ($p['username'] ?? 'Anonimo')) ?></td>
+                                            <td><a href="/admin/preventivo/<?= $p['id'] ?>" class="table-link table-link--id">#<?= $p['id'] ?></a></td>
+                                            <td>
+                                                <?php if (!empty($p['user_id'])): ?>
+                                                    <a href="/admin/utente/<?= $p['user_id'] ?>" class="table-link"><?= htmlspecialchars($p['nome_cliente'] ?? ($p['username'] ?? 'Anonimo')) ?></a>
+                                                <?php else: ?>
+                                                    <?= htmlspecialchars($p['nome_cliente'] ?? 'Anonimo') ?>
+                                                <?php endif; ?>
+                                            </td>
                                             <td><?= htmlspecialchars(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? '')) ?></td>
                                             <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_ritiro']) ?></td>
                                             <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_consegna']) ?></td>
@@ -261,12 +266,6 @@ if ($section === 'overview') {
                                                 </form>
                                             </td>
                                             <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
-                                            <td class="td-actions">
-                                                <div class="td-actions-inner">
-                                                    <a href="admin-preventivo-detail.php?id=<?= $p['id'] ?>"
-                                                        class="btn btn-small">Dettaglio</a>
-                                                </div>
-                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -275,7 +274,7 @@ if ($section === 'overview') {
                     <?php endif; ?>
                 </div>
 
-            <?php elseif ($section === 'users'): ?>
+            <?php elseif ($section === 'utenti'): ?>
                 <!-- Gestione Utenti -->
                 <div class="dashboard-section">
                     <h1>Gestione Utenti</h1>
@@ -305,7 +304,7 @@ if ($section === 'overview') {
                                     <?php foreach ($utenti as $u): ?>
                                         <tr>
                                             <td><?= $u['id'] ?></td>
-                                            <td><?= htmlspecialchars($u['username']) ?></td>
+                                            <td><a href="/admin/utente/<?= $u['id'] ?>" class="table-link"><?= htmlspecialchars($u['username']) ?></a></td>
                                             <td><?= htmlspecialchars($u['email']) ?></td>
                                             <td><?= htmlspecialchars($u['nome'] ?? '-') ?></td>
                                             <td><?= htmlspecialchars($u['cognome'] ?? '-') ?></td>
@@ -317,8 +316,7 @@ if ($section === 'overview') {
                                             <td><?= date('d/m/Y', strtotime($u['creato_il'])) ?></td>
                                             <td class="td-actions">
                                                 <div class="td-actions-inner">
-                                                    <a href="admin-user-detail.php?id=<?= $u['id'] ?>&back=users"
-                                                        class="btn btn-small">Dettaglio</a>
+
                                                     <?php if ($u['id'] != $user['id']): ?>
                                                         <form method="POST" class="inline-form" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente?')">
                                                             <input type="hidden" name="action" value="delete_user">
@@ -335,7 +333,7 @@ if ($section === 'overview') {
                         </div>
                     <?php endif; ?>
                 </div>
-            <?php elseif ($section === 'professionals'): ?>
+            <?php elseif ($section === 'professionisti'): ?>
                 <!-- Gestione Professionisti -->
                 <div class="dashboard-section">
                     <h1>Professionisti</h1>
@@ -367,7 +365,7 @@ if ($section === 'overview') {
                                     <?php foreach ($professionisti as $p): ?>
                                         <tr>
                                             <td><?= $p['id'] ?></td>
-                                            <td><?= htmlspecialchars($p['ragione_sociale'] ?? '-') ?></td>
+                                            <td><a href="/admin/utente/<?= $p['id'] ?>" class="table-link"><?= htmlspecialchars($p['ragione_sociale'] ?? '-') ?></a></td>
                                             <td><?= htmlspecialchars(trim(($p['nome'] ?? '') . ' ' . ($p['cognome'] ?? ''))) ?></td>
                                             <td><?= htmlspecialchars($p['email']) ?></td>
                                             <td><?= htmlspecialchars($p['partita_iva'] ?? '-') ?></td>
@@ -377,8 +375,7 @@ if ($section === 'overview') {
                                             <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
                                             <td class="td-actions">
                                                 <div class="td-actions-inner">
-                                                    <a href="admin-user-detail.php?id=<?= $p['id'] ?>&back=professionals"
-                                                        class="btn btn-small">Dettaglio</a>
+
                                                     <?php if ($p['id'] != $user['id']): ?>
                                                         <form method="POST" class="inline-form" onsubmit="return confirm('Eliminare questo professionista?')">
                                                             <input type="hidden" name="action" value="delete_user">
@@ -400,8 +397,8 @@ if ($section === 'overview') {
         </main>
     </div>
 
-    <script src="js/modules/nav.js"></script>
-    <script src="js/modules/forms.js"></script>
+    <script src="/js/modules/nav.js"></script>
+    <script src="/js/modules/forms.js"></script>
 </body>
 
 </html>

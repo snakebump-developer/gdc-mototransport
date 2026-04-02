@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_payment'])) {
             </form>
 
             <div class="auth-footer">
-                <p><a href="dashboard.php">Torna alla Dashboard</a></p>
+                <p><a href="/dashboard">Torna alla Dashboard</a></p>
             </div>
         </div>
     </div>

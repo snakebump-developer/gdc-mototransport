@@ -12,7 +12,7 @@ $isAdmin = $isAdmin ?? false;
 <nav class="navbar">
     <div class="nav-container">
         <div class="nav-logo">
-            <a href="index.php">
+            <a href="/">
                 <h2>MotoTransport</h2>
             </a>
         </div>
@@ -25,14 +25,14 @@ $isAdmin = $isAdmin ?? false;
                     </svg>
                 </button>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="dashboard.php">Il Mio Profilo</a>
-                    <a href="dashboard.php?section=orders">I Miei Ordini</a>
+                    <a href="/dashboard">Il Mio Profilo</a>
+                    <a href="/dashboard/ordini">I Miei Ordini</a>
                     <?php if (isAdmin()): ?>
                         <hr>
-                        <a href="admin.php">Pannello Admin</a>
+                        <a href="/admin">Pannello Admin</a>
                     <?php endif; ?>
                     <hr>
-                    <a href="logout.php">Logout</a>
+                    <a href="/logout">Logout</a>
                 </div>
             </div>
         </div>

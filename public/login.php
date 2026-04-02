@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../src/auth.php';
 
 if (isLogged()) {
-    header('Location: index.php');
+    header('Location: /');
     exit;
 }
 
@@ -53,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="auth-footer">
-                <p>Non hai un account? <a href="register.php">Registrati</a></p>
-                <p><a href="index.php">Torna alla home</a></p>
+                <p>Non hai un account? <a href="/registrati">Registrati</a></p>
+                <p><a href="/">Torna alla home</a></p>
             </div>
         </div>
     </div>

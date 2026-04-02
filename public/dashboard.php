@@ -31,9 +31,11 @@ if ($section === 'orders') {
 ?>
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <?php include 'includes/head.php'; ?>
 </head>
+
 <body>
     <?php include 'includes/navbar-dashboard.php'; ?>
 
@@ -152,7 +154,8 @@ if ($section === 'orders') {
         </main>
     </div>
 
-    <script src="js/modules/nav.js"></script>
-    <script src="js/modules/forms.js"></script>
+    <script src="/js/modules/nav.js"></script>
+    <script src="/js/modules/forms.js"></script>
 </body>
+
 </html>

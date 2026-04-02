@@ -7,7 +7,7 @@ requireAdmin();
 
 $user          = getCurrentUser();
 $isAdmin       = true;
-$section       = 'orders';
+$section       = 'preventivi';
 $pageTitle     = 'Dettaglio Preventivo - Admin';
 $noFontAwesome = true;
 $extraCss      = ['css/modules/dashboard.css'];
@@ -15,13 +15,13 @@ $extraCss      = ['css/modules/dashboard.css'];
 $preventivoId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($preventivoId <= 0) {
-    header('Location: admin.php?section=orders');
+    header('Location: /admin/preventivi');
     exit;
 }
 
 $preventivo = getPreventivoById($preventivoId);
 if (!$preventivo) {
-    header('Location: admin.php?section=orders&error=Preventivo+non+trovato');
+    header('Location: /admin/preventivi?error=Preventivo+non+trovato');
     exit;
 }
 
@@ -82,7 +82,7 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
 
             <!-- Breadcrumb -->
             <p style="font-size:.85rem;color:#6b7280;margin-bottom:1.25rem;">
-                <a href="admin.php?section=orders"
+                <a href="/admin/preventivi"
                     style="color:inherit;text-decoration:none;">&larr; Torna ai Preventivi</a>
             </p>
 
@@ -160,7 +160,7 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
                             <div class="ud-field" style="grid-column:1/-1;">
                                 <span class="ud-field__label">Account collegato</span>
                                 <span class="ud-field__value">
-                                    <a href="admin-user-detail.php?id=<?= $cliente['id'] ?>&back=<?= $cliente['ruolo'] === 'professional' ? 'professionals' : 'users' ?>"
+                                    <a href="/admin/utente/<?= $cliente['id'] ?>"
                                         style="color:var(--primary-color,#e85252);font-weight:600;">
                                         @<?= htmlspecialchars($cliente['username']) ?>
                                         <span class="ov-role ov-role--<?= $cliente['ruolo'] ?>"
@@ -307,7 +307,7 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
         </main>
     </div>
 
-    <script src="js/modules/nav.js"></script>
+    <script src="/js/modules/nav.js"></script>
 </body>
 
 </html>

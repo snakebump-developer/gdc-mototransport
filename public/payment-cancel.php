@@ -6,9 +6,11 @@ $extraCss = ['css/modules/auth.css'];
 ?>
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <?php include 'includes/head.php'; ?>
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-box" style="text-align: center;">
@@ -19,10 +21,11 @@ $extraCss = ['css/modules/auth.css'];
                 <p>Nessun addebito è stato effettuato sul tuo conto.</p>
             </div>
             <div style="margin-top: 2rem;">
-                <a href="payment.php" class="btn btn-primary">Riprova il Pagamento</a>
-                <a href="index.php" class="btn btn-secondary">Torna alla Home</a>
+                <a href="/pagamento" class="btn btn-primary">Riprova il Pagamento</a>
+                <a href="/" class="btn btn-secondary">Torna alla Home</a>
             </div>
         </div>
     </div>
 </body>
+
 </html>

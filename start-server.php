@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Script per avviare il server PHP su una porta disponibile
  * Cerca automaticamente una porta libera a partire da 8000
@@ -19,7 +20,8 @@ if (!is_dir($publicDir)) {
 /**
  * Controlla se una porta è disponibile
  */
-function isPortAvailable($host, $port) {
+function isPortAvailable($host, $port)
+{
     $connection = @fsockopen($host, $port, $errno, $errstr, 1);
     if (is_resource($connection)) {
         fclose($connection);
@@ -31,7 +33,8 @@ function isPortAvailable($host, $port) {
 /**
  * Trova la prima porta disponibile
  */
-function findAvailablePort($host, $startPort, $maxPort) {
+function findAvailablePort($host, $startPort, $maxPort)
+{
     for ($port = $startPort; $port <= $maxPort; $port++) {
         if (isPortAvailable($host, $port)) {
             return $port;
@@ -66,11 +69,13 @@ echo "⚠️  Premi CTRL+C per fermare il server\n";
 echo "\n";
 
 // Avvia il server PHP
+$routerFile = __DIR__ . '/public/router.php';
 $command = sprintf(
-    'php -S %s:%d -t %s',
+    'php -S %s:%d -t %s %s',
     $host,
     $port,
-    escapeshellarg($publicDir)
+    escapeshellarg($publicDir),
+    escapeshellarg($routerFile)
 );
 
 // Esegui il comando

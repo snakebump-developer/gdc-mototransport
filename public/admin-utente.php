@@ -10,28 +10,32 @@ $isAdmin    = true;
 $pageTitle  = 'Dettaglio Utente - Admin';
 $noFontAwesome = true;
 $extraCss   = ['css/modules/dashboard.css'];
-$section    = 'users'; // usato dalla sidebar per evidenziare la voce
+$section    = 'utenti'; // usato dalla sidebar per evidenziare la voce
 
 // Parametri
 $userId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$back   = in_array($_GET['back'] ?? '', ['users', 'professionals']) ? $_GET['back'] : 'users';
 
 if ($userId <= 0) {
-    header('Location: admin.php?section=' . $back);
+    header('Location: /admin/utenti');
     exit;
 }
 
 // Carica utente completo
 $soggetto = getUserById($userId);
 if (!$soggetto) {
-    header('Location: admin.php?section=' . $back . '&error=Utente+non+trovato');
+    header('Location: /admin/utenti&error=Utente+non+trovato');
     exit;
 }
 
 // Aggiorna la sezione sidebar in base al ruolo
 if ($soggetto['ruolo'] === 'professional') {
-    $section = 'professionals';
+    $section = 'professionisti';
 }
+
+// Sezione di ritorno derivata dal ruolo
+$sezioneRitorno = $soggetto['ruolo'] === 'professional' ? 'professionisti' : 'utenti';
+$labelRitorno   = $soggetto['ruolo'] === 'professional' ? 'Professionisti' : 'Clienti';
+$urlRitorno     = '/admin/' . $sezioneRitorno;
 
 // Preventivi collegati
 $preventivi_utente = getUserPreventivi($userId);
@@ -63,9 +67,9 @@ function val(mixed $v, string $empty = '—'): string
 
             <!-- Breadcrumb -->
             <p style="font-size:.85rem;color:#6b7280;margin-bottom:1.25rem;">
-                <a href="admin.php?section=<?= $back ?>"
+                <a href="<?= $urlRitorno ?>"
                     style="color:inherit;text-decoration:none;">&larr; Torna a
-                    <?= $back === 'professionals' ? 'Professionisti' : 'Clienti' ?>
+                    <?= $labelRitorno ?>
                 </a>
             </p>
 
@@ -96,7 +100,7 @@ function val(mixed $v, string $empty = '—'): string
                 </div>
                 <?php if ($soggetto['id'] !== $user['id']): ?>
                     <div class="ud-header__actions">
-                        <form method="POST" action="admin.php?section=<?= $back ?>"
+                        <form method="POST" action="<?= $urlRitorno ?>"
                             onsubmit="return confirm('Eliminare definitivamente questo utente?')">
                             <input type="hidden" name="action" value="delete_user">
                             <input type="hidden" name="user_id" value="<?= $soggetto['id'] ?>">
@@ -298,7 +302,7 @@ function val(mixed $v, string $empty = '—'): string
                             <table class="ud-preventivi-table">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>Prev.</th>
                                         <th>Moto</th>
                                         <th>Anno</th>
                                         <th>Targa</th>
@@ -315,7 +319,7 @@ function val(mixed $v, string $empty = '—'): string
                                 <tbody>
                                     <?php foreach ($preventivi_utente as $p): ?>
                                         <tr>
-                                            <td>#<?= $p['id'] ?></td>
+                                            <td><a href="/admin/preventivo/<?= $p['id'] ?>" class="table-link table-link--id">#<?= $p['id'] ?></a></td>
                                             <td><?= htmlspecialchars(trim(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? ''))) ?></td>
                                             <td><?= $p['anno_moto'] ? htmlspecialchars($p['anno_moto']) : '—' ?></td>
                                             <td><?= !empty($p['targa']) ? htmlspecialchars($p['targa']) : '—' ?></td>
@@ -348,7 +352,7 @@ function val(mixed $v, string $empty = '—'): string
         </main>
     </div>
 
-    <script src="js/modules/nav.js"></script>
+    <script src="/js/modules/nav.js"></script>
 </body>
 
 </html>

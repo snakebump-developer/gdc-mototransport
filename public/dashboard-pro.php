@@ -5,7 +5,7 @@ require_once __DIR__ . '/../src/motorcycles.php';
 
 requireLogin();
 if (!isProfessional() && !isAdmin()) {
-    header('Location: /dashboard.php');
+    header('Location: /dashboard');
     exit;
 }
 
@@ -296,7 +296,7 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
                         <div class="empty-state">
                             <div class="empty-state__icon">&#128230;</div>
                             <h3 class="empty-state__title">Nessun ordine trovato</h3>
-                            <a href="index.php" class="btn btn-primary">Richiedi un preventivo</a>
+                            <a href="/" class="btn btn-primary">Richiedi un preventivo</a>
                         </div>
                     <?php else: ?>
                         <div class="orders-table">
@@ -338,7 +338,7 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
         </main>
     </div>
 
-    <script src="js/modules/nav.js"></script>
+    <script src="/js/modules/nav.js"></script>
     <script>
         (function() {
             const addCard = document.getElementById('addMotoCard');

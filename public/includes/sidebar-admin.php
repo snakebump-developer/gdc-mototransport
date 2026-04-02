@@ -4,7 +4,7 @@
  * Sidebar per il pannello Admin.
  * Variabili attese: $section
  */
-$section = $section ?? 'overview';
+$section = $section ?? 'panoramica';
 ?>
 <aside class="dashboard-sidebar">
     <div class="sidebar-header">
@@ -12,27 +12,27 @@ $section = $section ?? 'overview';
         <h3>Pannello Admin</h3>
     </div>
     <nav class="sidebar-nav">
-        <a href="admin.php?section=overview"
-            class="sidebar-link <?= $section === 'overview' ? 'active' : '' ?>">
+        <a href="/admin/panoramica"
+            class="sidebar-link <?= $section === 'panoramica' ? 'active' : '' ?>">
             <span class="icon">📊</span> Panoramica
         </a>
-        <a href="admin.php?section=users"
-            class="sidebar-link <?= $section === 'users' ? 'active' : '' ?>">
+        <a href="/admin/utenti"
+            class="sidebar-link <?= $section === 'utenti' ? 'active' : '' ?>">
             <span class="icon">👥</span> Clienti
         </a>
-        <a href="admin.php?section=professionals"
-            class="sidebar-link <?= $section === 'professionals' ? 'active' : '' ?>">
+        <a href="/admin/professionisti"
+            class="sidebar-link <?= $section === 'professionisti' ? 'active' : '' ?>">
             <span class="icon">🏢</span> Professionisti
         </a>
-        <a href="admin.php?section=orders"
-            class="sidebar-link <?= $section === 'orders' ? 'active' : '' ?>">
+        <a href="/admin/preventivi"
+            class="sidebar-link <?= $section === 'preventivi' ? 'active' : '' ?>">
             <span class="icon">�</span> Preventivi
         </a>
         <hr>
-        <a href="index.php" class="sidebar-link">
+        <a href="/" class="sidebar-link">
             <span class="icon">🏠</span> Home
         </a>
-        <a href="logout.php" class="sidebar-link sidebar-link--danger">
+        <a href="/logout" class="sidebar-link sidebar-link--danger">
             <span class="icon">🚪</span> Esci
         </a>
     </nav>

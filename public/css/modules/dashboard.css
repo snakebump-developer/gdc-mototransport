@@ -146,6 +146,28 @@
     padding: 0;
 }
 
+/* Link cliccabili nelle celle delle tabelle */
+.table-link {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+.table-link:hover {
+    color: var(--primary-color, #e85252);
+    border-bottom-color: var(--primary-color, #e85252);
+}
+.table-link--id {
+    font-family: monospace;
+    font-size: 0.85em;
+    color: #6b7280;
+    font-weight: 500;
+}
+.table-link--id:hover {
+    color: var(--primary-color, #e85252);
+}
+
 .orders-table tbody tr:hover {
     background-color: var(--bg-color);
 }

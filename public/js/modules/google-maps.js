@@ -181,7 +181,7 @@ function initGoogleMaps() {
     routeSummary.style.display = 'block';
     routeSummary.classList.add('quote-route-summary--loading');
 
-    var url = 'api/route-calc.php?origin_lat=' + pCoords.lat
+    var url = '/api/percorso?origin_lat=' + pCoords.lat
       + '&origin_lng=' + pCoords.lng
       + '&dest_lat=' + dCoords.lat
       + '&dest_lng=' + dCoords.lng;
