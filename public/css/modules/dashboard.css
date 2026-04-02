@@ -95,7 +95,8 @@
 .orders-table {
     background-color: var(--card-bg);
     border-radius: 1rem;
-    overflow: hidden;
+    overflow-x: auto;          /* scroll orizzontale a tutte le dimensioni */
+    -webkit-overflow-scrolling: touch;
     box-shadow: var(--shadow);
 }
 
@@ -109,16 +110,40 @@
 }
 
 .orders-table th {
-    padding: 1rem;
+    padding: 0.875rem 1rem;
     text-align: left;
     font-weight: 600;
     color: var(--text-primary);
     border-bottom: 2px solid var(--border-color);
+    white-space: nowrap;
 }
 
 .orders-table td {
-    padding: 1rem;
+    padding: 0.875rem 1rem;
     border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* celle con testo lungo: percorsi, indirizzi */
+.orders-table td.td-wrap {
+    white-space: normal;
+    min-width: 160px;
+    max-width: 220px;
+}
+
+/* cella azioni: bottoni affiancati e centrati */
+.orders-table td.td-actions {
+    white-space: nowrap;
+}
+.td-actions-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.td-actions-inner .inline-form {
+    margin: 0;
+    padding: 0;
 }
 
 .orders-table tbody tr:hover {
@@ -555,12 +580,22 @@
     color: #6b7280;
     border-bottom: 2px solid #f3f4f6;
     background: #fafafa;
+    white-space: nowrap;
 }
 
 .ud-preventivi-table td {
     padding: 0.75rem 0.85rem;
     border-bottom: 1px solid #f9fafb;
     color: #374151;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* celle indirizzo: possono andare a capo */
+.ud-preventivi-table td.td-wrap {
+    white-space: normal;
+    min-width: 140px;
+    max-width: 200px;
 }
 
 .ud-preventivi-table tbody tr:last-child td { border-bottom: none; }

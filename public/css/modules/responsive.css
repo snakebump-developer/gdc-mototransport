@@ -230,8 +230,25 @@
         grid-template-columns: 1fr;
     }
 
-    .orders-table {
-        overflow-x: auto;
+    /* Le tabelle admin hanno già overflow-x di base; su mobile
+       assicuriamo che le celle azioni non vengano tagliate */
+    .orders-table td.td-actions,
+    .orders-table td.td-wrap {
+        min-width: 0;
+    }
+
+    /* Detail pages */
+    .ud-header {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .ud-header__actions {
+        width: 100%;
+    }
+
+    .ud-fields {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -305,5 +322,20 @@
 
     .nav-container {
         padding: 0 1.5rem;
+    }
+}
+
+/* Tablet - Dashboard & Admin */
+@media (max-width: 1024px) {
+    .ud-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ud-fields {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .overview-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

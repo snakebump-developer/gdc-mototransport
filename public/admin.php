@@ -243,12 +243,10 @@ if ($section === 'overview') {
                                     <?php foreach ($preventivi as $p): ?>
                                         <tr>
                                             <td>#<?= $p['id'] ?></td>
-                                            <td>
-                                                <?= htmlspecialchars($p['nome_cliente'] ?? ($p['username'] ?? 'Anonimo')) ?>
-                                            </td>
+                                            <td><?= htmlspecialchars($p['nome_cliente'] ?? ($p['username'] ?? 'Anonimo')) ?></td>
                                             <td><?= htmlspecialchars(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? '')) ?></td>
-                                            <td><?= htmlspecialchars($p['indirizzo_ritiro']) ?></td>
-                                            <td><?= htmlspecialchars($p['indirizzo_consegna']) ?></td>
+                                            <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_ritiro']) ?></td>
+                                            <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_consegna']) ?></td>
                                             <td><?= $p['distanza_km'] ? number_format((float)$p['distanza_km'], 0, ',', '.') . ' km' : '-' ?></td>
                                             <td>&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></td>
                                             <td>
@@ -263,9 +261,11 @@ if ($section === 'overview') {
                                                 </form>
                                             </td>
                                             <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
-                                            <td>
-                                                <a href="admin-preventivo-detail.php?id=<?= $p['id'] ?>"
-                                                    class="btn btn-small">Dettaglio</a>
+                                            <td class="td-actions">
+                                                <div class="td-actions-inner">
+                                                    <a href="admin-preventivo-detail.php?id=<?= $p['id'] ?>"
+                                                        class="btn btn-small">Dettaglio</a>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -315,16 +315,18 @@ if ($section === 'overview') {
                                                 </span>
                                             </td>
                                             <td><?= date('d/m/Y', strtotime($u['creato_il'])) ?></td>
-                                            <td style="display:flex;gap:.5rem;align-items:center;">
-                                                <a href="admin-user-detail.php?id=<?= $u['id'] ?>&back=users"
-                                                    class="btn btn-small">Dettaglio</a>
-                                                <?php if ($u['id'] != $user['id']): ?>
-                                                    <form method="POST" class="inline-form" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente?')">
-                                                        <input type="hidden" name="action" value="delete_user">
-                                                        <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
-                                                        <button type="submit" class="btn btn-small btn-danger">Elimina</button>
-                                                    </form>
-                                                <?php endif; ?>
+                                            <td class="td-actions">
+                                                <div class="td-actions-inner">
+                                                    <a href="admin-user-detail.php?id=<?= $u['id'] ?>&back=users"
+                                                        class="btn btn-small">Dettaglio</a>
+                                                    <?php if ($u['id'] != $user['id']): ?>
+                                                        <form method="POST" class="inline-form" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente?')">
+                                                            <input type="hidden" name="action" value="delete_user">
+                                                            <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
+                                                            <button type="submit" class="btn btn-small btn-danger">Elimina</button>
+                                                        </form>
+                                                    <?php endif; ?>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -369,20 +371,22 @@ if ($section === 'overview') {
                                             <td><?= htmlspecialchars(trim(($p['nome'] ?? '') . ' ' . ($p['cognome'] ?? ''))) ?></td>
                                             <td><?= htmlspecialchars($p['email']) ?></td>
                                             <td><?= htmlspecialchars($p['partita_iva'] ?? '-') ?></td>
-                                            <td><?= htmlspecialchars($p['tipo_attivita'] ?? '-') ?></td>
+                                            <td class="td-wrap"><?= htmlspecialchars($p['tipo_attivita'] ?? '-') ?></td>
                                             <td><?= htmlspecialchars($p['citta'] ?? '-') ?></td>
                                             <td><?= number_format((float)($p['sconto_percentuale'] ?? 0), 1) ?>%</td>
                                             <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
-                                            <td style="display:flex;gap:.5rem;align-items:center;">
-                                                <a href="admin-user-detail.php?id=<?= $p['id'] ?>&back=professionals"
-                                                    class="btn btn-small">Dettaglio</a>
-                                                <?php if ($p['id'] != $user['id']): ?>
-                                                    <form method="POST" class="inline-form" onsubmit="return confirm('Eliminare questo professionista?')">
-                                                        <input type="hidden" name="action" value="delete_user">
-                                                        <input type="hidden" name="user_id" value="<?= $p['id'] ?>">
-                                                        <button type="submit" class="btn btn-small btn-danger">Elimina</button>
-                                                    </form>
-                                                <?php endif; ?>
+                                            <td class="td-actions">
+                                                <div class="td-actions-inner">
+                                                    <a href="admin-user-detail.php?id=<?= $p['id'] ?>&back=professionals"
+                                                        class="btn btn-small">Dettaglio</a>
+                                                    <?php if ($p['id'] != $user['id']): ?>
+                                                        <form method="POST" class="inline-form" onsubmit="return confirm('Eliminare questo professionista?')">
+                                                            <input type="hidden" name="action" value="delete_user">
+                                                            <input type="hidden" name="user_id" value="<?= $p['id'] ?>">
+                                                            <button type="submit" class="btn btn-small btn-danger">Elimina</button>
+                                                        </form>
+                                                    <?php endif; ?>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

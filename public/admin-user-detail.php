@@ -294,50 +294,52 @@ function val(mixed $v, string $empty = '—'): string
                             Nessun preventivo associato a questo utente.
                         </p>
                     <?php else: ?>
-                        <table class="ud-preventivi-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Moto</th>
-                                    <th>Anno</th>
-                                    <th>Targa</th>
-                                    <th>Ritiro</th>
-                                    <th>Consegna</th>
-                                    <th>Km</th>
-                                    <th>Prezzo base</th>
-                                    <th>Sconto</th>
-                                    <th>Prezzo finale</th>
-                                    <th>Stato</th>
-                                    <th>Data</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($preventivi_utente as $p): ?>
+                        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                            <table class="ud-preventivi-table">
+                                <thead>
                                     <tr>
-                                        <td>#<?= $p['id'] ?></td>
-                                        <td><?= htmlspecialchars(trim(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? ''))) ?></td>
-                                        <td><?= $p['anno_moto'] ? htmlspecialchars($p['anno_moto']) : '—' ?></td>
-                                        <td><?= !empty($p['targa']) ? htmlspecialchars($p['targa']) : '—' ?></td>
-                                        <td style="max-width:180px;white-space:normal;"><?= htmlspecialchars($p['indirizzo_ritiro']) ?></td>
-                                        <td style="max-width:180px;white-space:normal;"><?= htmlspecialchars($p['indirizzo_consegna']) ?></td>
-                                        <td><?= $p['distanza_km'] ? number_format((float)$p['distanza_km'], 0, ',', '.') . ' km' : '—' ?></td>
-                                        <td>&euro;<?= number_format((float)($p['prezzo_base'] ?? 0), 2, ',', '.') ?></td>
-                                        <td>
-                                            <?= ($p['sconto_applicato'] ?? 0) > 0
-                                                ? '-&euro;' . number_format((float)$p['sconto_applicato'], 2, ',', '.')
-                                                : '—' ?>
-                                        </td>
-                                        <td style="font-weight:700;">&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></td>
-                                        <td>
-                                            <span class="ud-stato ud-stato--<?= htmlspecialchars($p['stato']) ?>">
-                                                <?= ucfirst(str_replace('_', ' ', $p['stato'])) ?>
-                                            </span>
-                                        </td>
-                                        <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                        <th>#</th>
+                                        <th>Moto</th>
+                                        <th>Anno</th>
+                                        <th>Targa</th>
+                                        <th>Ritiro</th>
+                                        <th>Consegna</th>
+                                        <th>Km</th>
+                                        <th>Prezzo base</th>
+                                        <th>Sconto</th>
+                                        <th>Prezzo finale</th>
+                                        <th>Stato</th>
+                                        <th>Data</th>
                                     </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($preventivi_utente as $p): ?>
+                                        <tr>
+                                            <td>#<?= $p['id'] ?></td>
+                                            <td><?= htmlspecialchars(trim(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? ''))) ?></td>
+                                            <td><?= $p['anno_moto'] ? htmlspecialchars($p['anno_moto']) : '—' ?></td>
+                                            <td><?= !empty($p['targa']) ? htmlspecialchars($p['targa']) : '—' ?></td>
+                                            <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_ritiro']) ?></td>
+                                            <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_consegna']) ?></td>
+                                            <td><?= $p['distanza_km'] ? number_format((float)$p['distanza_km'], 0, ',', '.') . ' km' : '—' ?></td>
+                                            <td>&euro;<?= number_format((float)($p['prezzo_base'] ?? 0), 2, ',', '.') ?></td>
+                                            <td>
+                                                <?= ($p['sconto_applicato'] ?? 0) > 0
+                                                    ? '-&euro;' . number_format((float)$p['sconto_applicato'], 2, ',', '.')
+                                                    : '—' ?>
+                                            </td>
+                                            <td style="font-weight:700;">&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></td>
+                                            <td>
+                                                <span class="ud-stato ud-stato--<?= htmlspecialchars($p['stato']) ?>">
+                                                    <?= ucfirst(str_replace('_', ' ', $p['stato'])) ?>
+                                                </span>
+                                            </td>
+                                            <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div><!-- /overflow wrapper -->
                     <?php endif; ?>
                 </div>
 
