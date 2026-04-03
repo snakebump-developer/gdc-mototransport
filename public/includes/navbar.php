@@ -32,7 +32,7 @@ $user = $user ?? null;
                 <a href="<?= getDashboardUrl() ?>" class="nav-auth-link">
                     <?php if (!empty($user['avatar'])): ?>
                         <img src="/<?= htmlspecialchars($user['avatar'], ENT_QUOTES, 'UTF-8') ?>"
-                             alt="Avatar" class="nav-avatar">
+                            alt="Avatar" class="nav-avatar">
                     <?php else: ?>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="8" r="4" />

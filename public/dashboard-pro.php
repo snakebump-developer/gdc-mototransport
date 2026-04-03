@@ -138,7 +138,7 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
                         <div class="avatar-preview-wrapper">
                             <?php if (!empty($user['avatar'])): ?>
                                 <img src="/<?= htmlspecialchars($user['avatar'], ENT_QUOTES, 'UTF-8') ?>"
-                                     alt="Avatar" class="avatar-preview">
+                                    alt="Avatar" class="avatar-preview">
                             <?php else: ?>
                                 <div class="avatar-placeholder">
                                     <?= htmlspecialchars(strtoupper(substr($user['ragione_sociale'] ?? $user['nome'] ?? $user['username'], 0, 1)), ENT_QUOTES, 'UTF-8') ?>
@@ -154,15 +154,15 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
                                     <label class="btn btn-secondary btn-sm avatar-upload-btn">
                                         Carica immagine
                                         <input type="file" name="avatar"
-                                               accept="image/jpeg,image/png,image/gif,image/webp"
-                                               id="avatarFileInput" style="display:none">
+                                            accept="image/jpeg,image/png,image/gif,image/webp"
+                                            id="avatarFileInput" style="display:none">
                                     </label>
                                 </form>
                                 <?php if (!empty($user['avatar'])): ?>
                                     <form method="POST" class="avatar-form">
                                         <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
                                         <button type="submit" name="remove_avatar" value="1"
-                                                class="btn btn-ghost btn-sm">Rimuovi</button>
+                                            class="btn btn-ghost btn-sm">Rimuovi</button>
                                     </form>
                                 <?php endif; ?>
                             </div>
@@ -456,7 +456,7 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
     <script>
         var avatarInput = document.getElementById('avatarFileInput');
         if (avatarInput) {
-            avatarInput.addEventListener('change', function () {
+            avatarInput.addEventListener('change', function() {
                 if (this.files && this.files.length > 0) {
                     document.getElementById('avatarUploadForm').submit();
                 }

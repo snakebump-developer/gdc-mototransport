@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $section === 'profile') {
             $user    = getCurrentUser();
         }
         // Aggiornamento dati profilo (solo se ci sono campi POST oltre csrf/action)
-        $profileFields = array_intersect_key($_POST, array_flip(['nome','cognome','telefono','indirizzo','citta','cap','paese']));
+        $profileFields = array_intersect_key($_POST, array_flip(['nome', 'cognome', 'telefono', 'indirizzo', 'citta', 'cap', 'paese']));
         if (!empty($profileFields)) {
             updateUserProfile($user['id'], $_POST);
             if (empty($success)) $success = "Profilo aggiornato con successo!";
@@ -103,7 +103,7 @@ if ($section === 'orders') {
                         <div class="avatar-preview-wrapper">
                             <?php if (!empty($user['avatar'])): ?>
                                 <img src="/<?= htmlspecialchars($user['avatar'], ENT_QUOTES, 'UTF-8') ?>"
-                                     alt="Avatar" class="avatar-preview">
+                                    alt="Avatar" class="avatar-preview">
                             <?php else: ?>
                                 <div class="avatar-placeholder">
                                     <?= htmlspecialchars(strtoupper(substr($user['nome'] ?? $user['username'], 0, 1)), ENT_QUOTES, 'UTF-8') ?>
@@ -118,14 +118,14 @@ if ($section === 'orders') {
                                     <label class="btn btn-secondary btn-sm avatar-upload-btn">
                                         Carica immagine
                                         <input type="file" name="avatar"
-                                               accept="image/jpeg,image/png,image/gif,image/webp"
-                                               id="avatarFileInput" style="display:none">
+                                            accept="image/jpeg,image/png,image/gif,image/webp"
+                                            id="avatarFileInput" style="display:none">
                                     </label>
                                 </form>
                                 <?php if (!empty($user['avatar'])): ?>
                                     <form method="POST" class="avatar-form">
                                         <button type="submit" name="remove_avatar" value="1"
-                                                class="btn btn-ghost btn-sm">Rimuovi</button>
+                                            class="btn btn-ghost btn-sm">Rimuovi</button>
                                     </form>
                                 <?php endif; ?>
                             </div>
@@ -240,7 +240,7 @@ if ($section === 'orders') {
         // Auto-submit form avatar quando si seleziona un file
         var avatarInput = document.getElementById('avatarFileInput');
         if (avatarInput) {
-            avatarInput.addEventListener('change', function () {
+            avatarInput.addEventListener('change', function() {
                 if (this.files && this.files.length > 0) {
                     document.getElementById('avatarUploadForm').submit();
                 }

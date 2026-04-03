@@ -453,157 +453,164 @@ if ($section === 'panoramica') {
     <script src="/js/modules/nav.js"></script>
     <script src="/js/modules/forms.js"></script>
     <?php if ($section === 'preventivi'): ?>
-    <script>
-    (function () {
-        'use strict';
+        <script>
+            (function() {
+                'use strict';
 
-        /* ---- Dati dal PHP ---- */
-        var COUNTS = <?= json_encode($calendarData ?? [], JSON_UNESCAPED_UNICODE) ?>;
+                /* ---- Dati dal PHP ---- */
+                var COUNTS = <?= json_encode($calendarData ?? [], JSON_UNESCAPED_UNICODE) ?>;
 
-        /* ---- Stato ---- */
-        var today      = new Date();
-        var viewYear   = today.getFullYear();
-        var viewMonth  = today.getMonth(); // 0-based
-        var activeDate = null;             // 'YYYY-MM-DD' selezionato
+                /* ---- Stato ---- */
+                var today = new Date();
+                var viewYear = today.getFullYear();
+                var viewMonth = today.getMonth(); // 0-based
+                var activeDate = null; // 'YYYY-MM-DD' selezionato
 
-        /* ---- Elementi DOM ---- */
-        var grid      = document.getElementById('calGrid');
-        var label     = document.getElementById('calMonthLabel');
-        var btnPrev   = document.getElementById('calPrev');
-        var btnNext   = document.getElementById('calNext');
-        var btnReset  = document.getElementById('calReset');
-        var tbody     = document.getElementById('preventiviTbody');
-        var tableInfo = document.getElementById('calTableInfo');
+                /* ---- Elementi DOM ---- */
+                var grid = document.getElementById('calGrid');
+                var label = document.getElementById('calMonthLabel');
+                var btnPrev = document.getElementById('calPrev');
+                var btnNext = document.getElementById('calNext');
+                var btnReset = document.getElementById('calReset');
+                var tbody = document.getElementById('preventiviTbody');
+                var tableInfo = document.getElementById('calTableInfo');
 
-        if (!grid) return;
+                if (!grid) return;
 
-        var MONTHS = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno',
-                      'Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-        var DAYS   = ['L','M','M','G','V','S','D'];
+                var MONTHS = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                    'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+                ];
+                var DAYS = ['L', 'M', 'M', 'G', 'V', 'S', 'D'];
 
-        /* ---- Render calendario ---- */
-        function render() {
-            label.textContent = MONTHS[viewMonth] + ' ' + viewYear;
-            grid.innerHTML = '';
+                /* ---- Render calendario ---- */
+                function render() {
+                    label.textContent = MONTHS[viewMonth] + ' ' + viewYear;
+                    grid.innerHTML = '';
 
-            // Intestazioni giorni
-            DAYS.forEach(function (d) {
-                var h = document.createElement('div');
-                h.className = 'cal-day-name';
-                h.textContent = d;
-                grid.appendChild(h);
-            });
+                    // Intestazioni giorni
+                    DAYS.forEach(function(d) {
+                        var h = document.createElement('div');
+                        h.className = 'cal-day-name';
+                        h.textContent = d;
+                        grid.appendChild(h);
+                    });
 
-            var firstDay = new Date(viewYear, viewMonth, 1).getDay();
-            // domenica=0 → portala a 6 (lunedì come primo giorno)
-            firstDay = firstDay === 0 ? 6 : firstDay - 1;
+                    var firstDay = new Date(viewYear, viewMonth, 1).getDay();
+                    // domenica=0 → portala a 6 (lunedì come primo giorno)
+                    firstDay = firstDay === 0 ? 6 : firstDay - 1;
 
-            var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+                    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
-            // Celle vuote iniziali
-            for (var i = 0; i < firstDay; i++) {
-                var empty = document.createElement('div');
-                empty.className = 'cal-day cal-day--empty';
-                grid.appendChild(empty);
-            }
+                    // Celle vuote iniziali
+                    for (var i = 0; i < firstDay; i++) {
+                        var empty = document.createElement('div');
+                        empty.className = 'cal-day cal-day--empty';
+                        grid.appendChild(empty);
+                    }
 
-            // Celle con i giorni
-            for (var d = 1; d <= daysInMonth; d++) {
-                var mm    = String(viewMonth + 1).padStart(2, '0');
-                var dd    = String(d).padStart(2, '0');
-                var iso   = viewYear + '-' + mm + '-' + dd;
-                var count = COUNTS[iso] || 0;
+                    // Celle con i giorni
+                    for (var d = 1; d <= daysInMonth; d++) {
+                        var mm = String(viewMonth + 1).padStart(2, '0');
+                        var dd = String(d).padStart(2, '0');
+                        var iso = viewYear + '-' + mm + '-' + dd;
+                        var count = COUNTS[iso] || 0;
 
-                var cell = document.createElement('div');
-                cell.className = 'cal-day';
-                cell.dataset.iso = iso;
-                if (count > 0) cell.classList.add('cal-day--has-events');
-                if (iso === activeDate) cell.classList.add('cal-day--active');
+                        var cell = document.createElement('div');
+                        cell.className = 'cal-day';
+                        cell.dataset.iso = iso;
+                        if (count > 0) cell.classList.add('cal-day--has-events');
+                        if (iso === activeDate) cell.classList.add('cal-day--active');
 
-                var todayIso = today.getFullYear() + '-'
-                    + String(today.getMonth()+1).padStart(2,'0') + '-'
-                    + String(today.getDate()).padStart(2,'0');
-                if (iso === todayIso) cell.classList.add('cal-day--today');
+                        var todayIso = today.getFullYear() + '-' +
+                            String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                            String(today.getDate()).padStart(2, '0');
+                        if (iso === todayIso) cell.classList.add('cal-day--today');
 
-                cell.innerHTML = '<span class="cal-day__num">' + d + '</span>'
-                    + (count > 0 ? '<span class="cal-day__badge">' + count + '</span>' : '');
+                        cell.innerHTML = '<span class="cal-day__num">' + d + '</span>' +
+                            (count > 0 ? '<span class="cal-day__badge">' + count + '</span>' : '');
 
-                cell.addEventListener('click', function () {
-                    var clickedIso = this.dataset.iso;
-                    if (COUNTS[clickedIso] === undefined || COUNTS[clickedIso] === 0) return;
-                    if (activeDate === clickedIso) {
-                        // deseleziona
-                        activeDate = null;
-                        filterTable(null);
-                    } else {
-                        activeDate = clickedIso;
-                        filterTable(clickedIso);
+                        cell.addEventListener('click', function() {
+                            var clickedIso = this.dataset.iso;
+                            if (COUNTS[clickedIso] === undefined || COUNTS[clickedIso] === 0) return;
+                            if (activeDate === clickedIso) {
+                                // deseleziona
+                                activeDate = null;
+                                filterTable(null);
+                            } else {
+                                activeDate = clickedIso;
+                                filterTable(clickedIso);
+                            }
+                            render();
+                            btnReset.style.display = activeDate ? 'inline-flex' : 'none';
+                        });
+
+                        grid.appendChild(cell);
+                    }
+                }
+
+                /* ---- Filtra tabella ---- */
+                function filterTable(isoDate) {
+                    if (!tbody) return;
+                    var rows = tbody.querySelectorAll('tr');
+                    var shown = 0;
+                    rows.forEach(function(row) {
+                        if (!isoDate || row.dataset.date === isoDate) {
+                            row.style.display = '';
+                            shown++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                    if (tableInfo) {
+                        if (isoDate) {
+                            var parts = isoDate.split('-');
+                            var nicDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+                            tableInfo.textContent = 'Mostrando ' + shown + ' preventivo/i per il ' + nicDate;
+                            tableInfo.style.display = 'block';
+                        } else {
+                            tableInfo.style.display = 'none';
+                        }
+                    }
+                }
+
+                /* ---- Navigazione ---- */
+                btnPrev.addEventListener('click', function() {
+                    viewMonth--;
+                    if (viewMonth < 0) {
+                        viewMonth = 11;
+                        viewYear--;
                     }
                     render();
-                    btnReset.style.display = activeDate ? 'inline-flex' : 'none';
+                });
+                btnNext.addEventListener('click', function() {
+                    viewMonth++;
+                    if (viewMonth > 11) {
+                        viewMonth = 0;
+                        viewYear++;
+                    }
+                    render();
+                });
+                btnReset.addEventListener('click', function() {
+                    activeDate = null;
+                    filterTable(null);
+                    render();
+                    this.style.display = 'none';
                 });
 
-                grid.appendChild(cell);
-            }
-        }
+                render();
 
-        /* ---- Filtra tabella ---- */
-        function filterTable(isoDate) {
-            if (!tbody) return;
-            var rows = tbody.querySelectorAll('tr');
-            var shown = 0;
-            rows.forEach(function (row) {
-                if (!isoDate || row.dataset.date === isoDate) {
-                    row.style.display = '';
-                    shown++;
-                } else {
-                    row.style.display = 'none';
+                // Se ci sono eventi nel mese corrente, naviga al primo mese con eventi
+                var keys = Object.keys(COUNTS);
+                if (keys.length > 0) {
+                    keys.sort();
+                    var firstIso = keys[0];
+                    var parts = firstIso.split('-');
+                    viewYear = parseInt(parts[0], 10);
+                    viewMonth = parseInt(parts[1], 10) - 1;
+                    render();
                 }
-            });
-            if (tableInfo) {
-                if (isoDate) {
-                    var parts = isoDate.split('-');
-                    var nicDate = parts[2] + '/' + parts[1] + '/' + parts[0];
-                    tableInfo.textContent = 'Mostrando ' + shown + ' preventivo/i per il ' + nicDate;
-                    tableInfo.style.display = 'block';
-                } else {
-                    tableInfo.style.display = 'none';
-                }
-            }
-        }
-
-        /* ---- Navigazione ---- */
-        btnPrev.addEventListener('click', function () {
-            viewMonth--;
-            if (viewMonth < 0) { viewMonth = 11; viewYear--; }
-            render();
-        });
-        btnNext.addEventListener('click', function () {
-            viewMonth++;
-            if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-            render();
-        });
-        btnReset.addEventListener('click', function () {
-            activeDate = null;
-            filterTable(null);
-            render();
-            this.style.display = 'none';
-        });
-
-        render();
-
-        // Se ci sono eventi nel mese corrente, naviga al primo mese con eventi
-        var keys = Object.keys(COUNTS);
-        if (keys.length > 0) {
-            keys.sort();
-            var firstIso = keys[0];
-            var parts = firstIso.split('-');
-            viewYear  = parseInt(parts[0], 10);
-            viewMonth = parseInt(parts[1], 10) - 1;
-            render();
-        }
-    }());
-    </script>
+            }());
+        </script>
     <?php endif; ?>
 </body>
 

@@ -11,7 +11,7 @@ $section = $section ?? 'profile';
         <div class="sidebar-avatar-wrapper">
             <?php if (!empty($user['avatar'])): ?>
                 <img src="/<?= htmlspecialchars($user['avatar'], ENT_QUOTES, 'UTF-8') ?>"
-                     alt="Avatar" class="sidebar-avatar">
+                    alt="Avatar" class="sidebar-avatar">
             <?php else: ?>
                 <div class="sidebar-avatar sidebar-avatar--initials">
                     <?= htmlspecialchars(strtoupper(substr($user['ragione_sociale'] ?? $user['nome'] ?? $user['username'], 0, 1)), ENT_QUOTES, 'UTF-8') ?>

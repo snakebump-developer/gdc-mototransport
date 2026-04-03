@@ -25,10 +25,17 @@ if (!is_array($data)) {
 }
 
 // Campi obbligatori
-$required = ['marca_moto', 'modello_moto', 'cilindrata',
-             'indirizzo_ritiro', 'indirizzo_consegna',
-             'nome_cliente', 'email_cliente', 'telefono_cliente',
-             'data_ritiro'];
+$required = [
+    'marca_moto',
+    'modello_moto',
+    'cilindrata',
+    'indirizzo_ritiro',
+    'indirizzo_consegna',
+    'nome_cliente',
+    'email_cliente',
+    'telefono_cliente',
+    'data_ritiro'
+];
 
 foreach ($required as $field) {
     if (empty($data[$field])) {
@@ -108,7 +115,6 @@ try {
     ]);
 
     echo json_encode(['success' => true, 'id' => (int) $pdo->lastInsertId()]);
-
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Errore nel salvataggio. Riprova.']);

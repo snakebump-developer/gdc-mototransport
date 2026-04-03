@@ -21,7 +21,7 @@ $isAdmin = $isAdmin ?? false;
                 <button class="user-button" id="userButton">
                     <?php if (!empty($user['avatar'])): ?>
                         <img src="/<?= htmlspecialchars($user['avatar'], ENT_QUOTES, 'UTF-8') ?>"
-                             alt="Avatar" class="nav-avatar">
+                            alt="Avatar" class="nav-avatar">
                     <?php else: ?>
                         <span class="nav-avatar nav-avatar--initials">
                             <?= htmlspecialchars(strtoupper(substr($user['nome'] ?? $user['username'], 0, 1)), ENT_QUOTES, 'UTF-8') ?>

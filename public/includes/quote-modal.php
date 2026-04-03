@@ -252,7 +252,7 @@
                     <div class="quote-form__group">
                         <label class="quote-form__label" for="pickupDate">Data di ritiro <span class="quote-form__required">*</span></label>
                         <input class="quote-form__input" type="date" id="pickupDate" name="pickupDate"
-                               min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
+                            min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
                         <small class="quote-form__hint">Seleziona il giorno in cui vogliamo ritirare la moto</small>
                     </div>
 
