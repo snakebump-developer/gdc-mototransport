@@ -66,6 +66,7 @@ $routes = [
 
     // API
     '/api/percorso'          => ['file' => 'api/route-calc.php'],
+    '/api/preventivo'        => ['file' => 'api/preventivo.php'],
 ];
 
 if (isset($routes[$uri])) {

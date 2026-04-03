@@ -137,3 +137,32 @@ function updateUserProfile($userId, $data)
     $stmt = $pdo->prepare($sql);
     return $stmt->execute($values);
 }
+
+function updateUserAvatar($userId, $avatarPath)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE utenti SET avatar = ?, aggiornato_il = CURRENT_TIMESTAMP WHERE id = ?");
+    return $stmt->execute([$avatarPath, $userId]);
+}
+
+function removeUserAvatar($userId)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE utenti SET avatar = NULL, aggiornato_il = CURRENT_TIMESTAMP WHERE id = ?");
+    return $stmt->execute([$userId]);
+}
+
+function generateCsrfToken(): string
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function validateCsrfToken(string $token): void
+{
+    if (empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+        throw new Exception("Token di sicurezza non valido. Ricarica la pagina e riprova.");
+    }
+}

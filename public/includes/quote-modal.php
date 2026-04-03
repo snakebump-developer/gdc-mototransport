@@ -245,10 +245,19 @@
                 </div>
             </div>
 
-            <!-- STEP 3: Tipo di consegna -->
+            <!-- STEP 3: Data & Tipo di consegna -->
             <div class="quote-step quote-step--hidden" id="quoteStep3">
-                <h3 class="quote-step__title">Tipo di consegna</h3>
+                <h3 class="quote-step__title">Data e tipo di ritiro</h3>
                 <div class="quote-form">
+                    <div class="quote-form__group">
+                        <label class="quote-form__label" for="pickupDate">Data di ritiro <span class="quote-form__required">*</span></label>
+                        <input class="quote-form__input" type="date" id="pickupDate" name="pickupDate"
+                               min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
+                        <small class="quote-form__hint">Seleziona il giorno in cui vogliamo ritirare la moto</small>
+                    </div>
+
+                    <div class="quote-form__separator"></div>
+
                     <p class="quote-form__label">Tipo di consegna <span class="quote-form__required">*</span></p>
                     <div class="quote-delivery-options" id="deliveryOptions">
                         <label class="quote-delivery-option quote-delivery-option--selected" id="optStandard">
@@ -360,6 +369,19 @@
                                 <span class="quote-summary__sublabel">Tipo di Ritiro</span>
                                 <strong class="quote-summary__value" id="summaryDelivery">&mdash;</strong>
                                 <span class="quote-summary__desc" id="summaryDeliveryDesc">&mdash;</span>
+                            </div>
+                            <svg class="quote-summary__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="quote-summary__divider"></div>
+                        <div class="quote-summary__row">
+                            <div class="quote-summary__info">
+                                <span class="quote-summary__sublabel">Data di ritiro</span>
+                                <strong class="quote-summary__value" id="summaryDate">&mdash;</strong>
                             </div>
                             <svg class="quote-summary__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>

@@ -8,7 +8,17 @@ $section = $section ?? 'profile';
 ?>
 <aside class="dashboard-sidebar">
     <div class="sidebar-header">
-        <h3>Dashboard</h3>
+        <div class="sidebar-avatar-wrapper">
+            <?php if (!empty($user['avatar'])): ?>
+                <img src="/<?= htmlspecialchars($user['avatar'], ENT_QUOTES, 'UTF-8') ?>"
+                     alt="Avatar" class="sidebar-avatar">
+            <?php else: ?>
+                <div class="sidebar-avatar sidebar-avatar--initials">
+                    <?= htmlspecialchars(strtoupper(substr($user['nome'] ?? $user['username'], 0, 1)), ENT_QUOTES, 'UTF-8') ?>
+                </div>
+            <?php endif; ?>
+        </div>
+        <h3><?= htmlspecialchars($user['username']) ?></h3>
     </div>
     <nav class="sidebar-nav">
         <a href="/dashboard/profilo"

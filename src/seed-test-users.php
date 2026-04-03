@@ -278,121 +278,146 @@ foreach ($utentiProfessionisti as $u) {
 // PREVENTIVI FITTIZI
 // Collegati agli utenti di test (risolve user_id per username)
 // =========================================================
-$preventivi = [
-    [
-        // Preventivo 1 - utente normale marco.rossi92, stato: completato
-        'username'           => 'marco.rossi92',
-        'nome_cliente'       => 'Marco Rossi',
-        'email_cliente'      => 'marco.rossi92@email.it',
-        'telefono_cliente'   => '3381234567',
-        'indirizzo_ritiro'   => 'Via Roma 14, 20121 Milano',
-        'indirizzo_consegna' => 'Via Toledo 100, 80132 Napoli',
-        'distanza_km'        => 784.0,
-        'marca_moto'         => 'Honda',
-        'modello_moto'       => 'CB650R',
-        'anno_moto'          => 2021,
-        'cilindrata'         => 649,
-        'targa'              => 'EX123GH',
-        'prezzo_base'        => 320.00,
-        'sconto_applicato'   => 0.00,
-        'prezzo_finale'      => 320.00,
-        'stato'              => 'completato',
-        'note'               => 'Consegna urgente richiesta entro venerdì.',
-    ],
-    [
-        // Preventivo 2 - professionista trasporti.esposito, stato: confermato
-        'username'           => 'trasporti.esposito',
-        'nome_cliente'       => 'Trasporti Esposito S.r.l.',
-        'email_cliente'      => 'info@trasportiesposito.it',
-        'telefono_cliente'   => '0815561234',
-        'indirizzo_ritiro'   => 'Via Caracciolo 88, 80122 Napoli',
-        'indirizzo_consegna' => 'Via della Libertà 5, 90143 Palermo',
-        'distanza_km'        => 392.5,
-        'marca_moto'         => 'Ducati',
-        'modello_moto'       => 'Monster 937',
-        'anno_moto'          => 2023,
-        'cilindrata'         => 937,
-        'targa'              => 'NA456KL',
-        'prezzo_base'        => 210.00,
-        'sconto_applicato'   => 25.20,
-        'prezzo_finale'      => 184.80,
-        'stato'              => 'confermato',
-        'note'               => 'Sconto 12% cliente professional applicato.',
-    ],
-    [
-        // Preventivo 3 - utente normale giulia.ferrari, stato: inviato
-        'username'           => 'giulia.ferrari',
-        'nome_cliente'       => 'Giulia Ferrari',
-        'email_cliente'      => 'giulia.ferrari@email.it',
-        'telefono_cliente'   => '3479876543',
-        'indirizzo_ritiro'   => 'Corso Buenos Aires 55, 20124 Milano',
-        'indirizzo_consegna' => 'Via dell\'Arcivescovado 7, 10121 Torino',
-        'distanza_km'        => 140.0,
-        'marca_moto'         => 'Yamaha',
-        'modello_moto'       => 'MT-07',
-        'anno_moto'          => 2022,
-        'cilindrata'         => 689,
-        'targa'              => 'MI789PQ',
-        'prezzo_base'        => 130.00,
-        'sconto_applicato'   => 0.00,
-        'prezzo_finale'      => 130.00,
-        'stato'              => 'inviato',
-        'note'               => 'Cliente richiede ritiro al pomeriggio.',
-    ],
-    [
-        // Preventivo 4 - professionista motoservice.milano, stato: in_lavorazione
-        'username'           => 'motoservice.milano',
-        'nome_cliente'       => 'MotoService Milano S.n.c.',
-        'email_cliente'      => 'info@motoservicemilano.it',
-        'telefono_cliente'   => '0236985412',
-        'indirizzo_ritiro'   => 'Via Arona 15, 20149 Milano',
-        'indirizzo_consegna' => 'Via Emilia Est 210, 41121 Modena',
-        'distanza_km'        => 190.0,
-        'marca_moto'         => 'BMW',
-        'modello_moto'       => 'R 1250 GS',
-        'anno_moto'          => 2020,
-        'cilindrata'         => 1254,
-        'targa'              => 'MI321RS',
-        'prezzo_base'        => 160.00,
-        'sconto_applicato'   => 24.00,
-        'prezzo_finale'      => 136.00,
-        'stato'              => 'in_lavorazione',
-        'note'               => 'Moto di alto valore, maneggiare con cura.',
-    ],
-    [
-        // Preventivo 5 - utente normale luca.bianchi, stato: bozza
-        'username'           => 'luca.bianchi',
-        'nome_cliente'       => 'Luca Bianchi',
-        'email_cliente'      => 'luca.bianchi@email.it',
-        'telefono_cliente'   => '3356781234',
-        'indirizzo_ritiro'   => 'Via Garibaldi 7, 10122 Torino',
-        'indirizzo_consegna' => 'Via dei Mille 30, 16121 Genova',
-        'distanza_km'        => 168.0,
-        'marca_moto'         => 'Kawasaki',
-        'modello_moto'       => 'Z900',
-        'anno_moto'          => 2019,
-        'cilindrata'         => 948,
-        'targa'              => 'TO654UV',
-        'prezzo_base'        => 145.00,
-        'sconto_applicato'   => 0.00,
-        'prezzo_finale'      => 145.00,
-        'stato'              => 'bozza',
-        'note'               => 'Da confermare data di ritiro.',
-    ],
-];
 
 $stmtPreventivo = $pdo->prepare("
     INSERT INTO preventivi
         (user_id, nome_cliente, email_cliente, telefono_cliente,
+         codice_fiscale_cliente,
          indirizzo_ritiro, indirizzo_consegna, distanza_km,
          marca_moto, modello_moto, anno_moto, cilindrata, targa,
+         borse_laterali, tipo_consegna, data_ritiro,
          prezzo_base, sconto_applicato, prezzo_finale, stato, note)
     VALUES
         (:user_id, :nome_cliente, :email_cliente, :telefono_cliente,
+         :codice_fiscale_cliente,
          :indirizzo_ritiro, :indirizzo_consegna, :distanza_km,
          :marca_moto, :modello_moto, :anno_moto, :cilindrata, :targa,
+         :borse_laterali, :tipo_consegna, :data_ritiro,
          :prezzo_base, :sconto_applicato, :prezzo_finale, :stato, :note)
 ");
+
+$preventivi = [
+    [
+        // #1 Marco Rossi — Milano → Roma — Ducati Panigale V4 — Express
+        'username'                => 'marco.rossi92',
+        'nome_cliente'            => 'Marco Rossi',
+        'email_cliente'           => 'marco.rossi92@email.it',
+        'telefono_cliente'        => '338 123 4567',
+        'codice_fiscale_cliente'  => 'RSSMRC92A01F205X',
+        'indirizzo_ritiro'        => 'Via Roma 14, 20121 Milano MI',
+        'indirizzo_consegna'      => 'Via Tuscolana 180, 00182 Roma RM',
+        'distanza_km'             => 578.0,
+        'marca_moto'              => 'Ducati',
+        'modello_moto'            => 'Panigale V4',
+        'anno_moto'               => 2023,
+        'cilindrata'              => 1103,
+        'targa'                   => 'MI 394 KT',
+        'borse_laterali'          => 0.00,
+        'tipo_consegna'           => 'Express',
+        'data_ritiro'             => '2026-04-08',
+        'prezzo_base'             => 275.00,
+        'sconto_applicato'        => 0.00,
+        'prezzo_finale'           => 325.00,   // +50 Express
+        'stato'                   => 'confermato',
+        'note'                    => 'Moto nuova, imballaggio premium richiesto. Consegna in box privato.',
+    ],
+    [
+        // #2 Giulia Ferrari — Torino → Venezia — BMW R 1250 GS Adventure — Standard + borse
+        'username'                => 'giulia.ferrari',
+        'nome_cliente'            => 'Giulia Ferrari',
+        'email_cliente'           => 'giulia.ferrari@email.it',
+        'telefono_cliente'        => '347 987 6543',
+        'codice_fiscale_cliente'  => 'FRRGLI95M41F839P',
+        'indirizzo_ritiro'        => 'Corso Buenos Aires 55, 20124 Milano MI',
+        'indirizzo_consegna'      => 'Via Mestre 12, 30172 Venezia VE',
+        'distanza_km'             => 268.0,
+        'marca_moto'              => 'BMW',
+        'modello_moto'            => 'R 1250 GS Adventure',
+        'anno_moto'               => 2022,
+        'cilindrata'              => 1254,
+        'targa'                   => 'MI 711 ZR',
+        'borse_laterali'          => 70.00,    // borse non smontabili
+        'tipo_consegna'           => 'Standard',
+        'data_ritiro'             => '2026-04-08',
+        'prezzo_base'             => 185.00,
+        'sconto_applicato'        => 0.00,
+        'prezzo_finale'           => 255.00,   // +70 borse
+        'stato'                   => 'inviato',
+        'note'                    => 'Borse laterali Givi integrate, non smontabili. Moto carica di accessori.',
+    ],
+    [
+        // #3 Trasporti Esposito (pro) — Napoli → Palermo — Yamaha R1 — Urgente
+        'username'                => 'trasporti.esposito',
+        'nome_cliente'            => 'Trasporti Esposito S.r.l.',
+        'email_cliente'           => 'info@trasportiesposito.it',
+        'telefono_cliente'        => '081 556 1234',
+        'codice_fiscale_cliente'  => '08765432100',
+        'indirizzo_ritiro'        => 'Via Caracciolo 88, 80122 Napoli NA',
+        'indirizzo_consegna'      => 'Via Libertà 5, 90143 Palermo PA',
+        'distanza_km'             => 392.5,
+        'marca_moto'              => 'Yamaha',
+        'modello_moto'            => 'YZF-R1',
+        'anno_moto'               => 2024,
+        'cilindrata'              => 998,
+        'targa'                   => 'NA 201 BX',
+        'borse_laterali'          => 30.00,    // borse smontate
+        'tipo_consegna'           => 'Urgente',
+        'data_ritiro'             => '2026-04-10',
+        'prezzo_base'             => 220.00,
+        'sconto_applicato'        => 26.40,    // sconto 12% professional
+        'prezzo_finale'           => 323.60,   // (220-26.40) +100 urgente +30 borse
+        'stato'                   => 'in_lavorazione',
+        'note'                    => 'Spedizione urgente per gara nel weekend. Riferimento: sig. Esposito cell. 333 100 2030.',
+    ],
+    [
+        // #4 Luca Bianchi — Torino → Firenze — Kawasaki Z H2 — Standard
+        'username'                => 'luca.bianchi',
+        'nome_cliente'            => 'Luca Bianchi',
+        'email_cliente'           => 'luca.bianchi@email.it',
+        'telefono_cliente'        => '335 678 1234',
+        'codice_fiscale_cliente'  => 'BNCLCU88T10L219W',
+        'indirizzo_ritiro'        => 'Via Garibaldi 7, 10122 Torino TO',
+        'indirizzo_consegna'      => 'Viale Gramsci 45, 50132 Firenze FI',
+        'distanza_km'             => 302.0,
+        'marca_moto'              => 'Kawasaki',
+        'modello_moto'            => 'Z H2',
+        'anno_moto'               => 2021,
+        'cilindrata'              => 998,
+        'targa'                   => 'TO 549 AM',
+        'borse_laterali'          => 0.00,
+        'tipo_consegna'           => 'Standard',
+        'data_ritiro'             => '2026-04-15',
+        'prezzo_base'             => 200.00,
+        'sconto_applicato'        => 0.00,
+        'prezzo_finale'           => 200.00,
+        'stato'                   => 'inviato',
+        'note'                    => 'Ritiro preferito dopo le 14:00. Moto in perfette condizioni, appena revisionata.',
+    ],
+    [
+        // #5 Andrea Martini — Roma → Bologna — Honda Africa Twin — Express + borse
+        'username'                => 'andrea.martini',
+        'nome_cliente'            => 'Andrea Martini',
+        'email_cliente'           => 'andrea.martini@email.it',
+        'telefono_cliente'        => '312 345 6789',
+        'codice_fiscale_cliente'  => 'MRTNDR85P20H501Q',
+        'indirizzo_ritiro'        => 'Via Napoli 22, 00185 Roma RM',
+        'indirizzo_consegna'      => 'Via Rizzoli 9, 40125 Bologna BO',
+        'distanza_km'             => 374.0,
+        'marca_moto'              => 'Honda',
+        'modello_moto'            => 'Africa Twin CRF1100L',
+        'anno_moto'               => 2023,
+        'cilindrata'              => 1084,
+        'targa'                   => 'RM 876 DV',
+        'borse_laterali'          => 30.00,    // borse smontate
+        'tipo_consegna'           => 'Express',
+        'data_ritiro'             => '2026-04-15',
+        'prezzo_base'             => 215.00,
+        'sconto_applicato'        => 0.00,
+        'prezzo_finale'           => 295.00,   // +50 Express +30 borse
+        'stato'                   => 'confermato',
+        'note'                    => 'Partecipazione raduno in Emilia. Contattare almeno 24h prima del ritiro.',
+    ],
+];
 
 $stmtUserId = $pdo->prepare("SELECT id FROM utenti WHERE username = ?");
 
@@ -407,7 +432,7 @@ foreach ($preventivi as $p) {
     $p['user_id'] = $row['id'];
     unset($p['username']);
     $stmtPreventivo->execute($p);
-    echo "  ✅ Inserito preventivo: {$p['marca_moto']} {$p['modello_moto']} — {$p['stato']}\n";
+    echo "  ✅ Preventivo: {$p['marca_moto']} {$p['modello_moto']} — {$p['data_ritiro']} — {$p['stato']}\n";
 }
 
 echo "\n========================================\n";

@@ -146,11 +146,30 @@ function getAllPreventivi($limit = 100, $offset = 0)
         SELECT p.*, u.username
         FROM preventivi p
         LEFT JOIN utenti u ON p.user_id = u.id
-        ORDER BY p.creato_il DESC
+        ORDER BY p.data_ritiro ASC, p.creato_il DESC
         LIMIT ? OFFSET ?
     ");
     $stmt->execute([$limit, $offset]);
     return $stmt->fetchAll();
+}
+
+/**
+ * Restituisce un array [ 'YYYY-MM-DD' => count ] per il calendario admin.
+ */
+function getPreventiviCountByDate(): array
+{
+    global $pdo;
+    $stmt = $pdo->query("
+        SELECT data_ritiro, COUNT(*) AS cnt
+        FROM preventivi
+        WHERE data_ritiro IS NOT NULL AND data_ritiro != ''
+        GROUP BY data_ritiro
+    ");
+    $result = [];
+    foreach ($stmt->fetchAll() as $row) {
+        $result[$row['data_ritiro']] = (int) $row['cnt'];
+    }
+    return $result;
 }
 
 function getPreventivoById($id)

@@ -57,7 +57,7 @@
   function resetForm() {
     currentStep = 1;
     ['motoBrand', 'motoModel', 'motoCc', 'motoBags', 'addressPickup', 'addressDelivery',
-      'clientName', 'clientEmail', 'clientPhone', 'clientFiscal'].forEach((id) => {
+      'pickupDate', 'clientName', 'clientEmail', 'clientPhone', 'clientFiscal'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) { el.value = ''; el.classList.remove('is-error'); }
     });
@@ -120,6 +120,7 @@
     const pickup = val('addressPickup');
     const delivery = val('addressDelivery');
     const deliveryType = selectedDelivery();
+    const pickupDate = val('pickupDate');
     const name = val('clientName');
     const email = val('clientEmail');
     const phone = val('clientPhone');
@@ -131,6 +132,12 @@
     setText('summaryRoute', pickup && delivery ? pickup + ' → ' + delivery : '—');
     setText('summaryDelivery', DELIVERY_LABELS[deliveryType] || deliveryType);
     setText('summaryDeliveryDesc', DELIVERY_DESC[deliveryType] || '');
+    if (pickupDate) {
+      const d = new Date(pickupDate + 'T00:00:00');
+      setText('summaryDate', d.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
+    } else {
+      setText('summaryDate', '—');
+    }
     setText('summaryName', name || '—');
     const contactLines = [email, phone, fiscal].filter(Boolean).join('\n');
     setText('summaryContact', contactLines || '—');
@@ -165,7 +172,16 @@
       require('addressPickup');
       require('addressDelivery');
     } else if (step === 3) {
-      // la selezione ha sempre un valore default
+      require('pickupDate');
+      const dateEl = document.getElementById('pickupDate');
+      if (dateEl && dateEl.value) {
+        const chosen = new Date(dateEl.value + 'T00:00:00');
+        const today = new Date(); today.setHours(0,0,0,0);
+        if (chosen <= today) {
+          dateEl.classList.add('is-error');
+          valid = false;
+        }
+      }
     } else if (step === 4) {
       require('clientName');
       require('clientEmail');
@@ -240,7 +256,58 @@
   prevBtn.addEventListener('click', goPrev);
 
   confirmBtn.addEventListener('click', function () {
-    alert('Reindirizzamento al sistema di pagamento sicuro...\n(integrazione pagamento da configurare)');
+    const rd = window._quoteRouteData || null;
+    const bagsPrice = parseInt(val('motoBags')) || 0;
+    const deliveryType = selectedDelivery();
+    const transportCost = rd ? rd.total_cost : BASE_PRICE;
+    const total = transportCost + (DELIVERY_SURCHARGE[deliveryType] || 0) + bagsPrice;
+
+    const payload = {
+      marca_moto:              val('motoBrand'),
+      modello_moto:            val('motoModel'),
+      cilindrata:              val('motoCc'),
+      borse_laterali:          bagsPrice,
+      indirizzo_ritiro:        val('addressPickup'),
+      indirizzo_consegna:      val('addressDelivery'),
+      distanza_km:             rd ? rd.distance_km : null,
+      tipo_consegna:           deliveryType,
+      data_ritiro:             val('pickupDate'),
+      nome_cliente:            val('clientName'),
+      email_cliente:           val('clientEmail'),
+      telefono_cliente:        val('clientPhone'),
+      codice_fiscale_cliente:  val('clientFiscal'),
+      prezzo_base:             transportCost,
+      prezzo_finale:           total,
+    };
+
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Invio in corso...';
+
+    fetch('/api/preventivo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.success) {
+          closeModal();
+          const banner = document.createElement('div');
+          banner.className = 'quote-success-banner';
+          banner.innerHTML = '<strong>Preventivo inviato!</strong> Ti contatteremo presto all\'indirizzo <em>' + payload.email_cliente + '</em>.';
+          document.body.appendChild(banner);
+          setTimeout(function () { banner.remove(); }, 6000);
+        } else {
+          alert('Errore: ' + (data.error || 'Riprova più tardi.'));
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Conferma e paga';
+        }
+      })
+      .catch(function () {
+        alert('Errore di rete. Controlla la connessione e riprova.');
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Conferma e paga';
+      });
   });
 
   document.addEventListener('keydown', function (e) {

@@ -156,6 +156,13 @@ $migrations = [
         'gdpr_accettato_il'      => 'DATETIME',
         'marketing_accettato'    => 'INTEGER DEFAULT 0',
         'paese'                  => "TEXT DEFAULT 'Italia'",
+        'avatar'                 => 'TEXT',
+    ],
+    'preventivi' => [
+        'data_ritiro'             => 'DATE',
+        'tipo_consegna'           => "TEXT DEFAULT 'Standard'",
+        'codice_fiscale_cliente'  => 'TEXT',
+        'borse_laterali'          => 'REAL DEFAULT 0',
     ],
 ];
 

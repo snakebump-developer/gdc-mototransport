@@ -51,6 +51,7 @@ if ($section === 'panoramica') {
     $ultimi_utenti = getAllUsers(5);
 } elseif ($section === 'preventivi') {
     $preventivi = getAllPreventivi();
+    $calendarData = getPreventiviCountByDate();
 } elseif ($section === 'utenti') {
     $utenti = getAllUsers();
 } elseif ($section === 'professionisti') {
@@ -217,42 +218,93 @@ if ($section === 'panoramica') {
                     <h1>Tutti i Preventivi</h1>
                     <p class="section-description">Gestisci tutti i preventivi di trasporto</p>
 
+                    <!-- ===== CALENDARIO RITIRI ===== -->
+                    <div class="cal-wrapper">
+                        <div class="cal-header">
+                            <button class="cal-nav" id="calPrev" aria-label="Mese precedente">&#8249;</button>
+                            <span class="cal-month-label" id="calMonthLabel"></span>
+                            <button class="cal-nav" id="calNext" aria-label="Mese successivo">&#8250;</button>
+                            <button class="cal-reset btn btn-ghost btn-sm" id="calReset" style="display:none">
+                                Mostra tutti
+                            </button>
+                        </div>
+                        <div class="cal-grid" id="calGrid"></div>
+                    </div>
+
                     <?php if (empty($preventivi)): ?>
                         <div class="empty-state">
                             <div class="empty-icon">📋</div>
                             <h3>Nessun preventivo presente</h3>
                         </div>
                     <?php else: ?>
-                        <div class="orders-table">
+                        <div class="orders-table" id="preventiviTable">
                             <table>
                                 <thead>
                                     <tr>
                                         <th>ID</th>
+                                        <th>Data ritiro</th>
                                         <th>Cliente</th>
+                                        <th>Telefono</th>
                                         <th>Moto</th>
+                                        <th>Cilindrata</th>
+                                        <th>Borse</th>
                                         <th>Ritiro</th>
                                         <th>Consegna</th>
                                         <th>Km</th>
+                                        <th>Tipo</th>
                                         <th>Prezzo</th>
                                         <th>Stato</th>
-                                        <th>Data</th>
+                                        <th>Ricevuto</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="preventiviTbody">
                                     <?php foreach ($preventivi as $p): ?>
-                                        <tr>
+                                        <tr data-date="<?= htmlspecialchars($p['data_ritiro'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                                             <td><a href="/admin/preventivo/<?= $p['id'] ?>" class="table-link table-link--id">#<?= $p['id'] ?></a></td>
+                                            <td class="td-date">
+                                                <?php if (!empty($p['data_ritiro'])): ?>
+                                                    <strong><?= date('d/m/Y', strtotime($p['data_ritiro'])) ?></strong>
+                                                    <span class="td-date__day"><?= (new IntlDateFormatter('it_IT', IntlDateFormatter::FULL, IntlDateFormatter::NONE, null, null, 'EEEE'))->format(strtotime($p['data_ritiro'])) ?></span>
+                                                <?php else: ?>
+                                                    <span class="text-muted">—</span>
+                                                <?php endif; ?>
+                                            </td>
                                             <td>
                                                 <?php if (!empty($p['user_id'])): ?>
                                                     <a href="/admin/utente/<?= $p['user_id'] ?>" class="table-link"><?= htmlspecialchars($p['nome_cliente'] ?? ($p['username'] ?? 'Anonimo')) ?></a>
                                                 <?php else: ?>
                                                     <?= htmlspecialchars($p['nome_cliente'] ?? 'Anonimo') ?>
                                                 <?php endif; ?>
+                                                <?php if (!empty($p['email_cliente'])): ?>
+                                                    <br><small class="text-muted"><?= htmlspecialchars($p['email_cliente']) ?></small>
+                                                <?php endif; ?>
+                                                <?php if (!empty($p['codice_fiscale_cliente'])): ?>
+                                                    <br><small class="text-muted"><?= htmlspecialchars($p['codice_fiscale_cliente']) ?></small>
+                                                <?php endif; ?>
                                             </td>
-                                            <td><?= htmlspecialchars(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? '')) ?></td>
+                                            <td><?= htmlspecialchars($p['telefono_cliente'] ?? '—') ?></td>
+                                            <td><?= htmlspecialchars(trim(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? ''))) ?></td>
+                                            <td><?= htmlspecialchars($p['cilindrata'] ?? '—') ?></td>
+                                            <td>
+                                                <?php
+                                                $borseVal = (float)($p['borse_laterali'] ?? 0);
+                                                if ($borseVal > 0) {
+                                                    echo '+€' . number_format($borseVal, 0);
+                                                } else {
+                                                    echo '<span class="text-muted">No</span>';
+                                                }
+                                                ?>
+                                            </td>
                                             <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_ritiro']) ?></td>
                                             <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_consegna']) ?></td>
-                                            <td><?= $p['distanza_km'] ? number_format((float)$p['distanza_km'], 0, ',', '.') . ' km' : '-' ?></td>
+                                            <td><?= $p['distanza_km'] ? number_format((float)$p['distanza_km'], 0, ',', '.') . ' km' : '—' ?></td>
+                                            <td>
+                                                <?php
+                                                $tipoClass = ['Standard' => 'badge-standard', 'Express' => 'badge-express', 'Urgente' => 'badge-urgente'];
+                                                $tipo = $p['tipo_consegna'] ?? 'Standard';
+                                                ?>
+                                                <span class="badge <?= $tipoClass[$tipo] ?? '' ?>"><?= htmlspecialchars($tipo) ?></span>
+                                            </td>
                                             <td>&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></td>
                                             <td>
                                                 <form method="POST" class="inline-form">
@@ -271,6 +323,7 @@ if ($section === 'panoramica') {
                                 </tbody>
                             </table>
                         </div>
+                        <p class="cal-table-info" id="calTableInfo" style="display:none"></p>
                     <?php endif; ?>
                 </div>
 
@@ -399,6 +452,159 @@ if ($section === 'panoramica') {
 
     <script src="/js/modules/nav.js"></script>
     <script src="/js/modules/forms.js"></script>
+    <?php if ($section === 'preventivi'): ?>
+    <script>
+    (function () {
+        'use strict';
+
+        /* ---- Dati dal PHP ---- */
+        var COUNTS = <?= json_encode($calendarData ?? [], JSON_UNESCAPED_UNICODE) ?>;
+
+        /* ---- Stato ---- */
+        var today      = new Date();
+        var viewYear   = today.getFullYear();
+        var viewMonth  = today.getMonth(); // 0-based
+        var activeDate = null;             // 'YYYY-MM-DD' selezionato
+
+        /* ---- Elementi DOM ---- */
+        var grid      = document.getElementById('calGrid');
+        var label     = document.getElementById('calMonthLabel');
+        var btnPrev   = document.getElementById('calPrev');
+        var btnNext   = document.getElementById('calNext');
+        var btnReset  = document.getElementById('calReset');
+        var tbody     = document.getElementById('preventiviTbody');
+        var tableInfo = document.getElementById('calTableInfo');
+
+        if (!grid) return;
+
+        var MONTHS = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno',
+                      'Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+        var DAYS   = ['L','M','M','G','V','S','D'];
+
+        /* ---- Render calendario ---- */
+        function render() {
+            label.textContent = MONTHS[viewMonth] + ' ' + viewYear;
+            grid.innerHTML = '';
+
+            // Intestazioni giorni
+            DAYS.forEach(function (d) {
+                var h = document.createElement('div');
+                h.className = 'cal-day-name';
+                h.textContent = d;
+                grid.appendChild(h);
+            });
+
+            var firstDay = new Date(viewYear, viewMonth, 1).getDay();
+            // domenica=0 → portala a 6 (lunedì come primo giorno)
+            firstDay = firstDay === 0 ? 6 : firstDay - 1;
+
+            var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+            // Celle vuote iniziali
+            for (var i = 0; i < firstDay; i++) {
+                var empty = document.createElement('div');
+                empty.className = 'cal-day cal-day--empty';
+                grid.appendChild(empty);
+            }
+
+            // Celle con i giorni
+            for (var d = 1; d <= daysInMonth; d++) {
+                var mm    = String(viewMonth + 1).padStart(2, '0');
+                var dd    = String(d).padStart(2, '0');
+                var iso   = viewYear + '-' + mm + '-' + dd;
+                var count = COUNTS[iso] || 0;
+
+                var cell = document.createElement('div');
+                cell.className = 'cal-day';
+                cell.dataset.iso = iso;
+                if (count > 0) cell.classList.add('cal-day--has-events');
+                if (iso === activeDate) cell.classList.add('cal-day--active');
+
+                var todayIso = today.getFullYear() + '-'
+                    + String(today.getMonth()+1).padStart(2,'0') + '-'
+                    + String(today.getDate()).padStart(2,'0');
+                if (iso === todayIso) cell.classList.add('cal-day--today');
+
+                cell.innerHTML = '<span class="cal-day__num">' + d + '</span>'
+                    + (count > 0 ? '<span class="cal-day__badge">' + count + '</span>' : '');
+
+                cell.addEventListener('click', function () {
+                    var clickedIso = this.dataset.iso;
+                    if (COUNTS[clickedIso] === undefined || COUNTS[clickedIso] === 0) return;
+                    if (activeDate === clickedIso) {
+                        // deseleziona
+                        activeDate = null;
+                        filterTable(null);
+                    } else {
+                        activeDate = clickedIso;
+                        filterTable(clickedIso);
+                    }
+                    render();
+                    btnReset.style.display = activeDate ? 'inline-flex' : 'none';
+                });
+
+                grid.appendChild(cell);
+            }
+        }
+
+        /* ---- Filtra tabella ---- */
+        function filterTable(isoDate) {
+            if (!tbody) return;
+            var rows = tbody.querySelectorAll('tr');
+            var shown = 0;
+            rows.forEach(function (row) {
+                if (!isoDate || row.dataset.date === isoDate) {
+                    row.style.display = '';
+                    shown++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            if (tableInfo) {
+                if (isoDate) {
+                    var parts = isoDate.split('-');
+                    var nicDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+                    tableInfo.textContent = 'Mostrando ' + shown + ' preventivo/i per il ' + nicDate;
+                    tableInfo.style.display = 'block';
+                } else {
+                    tableInfo.style.display = 'none';
+                }
+            }
+        }
+
+        /* ---- Navigazione ---- */
+        btnPrev.addEventListener('click', function () {
+            viewMonth--;
+            if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+            render();
+        });
+        btnNext.addEventListener('click', function () {
+            viewMonth++;
+            if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+            render();
+        });
+        btnReset.addEventListener('click', function () {
+            activeDate = null;
+            filterTable(null);
+            render();
+            this.style.display = 'none';
+        });
+
+        render();
+
+        // Se ci sono eventi nel mese corrente, naviga al primo mese con eventi
+        var keys = Object.keys(COUNTS);
+        if (keys.length > 0) {
+            keys.sort();
+            var firstIso = keys[0];
+            var parts = firstIso.split('-');
+            viewYear  = parseInt(parts[0], 10);
+            viewMonth = parseInt(parts[1], 10) - 1;
+            render();
+        }
+    }());
+    </script>
+    <?php endif; ?>
 </body>
 
 </html>
