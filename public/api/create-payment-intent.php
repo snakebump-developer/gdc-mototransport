@@ -56,8 +56,14 @@ if (!filter_var($data['email_cliente'], FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// --- Importo: SEMPRE calcolato server-side ---
-$BASE_PRICE = 175.0;
+// --- Importo: calcolato server-side con la STESSA formula di route-calc.php ---
+// Costanti speculari a route-calc.php (aggiornare entrambi i file se si cambia la tariffa)
+const FUEL_CONSUMPTION = 12;    // L/100km furgone benzina
+const FUEL_PRICE       = 1.80;  // €/L
+const TOLL_RATE        = 0.07;  // €/km pedaggi
+const MIN_TRANSPORT    = 50.0;  // costo minimo trasporto (€)
+const BASE_FALLBACK    = 175.0; // prezzo fisso quando non c'è distanza
+
 $DELIVERY_SURCHARGE = ['Standard' => 0, 'Express' => 50, 'Urgente' => 100];
 
 $distanzaKm    = isset($data['distanza_km'])    ? (float) $data['distanza_km']    : null;
@@ -65,14 +71,14 @@ $borseLaterali = isset($data['borse_laterali']) ? (float) $data['borse_laterali'
 $tipoConsegna  = in_array($data['tipo_consegna'] ?? '', ['Standard', 'Express', 'Urgente'])
     ? $data['tipo_consegna'] : 'Standard';
 
-// Calcolo trasporto: base + km (€0.35/km dopo i primi 50km) se distanza nota
+// Identica a route-calc.php: fuel + pedaggi, minimo MIN_TRANSPORT
 if ($distanzaKm !== null && $distanzaKm > 0) {
-    $kmExtra    = max(0, $distanzaKm - 50);
-    $prezzoBase = $BASE_PRICE + ($kmExtra * 0.35);
-    $prezzoBase = max($prezzoBase, $BASE_PRICE);
+    $fuelCost   = ($distanzaKm * FUEL_CONSUMPTION / 100) * FUEL_PRICE;
+    $tollCost   = $distanzaKm * TOLL_RATE;
+    $prezzoBase = max($fuelCost + $tollCost, MIN_TRANSPORT);
 } else {
-    $prezzoBase = isset($data['prezzo_base']) ? (float) $data['prezzo_base'] : $BASE_PRICE;
-    $prezzoBase = max($prezzoBase, $BASE_PRICE);
+    // Nessuna distanza: usa il prezzo fisso di fallback
+    $prezzoBase = BASE_FALLBACK;
 }
 
 // Validazione borse (valori ammessi: 0, 30, 70)
