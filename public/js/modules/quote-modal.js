@@ -54,9 +54,24 @@
   function openModal() {
     currentStep = 1;
     renderStep(currentStep);
+    prefillFromUserData();
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+  }
+
+  /* Prefill campi da dati utente loggato (solo se il campo è vuoto) */
+  function prefillFromUserData() {
+    const ud = window.QUOTE_USER_DATA;
+    if (!ud) return;
+    const setIfEmpty = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && !el.value && val) el.value = val;
+    };
+    setIfEmpty('clientName',   ud.nome);
+    setIfEmpty('clientEmail',  ud.email);
+    setIfEmpty('clientPhone',  ud.telefono);
+    setIfEmpty('clientFiscal', ud.cf);
   }
 
   /* ---------- Chiusura modale ---------- */

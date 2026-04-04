@@ -138,6 +138,32 @@ try {
     ]);
     $preventivoId = (int) $pdo->lastInsertId();
 
+    // 1b. Salva la moto nelle moto salvate dell'utente (se loggato e non già presente)
+    if ($userId !== null) {
+        require_once __DIR__ . '/../../src/motorcycles.php';
+        $marca   = htmlspecialchars(strip_tags($data['marca_moto']), ENT_QUOTES, 'UTF-8');
+        $modello = htmlspecialchars(strip_tags($data['modello_moto']), ENT_QUOTES, 'UTF-8');
+        // Estrae solo cifre dalla cilindrata (es. "1103cc" → 1103)
+        $ccRaw = preg_replace('/[^0-9]/', '', $data['cilindrata'] ?? '');
+        $cc    = ($ccRaw !== '' && (int)$ccRaw >= 50 && (int)$ccRaw <= 3000) ? (int)$ccRaw : null;
+
+        // Controlla duplicato (stessa marca e modello, case-insensitive)
+        $chk = $pdo->prepare("SELECT id FROM moto_salvate WHERE user_id=? AND LOWER(marca)=LOWER(?) AND LOWER(modello)=LOWER(?) LIMIT 1");
+        $chk->execute([$userId, $marca, $modello]);
+        if (!$chk->fetch()) {
+            try {
+                saveMotorcycle((int)$userId, [
+                    'marca'      => $marca,
+                    'modello'    => $modello,
+                    'cilindrata' => $cc,
+                ]);
+            } catch (Exception $e) {
+                error_log('[create-payment-intent] Salvataggio moto fallito: ' . $e->getMessage());
+                // Non bloccare il pagamento se il salvataggio moto fallisce
+            }
+        }
+    }
+
     // 2. Crea PaymentIntent su Stripe
     require_once __DIR__ . '/../../src/payments/stripe.php';
     $intent = createPaymentIntent($preventivoId, $prezzoFinale, $data['email_cliente']);

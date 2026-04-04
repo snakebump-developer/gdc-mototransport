@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/orders.php';
+require_once __DIR__ . '/../src/motorcycles.php';
 
 requireLogin();
 
@@ -69,10 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $section === 'profile') {
     }
 }
 
-// Carica ordini se necessario
-$ordini = [];
+// Carica dati della sezione attiva
+$preventivi = [];
+$moto = [];
 if ($section === 'orders') {
-    $ordini = getUserOrders($user['id']);
+    $preventivi = getUserPreventivi($user['id']);
+} elseif ($section === 'motorcycles') {
+    $moto = getUserMotorcycles((int)$user['id']);
 }
 ?>
 <!DOCTYPE html>
@@ -187,42 +191,115 @@ if ($section === 'orders') {
                     </form>
                 </div>
 
-            <?php elseif ($section === 'orders'): ?>
-                <!-- Sezione Ordini -->
+            <?php elseif ($section === 'motorcycles'): ?>
+                <!-- Sezione Le Mie Moto -->
                 <div class="dashboard-section">
-                    <h1>I Miei Ordini</h1>
-                    <p class="section-description">Visualizza lo storico dei tuoi ordini</p>
+                    <h1>Le Mie Moto</h1>
+                    <p class="section-description">Le moto associate ai tuoi preventivi di trasporto</p>
 
-                    <?php if (empty($ordini)): ?>
+                    <?php if (empty($moto)): ?>
                         <div class="empty-state">
-                            <div class="empty-icon">📦</div>
-                            <h3>Nessun ordine trovato</h3>
-                            <p>Non hai ancora effettuato ordini.</p>
+                            <div class="empty-icon">🏍️</div>
+                            <h3>Nessuna moto salvata</h3>
+                            <p>Le moto che inserisci nei preventivi vengono salvate automaticamente qui. <a href="/" class="link">Richiedi un trasporto →</a></p>
                         </div>
                     <?php else: ?>
                         <div class="orders-table">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>ID Ordine</th>
-                                        <th>Data</th>
-                                        <th>Totale</th>
-                                        <th>Stato</th>
-                                        <th>Metodo Pagamento</th>
+                                        <th>#</th>
+                                        <th>Marca</th>
+                                        <th>Modello</th>
+                                        <th>Cilindrata</th>
+                                        <th>Anno</th>
+                                        <th>Targa</th>
+                                        <th>Aggiunta il</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($ordini as $ordine): ?>
+                                    <?php foreach ($moto as $m): ?>
                                         <tr>
-                                            <td>#<?= $ordine['id'] ?></td>
-                                            <td><?= date('d/m/Y', strtotime($ordine['creato_il'])) ?></td>
-                                            <td>&euro;<?= number_format($ordine['totale'], 2, ',', '.') ?></td>
-                                            <td>
-                                                <span class="badge badge-<?= $ordine['stato'] ?>">
-                                                    <?= ucfirst($ordine['stato']) ?>
-                                                </span>
+                                            <td><strong>#<?= (int)$m['id'] ?></strong></td>
+                                            <td><?= htmlspecialchars($m['marca'] ?? '—', ENT_QUOTES, 'UTF-8') ?></td>
+                                            <td><?= htmlspecialchars($m['modello'] ?? '—', ENT_QUOTES, 'UTF-8') ?></td>
+                                            <td><?= $m['cilindrata'] ? htmlspecialchars($m['cilindrata'], ENT_QUOTES, 'UTF-8') . ' cc' : '—' ?></td>
+                                            <td><?= $m['anno'] ? (int)$m['anno'] : '—' ?></td>
+                                            <td><?= $m['targa'] ? htmlspecialchars(strtoupper($m['targa']), ENT_QUOTES, 'UTF-8') : '—' ?></td>
+                                            <td><?= date('d/m/Y', strtotime($m['creato_il'])) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+            <?php elseif ($section === 'orders'): ?>
+                <!-- Sezione Trasporti / Preventivi -->
+                <div class="dashboard-section">
+                    <h1>I Miei Trasporti</h1>
+                    <p class="section-description">Storico dei tuoi preventivi e trasporti moto</p>
+
+                    <?php if (empty($preventivi)): ?>
+                        <div class="empty-state">
+                            <div class="empty-icon">🏍️</div>
+                            <h3>Nessun trasporto trovato</h3>
+                            <p>Non hai ancora richiesto un preventivo. <a href="/" class="link">Richiedi ora →</a></p>
+                        </div>
+                    <?php else: ?>
+                        <div class="orders-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Data richiesta</th>
+                                        <th>Moto</th>
+                                        <th>Tragitto</th>
+                                        <th>Data ritiro</th>
+                                        <th>Importo</th>
+                                        <th>Stato ordine</th>
+                                        <th>Pagamento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($preventivi as $p):
+                                        $pgStato = $p['pagamento_stato'] ?? 'non_pagato';
+                                        $pgBadge = [
+                                            'non_pagato' => ['badge-pending',  'Non pagato'],
+                                            'pagato'     => ['badge-completed', 'Pagato'],
+                                            'fallito'    => ['badge-cancelled', 'Fallito'],
+                                            'rimborsato' => ['badge-processing', 'Rimborsato'],
+                                        ][$pgStato] ?? ['badge-pending', ucfirst($pgStato)];
+
+                                        $ordineStati = [
+                                            'inviato'      => ['badge-pending',   'Inviato'],
+                                            'confermato'   => ['badge-completed', 'Confermato'],
+                                            'in_lavorazione' => ['badge-processing', 'In lavorazione'],
+                                            'completato'   => ['badge-completed', 'Completato'],
+                                            'annullato'    => ['badge-cancelled', 'Annullato'],
+                                            'bozza'        => ['badge-pending',   'Bozza'],
+                                        ];
+                                        $ordineBadge = $ordineStati[$p['stato'] ?? 'bozza'] ?? ['badge-pending', ucfirst($p['stato'] ?? '—')];
+                                    ?>
+                                        <tr>
+                                            <td><strong>#<?= $p['id'] ?></strong></td>
+                                            <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                            <td><?= htmlspecialchars(trim(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? ''))) ?></td>
+                                            <td class="td-wrap" style="font-size:0.8rem;">
+                                                <?= htmlspecialchars($p['indirizzo_ritiro'] ?? '—') ?>
+                                                <span style="color:var(--text-secondary)"> → </span>
+                                                <?= htmlspecialchars($p['indirizzo_consegna'] ?? '—') ?>
                                             </td>
-                                            <td><?= ucfirst($ordine['metodo_pagamento'] ?? 'N/A') ?></td>
+                                            <td><?= $p['data_ritiro'] ? date('d/m/Y', strtotime($p['data_ritiro'])) : '—' ?></td>
+                                            <td><strong>&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></strong></td>
+                                            <td><span class="badge <?= $ordineBadge[0] ?>"><?= $ordineBadge[1] ?></span></td>
+                                            <td>
+                                                <span class="badge <?= $pgBadge[0] ?>"><?= $pgBadge[1] ?></span>
+                                                <?php if (!empty($p['pagamento_receipt'])): ?>
+                                                    <br><a href="<?= htmlspecialchars($p['pagamento_receipt'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--primary-color);">Ricevuta →</a>
+                                                <?php endif; ?>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

@@ -1,11 +1,25 @@
 <?php
 require_once __DIR__ . '/../src/auth.php';
-$config = require __DIR__ . '/../src/config.php';
-$user = isLogged() ? getCurrentUser() : null;
-$gmapsKey   = htmlspecialchars($config['google_maps_api_key'] ?? '', ENT_QUOTES, 'UTF-8');
-$stripePk   = htmlspecialchars($config['stripe']['public_key'] ?? '', ENT_QUOTES, 'UTF-8');
-$pageTitle  = 'MotoTransport - Home';
-$extraCss   = ['css/modules/home.css', 'css/modules/footer.css', 'css/modules/quote-modal.css'];
+require_once __DIR__ . '/../src/motorcycles.php';
+$config   = require __DIR__ . '/../src/config.php';
+$user     = isLogged() ? getCurrentUser() : null;
+$gmapsKey = htmlspecialchars($config['google_maps_api_key'] ?? '', ENT_QUOTES, 'UTF-8');
+$stripePk = htmlspecialchars($config['stripe']['public_key'] ?? '', ENT_QUOTES, 'UTF-8');
+$pageTitle = 'MotoTransport - Home';
+$extraCss  = ['css/modules/home.css', 'css/modules/footer.css', 'css/modules/quote-modal.css'];
+
+// Dati utente per autocompletamento modale (solo campi necessari, mai password)
+$quoteUserData = null;
+$quoteUserMotos = [];
+if ($user) {
+    $quoteUserData = [
+        'nome'     => trim(($user['nome'] ?? '') . ' ' . ($user['cognome'] ?? '')),
+        'email'    => $user['email'] ?? '',
+        'telefono' => $user['telefono'] ?? '',
+        'cf'       => $user['codice_fiscale_azienda'] ?? '',
+    ];
+    $quoteUserMotos = getUserMotorcycles((int)$user['id']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -397,6 +411,12 @@ $extraCss   = ['css/modules/home.css', 'css/modules/footer.css', 'css/modules/qu
     <script src="/js/modules/nav.js"></script>
     <script src="/js/modules/gallery.js"></script>
     <script src="/js/modules/forms.js"></script>
+    <?php if ($quoteUserData): ?>
+        <script>
+            window.QUOTE_USER_DATA = <?= json_encode($quoteUserData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+            window.QUOTE_USER_MOTORCYCLES = <?= json_encode($quoteUserMotos, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+        </script>
+    <?php endif; ?>
     <?php if ($stripePk): ?>
         <script>
             window.STRIPE_PUBLIC_KEY = '<?= $stripePk ?>';

@@ -200,9 +200,16 @@ function getUserPreventivi($userId, $limit = 50)
 {
     global $pdo;
     $stmt = $pdo->prepare("
-        SELECT * FROM preventivi
-        WHERE user_id = ?
-        ORDER BY creato_il DESC
+        SELECT p.*,
+               pg.stato           AS pagamento_stato_pg,
+               pg.importo         AS pagamento_importo,
+               pg.stripe_brand    AS pagamento_brand,
+               pg.stripe_ultimi_4 AS pagamento_ultimi4,
+               pg.stripe_receipt_url AS pagamento_receipt
+        FROM preventivi p
+        LEFT JOIN pagamenti pg ON pg.preventivo_id = p.id
+        WHERE p.user_id = ?
+        ORDER BY p.creato_il DESC
         LIMIT ?
     ");
     $stmt->execute([$userId, $limit]);
