@@ -254,6 +254,7 @@ if ($section === 'panoramica') {
                                         <th>Tipo</th>
                                         <th>Prezzo</th>
                                         <th>Stato</th>
+                                        <th>Pagamento</th>
                                         <th>Ricevuto</th>
                                     </tr>
                                 </thead>
@@ -316,6 +317,27 @@ if ($section === 'panoramica') {
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </form>
+                                            </td>
+                                            <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                            <td>
+                                                <?php
+                                                $pgStato = $p['pagamento_stato'] ?? 'non_pagato';
+                                                $pgClass = [
+                                                    'non_pagato' => 'badge-muted',
+                                                    'pagato'     => 'badge-success',
+                                                    'fallito'    => 'badge-danger',
+                                                    'rimborsato' => 'badge-warning',
+                                                ];
+                                                $pgLabel = [
+                                                    'non_pagato' => 'Non pagato',
+                                                    'pagato'     => 'Pagato',
+                                                    'fallito'    => 'Fallito',
+                                                    'rimborsato' => 'Rimborsato',
+                                                ];
+                                                ?>
+                                                <span class="badge <?= $pgClass[$pgStato] ?? 'badge-muted' ?>">
+                                                    <?= $pgLabel[$pgStato] ?? htmlspecialchars($pgStato) ?>
+                                                </span>
                                             </td>
                                             <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
                                         </tr>

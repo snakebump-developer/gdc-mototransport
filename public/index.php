@@ -2,9 +2,10 @@
 require_once __DIR__ . '/../src/auth.php';
 $config = require __DIR__ . '/../src/config.php';
 $user = isLogged() ? getCurrentUser() : null;
-$gmapsKey = htmlspecialchars($config['google_maps_api_key'] ?? '', ENT_QUOTES, 'UTF-8');
-$pageTitle = 'MotoTransport - Home';
-$extraCss = ['css/modules/home.css', 'css/modules/footer.css', 'css/modules/quote-modal.css'];
+$gmapsKey   = htmlspecialchars($config['google_maps_api_key'] ?? '', ENT_QUOTES, 'UTF-8');
+$stripePk   = htmlspecialchars($config['stripe']['public_key'] ?? '', ENT_QUOTES, 'UTF-8');
+$pageTitle  = 'MotoTransport - Home';
+$extraCss   = ['css/modules/home.css', 'css/modules/footer.css', 'css/modules/quote-modal.css'];
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -396,7 +397,13 @@ $extraCss = ['css/modules/home.css', 'css/modules/footer.css', 'css/modules/quot
     <script src="/js/modules/nav.js"></script>
     <script src="/js/modules/gallery.js"></script>
     <script src="/js/modules/forms.js"></script>
-    <script src="/js/modules/quote-modal.js"></script>
+    <?php if ($stripePk): ?>
+        <script>
+            window.STRIPE_PUBLIC_KEY = '<?= $stripePk ?>';
+        </script>
+        <script src="https://js.stripe.com/v3/" defer></script>
+    <?php endif; ?>
+    <script src="/js/modules/quote-modal.js" defer></script>
     <script src="/js/modules/google-maps.js"></script>
     <?php if ($gmapsKey): ?>
         <script src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapsKey ?>&libraries=places,geometry&callback=initGoogleMaps" async defer></script>

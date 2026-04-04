@@ -128,6 +128,26 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS preventivi (
 )");
 
 // =========================================================
+// TABELLA PAGAMENTI (legata ai preventivi)
+// =========================================================
+$pdo->exec("CREATE TABLE IF NOT EXISTS pagamenti (
+    id                       INTEGER PRIMARY KEY AUTOINCREMENT,
+    preventivo_id            INTEGER NOT NULL,
+    stripe_payment_intent_id TEXT    UNIQUE,
+    importo                  REAL    NOT NULL,
+    valuta                   TEXT    DEFAULT 'eur',
+    stato                    TEXT    DEFAULT 'pending'
+                                     CHECK(stato IN ('pending','paid','failed','refunded','cancelled')),
+    stripe_metodo            TEXT,
+    stripe_ultimi_4          TEXT,
+    stripe_brand             TEXT,
+    stripe_receipt_url       TEXT,
+    creato_il                DATETIME DEFAULT CURRENT_TIMESTAMP,
+    aggiornato_il            DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (preventivo_id) REFERENCES preventivi(id) ON DELETE CASCADE
+)");
+
+// =========================================================
 // MIGRAZIONI: aggiunge colonne mancanti su DB esistenti
 // =========================================================
 function columnExists(PDO $db, string $table, string $column): bool
@@ -159,10 +179,13 @@ $migrations = [
         'avatar'                 => 'TEXT',
     ],
     'preventivi' => [
-        'data_ritiro'             => 'DATE',
-        'tipo_consegna'           => "TEXT DEFAULT 'Standard'",
-        'codice_fiscale_cliente'  => 'TEXT',
-        'borse_laterali'          => 'REAL DEFAULT 0',
+        'data_ritiro'                => 'DATE',
+        'tipo_consegna'              => "TEXT DEFAULT 'Standard'",
+        'codice_fiscale_cliente'     => 'TEXT',
+        'borse_laterali'             => 'REAL DEFAULT 0',
+        'stripe_payment_intent_id'   => 'TEXT',
+        'pagamento_stato'            => "TEXT DEFAULT 'non_pagato'",
+        'pagamento_id'               => 'INTEGER',
     ],
 ];
 

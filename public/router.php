@@ -65,8 +65,10 @@ $routes = [
     '/admin/preventivi'      => ['file' => 'admin.php',         'get' => ['sezione' => 'preventivi']],
 
     // API
-    '/api/percorso'          => ['file' => 'api/route-calc.php'],
-    '/api/preventivo'        => ['file' => 'api/preventivo.php'],
+    '/api/percorso'                 => ['file' => 'api/route-calc.php'],
+    '/api/preventivo'               => ['file' => 'api/preventivo.php'],
+    '/api/create-payment-intent'    => ['file' => 'api/create-payment-intent.php'],
+    '/api/webhook-stripe'           => ['file' => 'api/webhook-stripe.php'],
 ];
 
 if (isset($routes[$uri])) {

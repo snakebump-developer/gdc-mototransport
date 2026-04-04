@@ -1,99 +1,77 @@
 <?php
-/**
- * Configurazione e helper per Stripe
- * 
- * Per utilizzare Stripe:
- * 1. Installa la libreria: composer require stripe/stripe-php
- * 2. Ottieni le tue API keys da https://dashboard.stripe.com/apikeys
- * 3. Configura le chiavi nel file config.php
- */
-
-// Esempio di utilizzo (da decommentare dopo l'installazione):
-// require_once __DIR__ . '/../vendor/autoload.php';
-// \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY') ?: 'sk_test_...');
 
 /**
- * Crea una sessione di checkout Stripe
+ * Helpers Stripe - integrazione Payment Intent + webhook
  */
-function createStripeCheckout($orderId, $amount, $currency = 'eur', $successUrl, $cancelUrl) {
-    // Esempio di implementazione
-    /*
-    $session = \Stripe\Checkout\Session::create([
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+$config = require __DIR__ . '/../config.php';
+$stripeSecretKey = $config['stripe']['secret_key'];
+
+if (empty($stripeSecretKey)) {
+    throw new RuntimeException('STRIPE_SECRET_KEY non configurata in .env');
+}
+
+\Stripe\Stripe::setApiKey($stripeSecretKey);
+
+/**
+ * Crea un PaymentIntent per un preventivo.
+ * Ritorna l'oggetto PaymentIntent di Stripe.
+ *
+ * @param  int    $preventivoId  ID del preventivo nel DB
+ * @param  float  $importoEuro   Importo in euro (es. 175.00)
+ * @param  string $emailCliente  Email per la ricevuta Stripe
+ * @return \Stripe\PaymentIntent
+ */
+function createPaymentIntent(int $preventivoId, float $importoEuro, string $emailCliente): \Stripe\PaymentIntent
+{
+    $importoCentesimi = (int) round($importoEuro * 100);
+
+    return \Stripe\PaymentIntent::create([
+        'amount'               => $importoCentesimi,
+        'currency'             => 'eur',
         'payment_method_types' => ['card'],
-        'line_items' => [[
-            'price_data' => [
-                'currency' => $currency,
-                'product_data' => [
-                    'name' => 'Ordine #' . $orderId,
-                ],
-                'unit_amount' => $amount * 100, // Stripe usa centesimi
-            ],
-            'quantity' => 1,
-        ]],
-        'mode' => 'payment',
-        'success_url' => $successUrl . '?session_id={CHECKOUT_SESSION_ID}',
-        'cancel_url' => $cancelUrl,
-        'metadata' => [
-            'order_id' => $orderId
-        ]
+        'receipt_email'        => $emailCliente,
+        'metadata'             => [
+            'preventivo_id' => $preventivoId,
+            'source'        => 'gdc-mototransport',
+        ],
+        'description'          => 'Trasporto moto - Preventivo #' . $preventivoId,
     ]);
-    
-    return $session;
-    */
-    
-    throw new Exception("Stripe non ancora configurato. Segui le istruzioni nel file.");
 }
 
 /**
- * Verifica il pagamento Stripe tramite webhook
+ * Recupera un PaymentIntent da Stripe per ID.
+ *
+ * @param  string $paymentIntentId
+ * @return \Stripe\PaymentIntent|null
  */
-function verifyStripeWebhook($payload, $signature) {
-    // Esempio di implementazione
-    /*
-    $endpoint_secret = getenv('STRIPE_WEBHOOK_SECRET');
-    
+function retrievePaymentIntent(string $paymentIntentId): ?\Stripe\PaymentIntent
+{
     try {
-        $event = \Stripe\Webhook::constructEvent(
-            $payload, $signature, $endpoint_secret
-        );
-        
-        if ($event->type === 'checkout.session.completed') {
-            $session = $event->data->object;
-            $orderId = $session->metadata->order_id;
-            
-            // Aggiorna lo stato dell'ordine
-            require_once __DIR__ . '/orders.php';
-            updateOrderStatus($orderId, 'completed', $session->id);
-            
-            return true;
-        }
-    } catch(\UnexpectedValueException $e) {
-        return false;
-    }
-    */
-    
-    return false;
-}
-
-/**
- * Recupera i dettagli di una transazione Stripe
- */
-function getStripeTransaction($transactionId) {
-    // Esempio di implementazione
-    /*
-    try {
-        $session = \Stripe\Checkout\Session::retrieve($transactionId);
-        return [
-            'id' => $session->id,
-            'amount' => $session->amount_total / 100,
-            'currency' => $session->currency,
-            'status' => $session->payment_status,
-            'created' => date('Y-m-d H:i:s', $session->created)
-        ];
+        return \Stripe\PaymentIntent::retrieve($paymentIntentId);
     } catch (\Stripe\Exception\ApiErrorException $e) {
         return null;
     }
-    */
-    
-    return null;
+}
+
+/**
+ * Verifica e decodifica un evento webhook Stripe.
+ * Ritorna l'evento oppure null se la firma non è valida.
+ *
+ * @param  string $payload    Raw request body
+ * @param  string $signature  Valore di Stripe-Signature header
+ * @param  string $secret     Webhook signing secret
+ * @return \Stripe\Event|null
+ */
+function verifyStripeWebhook(string $payload, string $signature, string $secret): ?\Stripe\Event
+{
+    try {
+        return \Stripe\Webhook::constructEvent($payload, $signature, $secret);
+    } catch (\Stripe\Exception\SignatureVerificationException $e) {
+        return null;
+    } catch (\UnexpectedValueException $e) {
+        return null;
+    }
 }

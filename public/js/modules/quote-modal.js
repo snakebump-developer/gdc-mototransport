@@ -1,41 +1,54 @@
-// ===== MODALE PREVENTIVO MULTI-STEP =====
+// ===== MODALE PREVENTIVO MULTI-STEP + PAGAMENTO STRIPE =====
 (function () {
   'use strict';
 
-  /* ---------- Configurazione prezzi ---------- */
+  /* ---------- Configurazione prezzi (mirror del server) ---------- */
   const BASE_PRICE = 175;
   const DELIVERY_SURCHARGE = { Standard: 0, Express: 50, Urgente: 100 };
   const BAGS_LABELS = { '0': 'Nessuna borsa laterale', '30': 'Borse smontate (+€30)', '70': 'Borse non smontabili (+€70)' };
-  const DELIVERY_LABELS = {
-    Standard: 'Standard',
-    Express: 'Express',
-    Urgente: 'Urgente',
-  };
-  const DELIVERY_DESC = {
-    Standard: 'Consegna in 6-7 giorni',
-    Express: 'Consegna in 3-5 giorni',
-    Urgente: 'Consegna in 24-48h',
-  };
+  const DELIVERY_LABELS  = { Standard: 'Standard', Express: 'Express', Urgente: 'Urgente' };
+  const DELIVERY_DESC    = { Standard: 'Consegna in 6-7 giorni', Express: 'Consegna in 3-5 giorni', Urgente: 'Consegna in 24-48h' };
 
   /* ---------- Stato ---------- */
   let currentStep = 1;
-  const TOTAL_STEPS = 5;
+  const SUMMARY_STEP  = 5;
+  const PAYMENT_STEP  = 6;
+  const SUCCESS_STEP  = 7;
+  const TOTAL_STEPS   = SUCCESS_STEP; // step visivi nello stepper: 1-6 + success hidden
 
   /* ---------- Stato Mappa / Tratta ---------- */
-  let routeData = null;
-  let pickupCoords = null;
+  let routeData     = null;
+  let pickupCoords  = null;
   let deliveryCoords = null;
 
+  /* ---------- Stato Stripe ---------- */
+  let stripeInstance = null;
+  let stripeElements = null;
+  let stripePaymentElement = null;
+  let currentClientSecret = null;
+  let currentPreventivoId = null;
+  let currentImporto = null;
+
   /* ---------- Elementi DOM ---------- */
-  const overlay = document.getElementById('quoteModal');
-  const closeBtn = document.getElementById('quoteModalClose');
-  const prevBtn = document.getElementById('quotePrevBtn');
-  const nextBtn = document.getElementById('quoteNextBtn');
-  const confirmBtn = document.getElementById('quoteConfirmBtn');
-  const stepperSteps = document.querySelectorAll('.quote-stepper__step');
-  const stepperLines = document.querySelectorAll('.quote-stepper__line');
+  const overlay       = document.getElementById('quoteModal');
+  const closeBtn      = document.getElementById('quoteModalClose');
+  const prevBtn       = document.getElementById('quotePrevBtn');
+  const nextBtn       = document.getElementById('quoteNextBtn');
+  const confirmBtn    = document.getElementById('quoteConfirmBtn');
+  const payBtn        = document.getElementById('quotePayBtn');
+  const stepperSteps  = document.querySelectorAll('.quote-stepper__step');
+  const stepperLines  = document.querySelectorAll('.quote-stepper__line');
 
   if (!overlay) return;
+
+  /* ---------- Inizializza Stripe ---------- */
+  function initStripe() {
+    const pk = window.STRIPE_PUBLIC_KEY || '';
+    if (!pk || pk.indexOf('INSERISCI') !== -1) return;
+    if (typeof Stripe === 'undefined') return;
+    stripeInstance = Stripe(pk);
+  }
+  initStripe();
 
   /* ---------- Apertura modale ---------- */
   function openModal() {
@@ -84,44 +97,77 @@
       window._quoteRouteMarkers.forEach(function(m) { m.setMap(null); });
       window._quoteRouteMarkers = [];
     }
+    // Reset Stripe
+    if (stripePaymentElement) {
+      stripePaymentElement.unmount();
+      stripePaymentElement = null;
+    }
+    stripeElements = null;
+    currentClientSecret = null;
+    currentPreventivoId = null;
+    currentImporto = null;
+    const errEl = document.getElementById('stripePaymentError');
+    if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
   }
 
   /* ---------- Rendering step ---------- */
   function renderStep(step) {
-    for (let i = 1; i <= TOTAL_STEPS; i++) {
+    // Mostra il pannello corretto (1-7)
+    for (let i = 1; i <= SUCCESS_STEP; i++) {
       const panel = document.getElementById('quoteStep' + i);
       if (panel) panel.classList.toggle('quote-step--hidden', i !== step);
     }
 
+    // Stepper visivo: solo step 1-6
     stepperSteps.forEach((el, idx) => {
       const stepNum = idx + 1;
       el.classList.remove('active', 'completed');
       if (stepNum === step) el.classList.add('active');
-      if (stepNum < step) el.classList.add('completed');
+      if (stepNum < step)  el.classList.add('completed');
     });
 
     stepperLines.forEach((line, idx) => {
       line.classList.toggle('completed', idx + 1 < step);
     });
 
-    prevBtn.style.display = step === 1 ? 'none' : 'inline-flex';
-    nextBtn.style.display = step === TOTAL_STEPS ? 'none' : 'inline-flex';
-    confirmBtn.style.display = step === TOTAL_STEPS ? 'inline-flex' : 'none';
+    // Pulsanti footer
+    const onSummary = step === SUMMARY_STEP;
+    const onPayment = step === PAYMENT_STEP;
+    const onSuccess = step === SUCCESS_STEP;
+    const hidePrev  = step === 1 || onPayment || onSuccess;
 
-    if (step === TOTAL_STEPS) populateSummary();
+    prevBtn.style.display    = hidePrev    ? 'none' : 'inline-flex';
+    nextBtn.style.display    = (onSummary || onPayment || onSuccess) ? 'none' : 'inline-flex';
+    confirmBtn.style.display = onSummary   ? 'inline-flex' : 'none';
+    payBtn.style.display     = onPayment   ? 'inline-flex' : 'none';
+
+    // Stepper nascosto su step successo
+    const stepper = document.getElementById('quoteStepper');
+    if (stepper) stepper.style.display = onSuccess ? 'none' : '';
+
+    if (onSummary) populateSummary();
+  }
+
+  /* ---------- Calcolo totale ---------- */
+  function calcTotal() {
+    const bagsPrice   = parseInt(val('motoBags')) || 0;
+    const deliveryType = selectedDelivery();
+    const rd = window._quoteRouteData || null;
+    const transportCost = rd ? rd.total_cost : BASE_PRICE;
+    return transportCost + (DELIVERY_SURCHARGE[deliveryType] || 0) + bagsPrice;
   }
 
   /* ---------- Compila riepilogo ---------- */
   function populateSummary() {
     const brand = val('motoBrand');
     const model = val('motoModel');
-    const cc = val('motoCc');
-    const bags = val('motoBags');
-    const pickup = val('addressPickup');
-    const delivery = val('addressDelivery');
+    const cc    = val('motoCc');
+    const bags  = val('motoBags');
+    const pickup    = val('addressPickup');
+    const delivery  = val('addressDelivery');
     const deliveryType = selectedDelivery();
-    const pickupDate = val('pickupDate');
-    const name = val('clientName');
+    const pickupDate   = val('pickupDate');
+    const name  = val('clientName');
     const email = val('clientEmail');
     const phone = val('clientPhone');
     const fiscal = val('clientFiscal');
@@ -142,10 +188,7 @@
     const contactLines = [email, phone, fiscal].filter(Boolean).join('\n');
     setText('summaryContact', contactLines || '—');
 
-    const bagsPrice = parseInt(bags) || 0;
-    const rd = window._quoteRouteData || null;
-    const transportCost = rd ? rd.total_cost : BASE_PRICE;
-    const total = transportCost + (DELIVERY_SURCHARGE[deliveryType] || 0) + bagsPrice;
+    const total = calcTotal();
     setText('summaryPrice', '€' + total.toFixed(0));
   }
 
@@ -153,40 +196,28 @@
   function validateStep(step) {
     let valid = true;
 
-    const require = (id) => {
+    const requireField = (id) => {
       const el = document.getElementById(id);
       if (!el) return;
-      if (!el.value.trim()) {
-        el.classList.add('is-error');
-        valid = false;
-      } else {
-        el.classList.remove('is-error');
-      }
+      if (!el.value.trim()) { el.classList.add('is-error'); valid = false; }
+      else el.classList.remove('is-error');
     };
 
     if (step === 1) {
-      require('motoBrand');
-      require('motoModel');
-      require('motoCc');
+      requireField('motoBrand'); requireField('motoModel'); requireField('motoCc');
     } else if (step === 2) {
-      require('addressPickup');
-      require('addressDelivery');
+      requireField('addressPickup'); requireField('addressDelivery');
     } else if (step === 3) {
-      require('pickupDate');
+      requireField('pickupDate');
       const dateEl = document.getElementById('pickupDate');
       if (dateEl && dateEl.value) {
         const chosen = new Date(dateEl.value + 'T00:00:00');
-        const today = new Date(); today.setHours(0,0,0,0);
-        if (chosen <= today) {
-          dateEl.classList.add('is-error');
-          valid = false;
-        }
+        const today  = new Date(); today.setHours(0, 0, 0, 0);
+        if (chosen <= today) { dateEl.classList.add('is-error'); valid = false; }
       }
     } else if (step === 4) {
-      require('clientName');
-      require('clientEmail');
-      require('clientPhone');
-      require('clientFiscal');
+      requireField('clientName'); requireField('clientEmail');
+      requireField('clientPhone'); requireField('clientFiscal');
       const priv = document.getElementById('privacyAccept');
       if (priv && !priv.checked) {
         priv.closest('.quote-form__checkbox').style.color = 'var(--danger-color)';
@@ -196,8 +227,7 @@
       }
       const emailEl = document.getElementById('clientEmail');
       if (emailEl && emailEl.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
-        emailEl.classList.add('is-error');
-        valid = false;
+        emailEl.classList.add('is-error'); valid = false;
       }
     }
 
@@ -207,30 +237,173 @@
   /* ---------- Navigazione ---------- */
   function goNext() {
     if (!validateStep(currentStep)) return;
-    if (currentStep < TOTAL_STEPS) {
+    if (currentStep < SUMMARY_STEP) {
       currentStep++;
       renderStep(currentStep);
     }
   }
 
   function goPrev() {
-    if (currentStep > 1) {
+    if (currentStep > 1 && currentStep !== PAYMENT_STEP && currentStep !== SUCCESS_STEP) {
       currentStep--;
       renderStep(currentStep);
     }
   }
 
+  /* ---------- STEP 5 → STEP 6: salva preventivo + crea PaymentIntent ---------- */
+  function handleConfirm() {
+    if (!stripeInstance) {
+      alert('Il sistema di pagamento non è disponibile al momento. Configura la chiave pubblica Stripe.');
+      return;
+    }
+
+    const rd = window._quoteRouteData || null;
+    const deliveryType = selectedDelivery();
+    const bagsPrice    = parseInt(val('motoBags')) || 0;
+    const transportCost = rd ? rd.total_cost : BASE_PRICE;
+    const total = transportCost + (DELIVERY_SURCHARGE[deliveryType] || 0) + bagsPrice;
+
+    const payload = {
+      marca_moto:             val('motoBrand'),
+      modello_moto:           val('motoModel'),
+      cilindrata:             val('motoCc'),
+      borse_laterali:         bagsPrice,
+      indirizzo_ritiro:       val('addressPickup'),
+      indirizzo_consegna:     val('addressDelivery'),
+      distanza_km:            rd ? rd.distance_km : null,
+      tipo_consegna:          deliveryType,
+      data_ritiro:            val('pickupDate'),
+      nome_cliente:           val('clientName'),
+      email_cliente:          val('clientEmail'),
+      telefono_cliente:       val('clientPhone'),
+      codice_fiscale_cliente: val('clientFiscal'),
+      prezzo_base:            transportCost,
+      prezzo_finale:          total,
+    };
+
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = '<svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Caricamento...';
+
+    fetch('/api/create-payment-intent', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg> Vai al pagamento <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+
+        if (!data.success) {
+          alert('Errore: ' + (data.error || 'Riprova più tardi.'));
+          return;
+        }
+
+        currentClientSecret  = data.clientSecret;
+        currentPreventivoId  = data.preventivoId;
+        currentImporto       = data.importo;
+
+        // Popola riepilogo importo nello step pagamento
+        const motoLabel = [val('motoBrand'), val('motoModel'), val('motoCc')].filter(Boolean).join(' ');
+        setText('paymentSummaryMoto', motoLabel || 'Trasporto moto');
+        setText('paymentSummaryTotal', '€' + parseFloat(data.importo).toFixed(2));
+
+        // Monta Stripe Payment Element
+        mountStripeElement(data.clientSecret);
+
+        currentStep = PAYMENT_STEP;
+        renderStep(currentStep);
+      })
+      .catch(() => {
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg> Vai al pagamento <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+        alert('Errore di rete. Controlla la connessione e riprova.');
+      });
+  }
+
+  /* ---------- Monta Stripe Payment Element ---------- */
+  function mountStripeElement(clientSecret) {
+    if (stripePaymentElement) {
+      stripePaymentElement.unmount();
+      stripePaymentElement = null;
+    }
+
+    stripeElements = stripeInstance.elements({
+      clientSecret: clientSecret,
+      appearance: {
+        theme: 'stripe',
+        variables: {
+          colorPrimary:       '#0284c7',
+          colorBackground:    '#ffffff',
+          colorText:          '#1e293b',
+          colorDanger:        '#ef4444',
+          fontFamily:         'Inter, system-ui, sans-serif',
+          borderRadius:       '8px',
+          spacingUnit:        '4px',
+        },
+      },
+      locale: 'it',
+    });
+
+    stripePaymentElement = stripeElements.create('payment', {
+      layout: 'tabs',
+    });
+    stripePaymentElement.mount('#stripePaymentElement');
+  }
+
+  /* ---------- STEP 6: esegui pagamento ---------- */
+  function handlePay() {
+    if (!stripeInstance || !stripeElements || !currentClientSecret) return;
+
+    const errEl = document.getElementById('stripePaymentError');
+    if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
+
+    payBtn.disabled = true;
+    payBtn.innerHTML = '<svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Elaborazione...';
+
+    stripeInstance.confirmPayment({
+      elements: stripeElements,
+      confirmParams: {
+        return_url: window.location.origin + '/payment-success.php?preventivo_id=' + (currentPreventivoId || ''),
+      },
+      redirect: 'if_required',
+    }).then(function (result) {
+      payBtn.disabled = false;
+      payBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Paga ora';
+
+      if (result.error) {
+        if (errEl) {
+          errEl.textContent = result.error.message || 'Pagamento non riuscito. Riprova.';
+          errEl.style.display = 'block';
+        }
+        return;
+      }
+
+      // Pagamento completato in-modal (no redirect)
+      if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+        showSuccess();
+      }
+    });
+  }
+
+  /* ---------- Mostra step successo ---------- */
+  function showSuccess() {
+    setText('successEmail', val('clientEmail'));
+    setText('successPreventivoId', '#' + (currentPreventivoId || '—'));
+    setText('successImporto', currentImporto ? '€' + parseFloat(currentImporto).toFixed(2) : '—');
+    currentStep = SUCCESS_STEP;
+    renderStep(currentStep);
+  }
+
   /* ---------- Gestione opzioni consegna ---------- */
   function updateDeliverySelection() {
-    const options = document.querySelectorAll('.quote-delivery-option');
-    options.forEach((opt) => {
+    document.querySelectorAll('.quote-delivery-option').forEach((opt) => {
       const radio = opt.querySelector('input[type="radio"]');
       opt.classList.toggle('quote-delivery-option--selected', radio && radio.checked);
     });
   }
 
-  const deliveryOptions = document.querySelectorAll('.quote-delivery-option');
-  deliveryOptions.forEach((opt) => {
+  document.querySelectorAll('.quote-delivery-option').forEach((opt) => {
     opt.addEventListener('click', function () {
       const radio = this.querySelector('input[type="radio"]');
       if (radio) radio.checked = true;
@@ -239,85 +412,26 @@
   });
 
   /* ---------- Event listener ---------- */
-
   document.querySelectorAll('.open-quote-modal').forEach((btn) => {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      openModal();
-    });
+    btn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
   });
 
   closeBtn.addEventListener('click', closeModal);
-  overlay.addEventListener('click', function (e) {
-    if (e.target === overlay) closeModal();
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
   });
 
   nextBtn.addEventListener('click', goNext);
   prevBtn.addEventListener('click', goPrev);
+  confirmBtn.addEventListener('click', handleConfirm);
+  payBtn.addEventListener('click', handlePay);
 
-  confirmBtn.addEventListener('click', function () {
-    const rd = window._quoteRouteData || null;
-    const bagsPrice = parseInt(val('motoBags')) || 0;
-    const deliveryType = selectedDelivery();
-    const transportCost = rd ? rd.total_cost : BASE_PRICE;
-    const total = transportCost + (DELIVERY_SURCHARGE[deliveryType] || 0) + bagsPrice;
-
-    const payload = {
-      marca_moto:              val('motoBrand'),
-      modello_moto:            val('motoModel'),
-      cilindrata:              val('motoCc'),
-      borse_laterali:          bagsPrice,
-      indirizzo_ritiro:        val('addressPickup'),
-      indirizzo_consegna:      val('addressDelivery'),
-      distanza_km:             rd ? rd.distance_km : null,
-      tipo_consegna:           deliveryType,
-      data_ritiro:             val('pickupDate'),
-      nome_cliente:            val('clientName'),
-      email_cliente:           val('clientEmail'),
-      telefono_cliente:        val('clientPhone'),
-      codice_fiscale_cliente:  val('clientFiscal'),
-      prezzo_base:             transportCost,
-      prezzo_finale:           total,
-    };
-
-    confirmBtn.disabled = true;
-    confirmBtn.textContent = 'Invio in corso...';
-
-    fetch('/api/preventivo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        if (data.success) {
-          closeModal();
-          const banner = document.createElement('div');
-          banner.className = 'quote-success-banner';
-          banner.innerHTML = '<strong>Preventivo inviato!</strong> Ti contatteremo presto all\'indirizzo <em>' + payload.email_cliente + '</em>.';
-          document.body.appendChild(banner);
-          setTimeout(function () { banner.remove(); }, 6000);
-        } else {
-          alert('Errore: ' + (data.error || 'Riprova più tardi.'));
-          confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Conferma e paga';
-        }
-      })
-      .catch(function () {
-        alert('Errore di rete. Controlla la connessione e riprova.');
-        confirmBtn.disabled = false;
-        confirmBtn.textContent = 'Conferma e paga';
-      });
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
-  });
+  const successCloseBtn = document.getElementById('quoteSuccessClose');
+  if (successCloseBtn) successCloseBtn.addEventListener('click', closeModal);
 
   document.querySelectorAll('.quote-form__input, .quote-form__select').forEach((el) => {
-    el.addEventListener('input', function () {
-      this.classList.remove('is-error');
-    });
+    el.addEventListener('input', function () { this.classList.remove('is-error'); });
   });
 
   /* ---------- Utilità ---------- */
@@ -334,3 +448,4 @@
     return checked ? checked.value : 'Standard';
   }
 })();
+

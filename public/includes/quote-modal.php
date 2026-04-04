@@ -87,6 +87,19 @@
                 </div>
                 <span class="quote-stepper__label">Riepilogo</span>
             </div>
+            <div class="quote-stepper__line"></div>
+            <div class="quote-stepper__step" data-step="6">
+                <div class="quote-stepper__circle">
+                    <svg class="quote-stepper__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                    <svg class="quote-stepper__check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <span class="quote-stepper__label">Pagamento</span>
+            </div>
         </div>
 
         <!-- Contenuto degli step -->
@@ -410,7 +423,65 @@
                         <span class="quote-summary__price-note">IVA inclusa</span>
                     </div>
 
-                    <p class="quote-summary__disclaimer">Cliccando "Conferma e Paga" verrai reindirizzato al sistema di pagamento sicuro.</p>
+                    <p class="quote-summary__disclaimer">Cliccando "Conferma e Paga" verrai portato al pagamento sicuro integrato.</p>
+                </div>
+            </div>
+
+            <!-- STEP 6: Pagamento Stripe -->
+            <div class="quote-step quote-step--hidden" id="quoteStep6">
+                <h3 class="quote-step__title">Pagamento sicuro</h3>
+
+                <!-- Riepilogo importo nel pagamento -->
+                <div class="quote-payment__summary">
+                    <div class="quote-payment__summary-row">
+                        <span>Trasporto moto</span>
+                        <strong id="paymentSummaryMoto">—</strong>
+                    </div>
+                    <div class="quote-payment__summary-divider"></div>
+                    <div class="quote-payment__summary-row quote-payment__summary-row--total">
+                        <span>Totale da pagare</span>
+                        <strong id="paymentSummaryTotal">—</strong>
+                    </div>
+                </div>
+
+                <!-- Stripe Payment Element -->
+                <div id="stripePaymentElement" class="quote-payment__element"></div>
+                <div id="stripePaymentError" class="quote-payment__error" role="alert" style="display:none;"></div>
+
+                <!-- Sicurezza badge -->
+                <div class="quote-payment__security">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span>Pagamento crittografato con SSL. Dati gestiti da <strong>Stripe</strong>.</span>
+                </div>
+            </div>
+
+            <!-- STEP 7: Successo -->
+            <div class="quote-step quote-step--hidden" id="quoteStep7">
+                <div class="quote-success">
+                    <div class="quote-success__icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="quote-success__title">Pagamento confermato!</h3>
+                    <p class="quote-success__text">Il tuo ordine di trasporto moto è stato confermato. Riceverai una email di conferma a <strong id="successEmail"></strong>.</p>
+                    <div class="quote-success__details">
+                        <div class="quote-success__detail">
+                            <span class="quote-success__detail-label">N° preventivo</span>
+                            <strong class="quote-success__detail-value" id="successPreventivoId">—</strong>
+                        </div>
+                        <div class="quote-success__detail">
+                            <span class="quote-success__detail-label">Importo pagato</span>
+                            <strong class="quote-success__detail-value" id="successImporto">—</strong>
+                        </div>
+                    </div>
+                    <button class="quote-btn quote-btn--next" id="quoteSuccessClose" style="margin-top:1.5rem;">
+                        Chiudi
+                    </button>
                 </div>
             </div>
 
@@ -435,10 +506,17 @@
                     <rect x="1" y="4" width="22" height="16" rx="2"></rect>
                     <line x1="1" y1="10" x2="23" y2="10"></line>
                 </svg>
-                Conferma e paga
+                Vai al pagamento
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
+            </button>
+            <button class="quote-btn quote-btn--pay" id="quotePayBtn" style="display:none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                Paga ora
             </button>
         </div>
 
