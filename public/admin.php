@@ -39,9 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 $stats = null;
 $ordini = [];
 $utenti = [];
-
 $professionisti = [];
 $preventivi = [];
+
+$ITEMS_PER_PAGE = 10;
+$searchQuery  = '';
+$currentPage  = 1;
+$totalItems   = 0;
+$totalPages   = 1;
 
 if ($section === 'panoramica') {
     $orderStats = getOrderStats();
@@ -53,9 +58,21 @@ if ($section === 'panoramica') {
     $preventivi = getAllPreventivi();
     $calendarData = getPreventiviCountByDate();
 } elseif ($section === 'utenti') {
-    $utenti = getAllUsers();
+    $searchQuery = trim($_GET['q'] ?? '');
+    $currentPage = max(1, (int)($_GET['page'] ?? 1));
+    $totalItems  = countAllUsers($searchQuery);
+    $totalPages  = max(1, (int)ceil($totalItems / $ITEMS_PER_PAGE));
+    $currentPage = min($currentPage, $totalPages);
+    $offset      = ($currentPage - 1) * $ITEMS_PER_PAGE;
+    $utenti      = getAllUsers($ITEMS_PER_PAGE, $offset, $searchQuery);
 } elseif ($section === 'professionisti') {
-    $professionisti = getAllProfessionals();
+    $searchQuery    = trim($_GET['q'] ?? '');
+    $currentPage    = max(1, (int)($_GET['page'] ?? 1));
+    $totalItems     = countAllProfessionals($searchQuery);
+    $totalPages     = max(1, (int)ceil($totalItems / $ITEMS_PER_PAGE));
+    $currentPage    = min($currentPage, $totalPages);
+    $offset         = ($currentPage - 1) * $ITEMS_PER_PAGE;
+    $professionisti = getAllProfessionals($ITEMS_PER_PAGE, $offset, $searchQuery);
 }
 ?>
 <!DOCTYPE html>
@@ -355,43 +372,86 @@ if ($section === 'panoramica') {
                     <h1>Gestione Utenti</h1>
                     <p class="section-description">Visualizza e gestisci tutti gli utenti</p>
 
+                    <!-- Search toolbar + col picker -->
+                    <div class="table-controls">
+                        <form method="GET" action="/admin/utenti" class="search-toolbar">
+                            <div class="search-toolbar__input-wrap">
+                                <svg class="search-toolbar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                                <input type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" placeholder="Cerca per username, email, nome…" class="search-toolbar__input" autocomplete="off">
+                                <?php if ($searchQuery !== ''): ?>
+                                    <a href="/admin/utenti" class="search-toolbar__clear" title="Cancella ricerca">&#x2715;</a>
+                                <?php endif; ?>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Cerca</button>
+                        </form>
+
+                        <!-- Column picker -->
+                        <div class="col-picker" id="colPicker-utenti">
+                            <button type="button" class="btn btn-ghost btn-sm col-picker__toggle" id="colPickerBtn-utenti" aria-expanded="false" aria-haspopup="true">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="18" rx="1" />
+                                    <rect x="14" y="3" width="7" height="18" rx="1" />
+                                </svg>
+                                Colonne
+                            </button>
+                            <div class="col-picker__dropdown" id="colPickerDropdown-utenti" hidden>
+                                <p class="col-picker__label">Mostra / nascondi colonne</p>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="id"> ID</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="email"> Email</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="nome"> Nome</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="cognome"> Cognome</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="ruolo"> Ruolo</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="registrato"> Registrato</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php if ($totalItems > 0): ?>
+                        <p class="search-result-count">
+                            <?= $totalItems ?> <?= $totalItems === 1 ? 'utente trovato' : 'utenti trovati' ?>
+                            <?= $searchQuery !== '' ? ' per <strong>' . htmlspecialchars($searchQuery) . '</strong>' : '' ?>
+                        </p>
+                    <?php endif; ?>
+
                     <?php if (empty($utenti)): ?>
                         <div class="empty-state">
                             <div class="empty-icon">👥</div>
-                            <h3>Nessun utente presente</h3>
+                            <h3><?= $searchQuery !== '' ? 'Nessun utente trovato per "' . htmlspecialchars($searchQuery) . '"' : 'Nessun utente presente' ?></h3>
                         </div>
                     <?php else: ?>
                         <div class="orders-table">
-                            <table>
+                            <table id="tbl-utenti">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Username</th>
-                                        <th>Email</th>
-                                        <th>Nome</th>
-                                        <th>Cognome</th>
-                                        <th>Ruolo</th>
-                                        <th>Registrato</th>
-                                        <th>Azioni</th>
+                                        <th data-col="id">ID</th>
+                                        <th data-col="username">Username</th>
+                                        <th data-col="email">Email</th>
+                                        <th data-col="nome">Nome</th>
+                                        <th data-col="cognome">Cognome</th>
+                                        <th data-col="ruolo">Ruolo</th>
+                                        <th data-col="registrato">Registrato</th>
+                                        <th data-col="azioni">Azioni</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($utenti as $u): ?>
                                         <tr>
-                                            <td><?= $u['id'] ?></td>
-                                            <td><a href="/admin/utente/<?= $u['id'] ?>" class="table-link"><?= htmlspecialchars($u['username']) ?></a></td>
-                                            <td><?= htmlspecialchars($u['email']) ?></td>
-                                            <td><?= htmlspecialchars($u['nome'] ?? '-') ?></td>
-                                            <td><?= htmlspecialchars($u['cognome'] ?? '-') ?></td>
-                                            <td>
+                                            <td data-col="id"><?= $u['id'] ?></td>
+                                            <td data-col="username"><a href="/admin/utente/<?= $u['id'] ?>" class="table-link"><?= htmlspecialchars($u['username']) ?></a></td>
+                                            <td data-col="email"><?= htmlspecialchars($u['email']) ?></td>
+                                            <td data-col="nome"><?= htmlspecialchars($u['nome'] ?? '-') ?></td>
+                                            <td data-col="cognome"><?= htmlspecialchars($u['cognome'] ?? '-') ?></td>
+                                            <td data-col="ruolo">
                                                 <span class="badge badge-<?= $u['ruolo'] ?>">
                                                     <?= ucfirst($u['ruolo']) ?>
                                                 </span>
                                             </td>
-                                            <td><?= date('d/m/Y', strtotime($u['creato_il'])) ?></td>
-                                            <td class="td-actions">
+                                            <td data-col="registrato"><?= date('d/m/Y', strtotime($u['creato_il'])) ?></td>
+                                            <td data-col="azioni" class="td-actions">
                                                 <div class="td-actions-inner">
-
                                                     <?php if ($u['id'] != $user['id']): ?>
                                                         <form method="POST" class="inline-form" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente?')">
                                                             <input type="hidden" name="action" value="delete_user">
@@ -406,6 +466,49 @@ if ($section === 'panoramica') {
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Paginazione -->
+                        <?php if ($totalPages > 1): ?>
+                            <nav class="pagination" aria-label="Paginazione utenti">
+                                <?php
+                                $baseUrl = '/admin/utenti' . ($searchQuery !== '' ? '?q=' . urlencode($searchQuery) . '&' : '?');
+                                ?>
+                                <?php if ($currentPage > 1): ?>
+                                    <a href="<?= $baseUrl ?>page=<?= $currentPage - 1 ?>" class="pagination__btn" aria-label="Pagina precedente">&#8249;</a>
+                                <?php else: ?>
+                                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8249;</span>
+                                <?php endif; ?>
+
+                                <?php
+                                $start = max(1, $currentPage - 2);
+                                $end   = min($totalPages, $currentPage + 2);
+                                if ($start > 1): ?>
+                                    <a href="<?= $baseUrl ?>page=1" class="pagination__btn">1</a>
+                                    <?php if ($start > 2): ?><span class="pagination__ellipsis">…</span><?php endif; ?>
+                                <?php endif; ?>
+
+                                <?php for ($p = $start; $p <= $end; $p++): ?>
+                                    <?php if ($p === $currentPage): ?>
+                                        <span class="pagination__btn pagination__btn--active" aria-current="page"><?= $p ?></span>
+                                    <?php else: ?>
+                                        <a href="<?= $baseUrl ?>page=<?= $p ?>" class="pagination__btn"><?= $p ?></a>
+                                    <?php endif; ?>
+                                <?php endfor; ?>
+
+                                <?php if ($end < $totalPages): ?>
+                                    <?php if ($end < $totalPages - 1): ?><span class="pagination__ellipsis">…</span><?php endif; ?>
+                                    <a href="<?= $baseUrl ?>page=<?= $totalPages ?>" class="pagination__btn"><?= $totalPages ?></a>
+                                <?php endif; ?>
+
+                                <?php if ($currentPage < $totalPages): ?>
+                                    <a href="<?= $baseUrl ?>page=<?= $currentPage + 1 ?>" class="pagination__btn" aria-label="Pagina successiva">&#8250;</a>
+                                <?php else: ?>
+                                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8250;</span>
+                                <?php endif; ?>
+
+                                <span class="pagination__info">Pagina <?= $currentPage ?> di <?= $totalPages ?></span>
+                            </nav>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             <?php elseif ($section === 'professionisti'): ?>
@@ -414,43 +517,88 @@ if ($section === 'panoramica') {
                     <h1>Professionisti</h1>
                     <p class="section-description">Aziende e professionisti registrati</p>
 
+                    <!-- Search toolbar + col picker -->
+                    <div class="table-controls">
+                        <form method="GET" action="/admin/professionisti" class="search-toolbar">
+                            <div class="search-toolbar__input-wrap">
+                                <svg class="search-toolbar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                                <input type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" placeholder="Cerca per ragione sociale, email, P.IVA, città…" class="search-toolbar__input" autocomplete="off">
+                                <?php if ($searchQuery !== ''): ?>
+                                    <a href="/admin/professionisti" class="search-toolbar__clear" title="Cancella ricerca">&#x2715;</a>
+                                <?php endif; ?>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Cerca</button>
+                        </form>
+
+                        <!-- Column picker -->
+                        <div class="col-picker" id="colPicker-professionisti">
+                            <button type="button" class="btn btn-ghost btn-sm col-picker__toggle" id="colPickerBtn-professionisti" aria-expanded="false" aria-haspopup="true">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="18" rx="1" />
+                                    <rect x="14" y="3" width="7" height="18" rx="1" />
+                                </svg>
+                                Colonne
+                            </button>
+                            <div class="col-picker__dropdown" id="colPickerDropdown-professionisti" hidden>
+                                <p class="col-picker__label">Mostra / nascondi colonne</p>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="id"> ID</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="referente"> Referente</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="email"> Email</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="piva"> P.IVA</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="attivita"> Attività</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="citta"> Città</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="sconto"> Sconto</label>
+                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="registrato"> Registrato</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php if ($totalItems > 0): ?>
+                        <p class="search-result-count">
+                            <?= $totalItems ?> <?= $totalItems === 1 ? 'professionista trovato' : 'professionisti trovati' ?>
+                            <?= $searchQuery !== '' ? ' per <strong>' . htmlspecialchars($searchQuery) . '</strong>' : '' ?>
+                        </p>
+                    <?php endif; ?>
+
                     <?php if (empty($professionisti)): ?>
                         <div class="empty-state">
                             <div class="empty-icon">🏢</div>
-                            <h3>Nessun professionista registrato</h3>
+                            <h3><?= $searchQuery !== '' ? 'Nessun professionista trovato per "' . htmlspecialchars($searchQuery) . '"' : 'Nessun professionista registrato' ?></h3>
                         </div>
                     <?php else: ?>
                         <div class="orders-table">
-                            <table>
+                            <table id="tbl-professionisti">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Ragione Sociale</th>
-                                        <th>Referente</th>
-                                        <th>Email</th>
-                                        <th>P.IVA</th>
-                                        <th>Attività</th>
-                                        <th>Città</th>
-                                        <th>Sconto</th>
-                                        <th>Registrato</th>
-                                        <th>Azioni</th>
+                                        <th data-col="id">ID</th>
+                                        <th data-col="ragione-sociale">Ragione Sociale</th>
+                                        <th data-col="referente">Referente</th>
+                                        <th data-col="email">Email</th>
+                                        <th data-col="piva">P.IVA</th>
+                                        <th data-col="attivita">Attività</th>
+                                        <th data-col="citta">Città</th>
+                                        <th data-col="sconto">Sconto</th>
+                                        <th data-col="registrato">Registrato</th>
+                                        <th data-col="azioni">Azioni</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($professionisti as $p): ?>
                                         <tr>
-                                            <td><?= $p['id'] ?></td>
-                                            <td><a href="/admin/utente/<?= $p['id'] ?>" class="table-link"><?= htmlspecialchars($p['ragione_sociale'] ?? '-') ?></a></td>
-                                            <td><?= htmlspecialchars(trim(($p['nome'] ?? '') . ' ' . ($p['cognome'] ?? ''))) ?></td>
-                                            <td><?= htmlspecialchars($p['email']) ?></td>
-                                            <td><?= htmlspecialchars($p['partita_iva'] ?? '-') ?></td>
-                                            <td class="td-wrap"><?= htmlspecialchars($p['tipo_attivita'] ?? '-') ?></td>
-                                            <td><?= htmlspecialchars($p['citta'] ?? '-') ?></td>
-                                            <td><?= number_format((float)($p['sconto_percentuale'] ?? 0), 1) ?>%</td>
-                                            <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
-                                            <td class="td-actions">
+                                            <td data-col="id"><?= $p['id'] ?></td>
+                                            <td data-col="ragione-sociale"><a href="/admin/utente/<?= $p['id'] ?>" class="table-link"><?= htmlspecialchars($p['ragione_sociale'] ?? '-') ?></a></td>
+                                            <td data-col="referente"><?= htmlspecialchars(trim(($p['nome'] ?? '') . ' ' . ($p['cognome'] ?? ''))) ?></td>
+                                            <td data-col="email"><?= htmlspecialchars($p['email']) ?></td>
+                                            <td data-col="piva"><?= htmlspecialchars($p['partita_iva'] ?? '-') ?></td>
+                                            <td data-col="attivita" class="td-wrap"><?= htmlspecialchars($p['tipo_attivita'] ?? '-') ?></td>
+                                            <td data-col="citta"><?= htmlspecialchars($p['citta'] ?? '-') ?></td>
+                                            <td data-col="sconto"><?= number_format((float)($p['sconto_percentuale'] ?? 0), 1) ?>%</td>
+                                            <td data-col="registrato"><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                            <td data-col="azioni" class="td-actions">
                                                 <div class="td-actions-inner">
-
                                                     <?php if ($p['id'] != $user['id']): ?>
                                                         <form method="POST" class="inline-form" onsubmit="return confirm('Eliminare questo professionista?')">
                                                             <input type="hidden" name="action" value="delete_user">
@@ -465,6 +613,49 @@ if ($section === 'panoramica') {
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Paginazione -->
+                        <?php if ($totalPages > 1): ?>
+                            <nav class="pagination" aria-label="Paginazione professionisti">
+                                <?php
+                                $baseUrl = '/admin/professionisti' . ($searchQuery !== '' ? '?q=' . urlencode($searchQuery) . '&' : '?');
+                                ?>
+                                <?php if ($currentPage > 1): ?>
+                                    <a href="<?= $baseUrl ?>page=<?= $currentPage - 1 ?>" class="pagination__btn" aria-label="Pagina precedente">&#8249;</a>
+                                <?php else: ?>
+                                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8249;</span>
+                                <?php endif; ?>
+
+                                <?php
+                                $start = max(1, $currentPage - 2);
+                                $end   = min($totalPages, $currentPage + 2);
+                                if ($start > 1): ?>
+                                    <a href="<?= $baseUrl ?>page=1" class="pagination__btn">1</a>
+                                    <?php if ($start > 2): ?><span class="pagination__ellipsis">…</span><?php endif; ?>
+                                <?php endif; ?>
+
+                                <?php for ($p = $start; $p <= $end; $p++): ?>
+                                    <?php if ($p === $currentPage): ?>
+                                        <span class="pagination__btn pagination__btn--active" aria-current="page"><?= $p ?></span>
+                                    <?php else: ?>
+                                        <a href="<?= $baseUrl ?>page=<?= $p ?>" class="pagination__btn"><?= $p ?></a>
+                                    <?php endif; ?>
+                                <?php endfor; ?>
+
+                                <?php if ($end < $totalPages): ?>
+                                    <?php if ($end < $totalPages - 1): ?><span class="pagination__ellipsis">…</span><?php endif; ?>
+                                    <a href="<?= $baseUrl ?>page=<?= $totalPages ?>" class="pagination__btn"><?= $totalPages ?></a>
+                                <?php endif; ?>
+
+                                <?php if ($currentPage < $totalPages): ?>
+                                    <a href="<?= $baseUrl ?>page=<?= $currentPage + 1 ?>" class="pagination__btn" aria-label="Pagina successiva">&#8250;</a>
+                                <?php else: ?>
+                                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8250;</span>
+                                <?php endif; ?>
+
+                                <span class="pagination__info">Pagina <?= $currentPage ?> di <?= $totalPages ?></span>
+                            </nav>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
 
@@ -474,6 +665,94 @@ if ($section === 'panoramica') {
 
     <script src="/js/modules/nav.js"></script>
     <script src="/js/modules/forms.js"></script>
+    <?php if ($section === 'utenti' || $section === 'professionisti'): ?>
+        <script>
+            (function() {
+                'use strict';
+
+                var PICKERS = {
+                    'tbl-utenti': {
+                        pickerId: 'colPicker-utenti',
+                        btnId: 'colPickerBtn-utenti',
+                        dropdownId: 'colPickerDropdown-utenti',
+                        storageKey: 'adminHiddenCols_utenti'
+                    },
+                    'tbl-professionisti': {
+                        pickerId: 'colPicker-professionisti',
+                        btnId: 'colPickerBtn-professionisti',
+                        dropdownId: 'colPickerDropdown-professionisti',
+                        storageKey: 'adminHiddenCols_professionisti'
+                    }
+                };
+
+                function loadHidden(key) {
+                    try {
+                        return JSON.parse(localStorage.getItem(key) || '[]');
+                    } catch (e) {
+                        return [];
+                    }
+                }
+
+                function saveHidden(key, arr) {
+                    try {
+                        localStorage.setItem(key, JSON.stringify(arr));
+                    } catch (e) {}
+                }
+
+                function applyVisibility(tableId, hiddenCols) {
+                    var tbl = document.getElementById(tableId);
+                    if (!tbl) return;
+                    tbl.querySelectorAll('[data-col]').forEach(function(el) {
+                        el.style.display = hiddenCols.indexOf(el.getAttribute('data-col')) !== -1 ? 'none' : '';
+                    });
+                }
+
+                function initPicker(tableId, cfg) {
+                    var tbl = document.getElementById(tableId);
+                    var btn = document.getElementById(cfg.btnId);
+                    var dropdown = document.getElementById(cfg.dropdownId);
+                    if (!tbl || !btn || !dropdown) return;
+
+                    var hidden = loadHidden(cfg.storageKey);
+                    applyVisibility(tableId, hidden);
+
+                    // Sync checkboxes with saved state
+                    dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+                        cb.checked = hidden.indexOf(cb.getAttribute('data-col')) === -1;
+                        cb.addEventListener('change', function() {
+                            var newHidden = [];
+                            dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(c) {
+                                if (!c.checked) newHidden.push(c.getAttribute('data-col'));
+                            });
+                            saveHidden(cfg.storageKey, newHidden);
+                            applyVisibility(tableId, newHidden);
+                        });
+                    });
+
+                    // Toggle dropdown
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        var wasHidden = dropdown.hidden;
+                        dropdown.hidden = !wasHidden;
+                        btn.setAttribute('aria-expanded', String(wasHidden));
+                    });
+
+                    // Close on outside click
+                    document.addEventListener('click', function(e) {
+                        var picker = document.getElementById(cfg.pickerId);
+                        if (picker && !picker.contains(e.target)) {
+                            dropdown.hidden = true;
+                            btn.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                }
+
+                Object.keys(PICKERS).forEach(function(tableId) {
+                    initPicker(tableId, PICKERS[tableId]);
+                });
+            })();
+        </script>
+    <?php endif; ?>
     <?php if ($section === 'preventivi'): ?>
         <script>
             (function() {

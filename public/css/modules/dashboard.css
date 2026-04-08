@@ -921,3 +921,222 @@
 .ud-stato--in_lavorazione { background: #ede9fe; color: #5b21b6; }
 .ud-stato--completato   { background: #d1fae5; color: #065f46; }
 .ud-stato--annullato    { background: #fee2e2; color: #991b1b; }
+
+/* ===== SEARCH TOOLBAR ===== */
+.search-toolbar {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1rem;
+}
+
+.search-toolbar__input-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 480px;
+}
+
+.search-toolbar__icon {
+    position: absolute;
+    left: .75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.search-toolbar__input {
+    width: 100%;
+    padding: .5rem .75rem .5rem 2.25rem;
+    border: 1px solid #d1d5db;
+    border-radius: .5rem;
+    font-size: .875rem;
+    color: #111827;
+    background: #fff;
+    box-sizing: border-box;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.search-toolbar__input:focus {
+    outline: none;
+    border-color: #e85252;
+    box-shadow: 0 0 0 3px rgba(232,82,82,.12);
+}
+
+.search-toolbar__clear {
+    position: absolute;
+    right: .6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: .85rem;
+    text-decoration: none;
+    line-height: 1;
+    padding: .15rem .3rem;
+    border-radius: 4px;
+    transition: color .15s, background .15s;
+}
+
+.search-toolbar__clear:hover {
+    color: #374151;
+    background: #f3f4f6;
+}
+
+.search-result-count {
+    font-size: .82rem;
+    color: #6b7280;
+    margin-bottom: .75rem;
+}
+
+/* ===== PAGINAZIONE ===== */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.pagination__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 .5rem;
+    border: 1px solid #d1d5db;
+    border-radius: .4rem;
+    font-size: .82rem;
+    font-weight: 500;
+    color: #374151;
+    background: #fff;
+    text-decoration: none;
+    transition: background .15s, border-color .15s, color .15s;
+}
+
+.pagination__btn:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.pagination__btn--active {
+    background: #e85252;
+    border-color: #e85252;
+    color: #fff;
+    cursor: default;
+}
+
+.pagination__btn--active:hover {
+    background: #e85252;
+    border-color: #e85252;
+}
+
+.pagination__btn--disabled {
+    color: #d1d5db;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    background: #f9fafb;
+}
+
+.pagination__ellipsis {
+    color: #9ca3af;
+    font-size: .82rem;
+    padding: 0 .2rem;
+    user-select: none;
+}
+
+.pagination__info {
+    margin-left: .5rem;
+    font-size: .78rem;
+    color: #9ca3af;
+    white-space: nowrap;
+}
+
+/* btn-sm usato nella search toolbar */
+.btn.btn-sm,
+.btn-primary.btn-sm {
+    padding: .45rem .9rem;
+    font-size: .82rem;
+    border-radius: .4rem;
+}
+
+/* ===== TABLE CONTROLS (search + col-picker row) ===== */
+.table-controls {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.table-controls .search-toolbar {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+/* ===== COL PICKER ===== */
+.col-picker {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.col-picker__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    white-space: nowrap;
+}
+
+.col-picker__dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + .4rem);
+    z-index: 200;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: .6rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,.10);
+    padding: .75rem 1rem 1rem;
+    min-width: 200px;
+}
+
+.col-picker__label {
+    font-size: .72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #9ca3af;
+    margin: 0 0 .5rem;
+}
+
+.col-picker__item {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .84rem;
+    color: #374151;
+    padding: .3rem 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.col-picker__item input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: #e85252;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* btn-ghost — bottone testo con bordo leggero */
+.btn-ghost {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    transition: background .15s, border-color .15s;
+}
+
+.btn-ghost:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}

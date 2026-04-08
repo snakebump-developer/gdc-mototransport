@@ -1,33 +1,94 @@
 <?php
 require_once __DIR__ . '/db.php';
 
-function getAllUsers($limit = 50, $offset = 0)
+function getAllUsers($limit = 50, $offset = 0, string $search = '')
 {
     global $pdo;
-    $stmt = $pdo->prepare("
-        SELECT id, username, email, nome, cognome, ruolo, creato_il 
-        FROM utenti 
-        WHERE ruolo IN ('user', 'admin')
-        ORDER BY creato_il DESC 
-        LIMIT ? OFFSET ?
-    ");
-    $stmt->execute([$limit, $offset]);
+    if ($search !== '') {
+        $like = '%' . $search . '%';
+        $stmt = $pdo->prepare("
+            SELECT id, username, email, nome, cognome, ruolo, creato_il
+            FROM utenti
+            WHERE ruolo IN ('user', 'admin')
+              AND (username LIKE ? OR email LIKE ? OR nome LIKE ? OR cognome LIKE ?)
+            ORDER BY creato_il DESC
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->execute([$like, $like, $like, $like, $limit, $offset]);
+    } else {
+        $stmt = $pdo->prepare("
+            SELECT id, username, email, nome, cognome, ruolo, creato_il
+            FROM utenti
+            WHERE ruolo IN ('user', 'admin')
+            ORDER BY creato_il DESC
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->execute([$limit, $offset]);
+    }
     return $stmt->fetchAll();
 }
 
-function getAllProfessionals($limit = 50, $offset = 0)
+function countAllUsers(string $search = ''): int
 {
     global $pdo;
-    $stmt = $pdo->prepare("
-        SELECT id, username, email, nome, cognome, ragione_sociale,
-               partita_iva, tipo_attivita, sconto_percentuale, citta, creato_il
-        FROM utenti
-        WHERE ruolo = 'professional'
-        ORDER BY creato_il DESC
-        LIMIT ? OFFSET ?
-    ");
-    $stmt->execute([$limit, $offset]);
+    if ($search !== '') {
+        $like = '%' . $search . '%';
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) FROM utenti
+            WHERE ruolo IN ('user', 'admin')
+              AND (username LIKE ? OR email LIKE ? OR nome LIKE ? OR cognome LIKE ?)
+        ");
+        $stmt->execute([$like, $like, $like, $like]);
+    } else {
+        $stmt = $pdo->query("SELECT COUNT(*) FROM utenti WHERE ruolo IN ('user', 'admin')");
+    }
+    return (int) $stmt->fetchColumn();
+}
+
+function getAllProfessionals($limit = 50, $offset = 0, string $search = '')
+{
+    global $pdo;
+    if ($search !== '') {
+        $like = '%' . $search . '%';
+        $stmt = $pdo->prepare("
+            SELECT id, username, email, nome, cognome, ragione_sociale,
+                   partita_iva, tipo_attivita, sconto_percentuale, citta, creato_il
+            FROM utenti
+            WHERE ruolo = 'professional'
+              AND (ragione_sociale LIKE ? OR email LIKE ? OR nome LIKE ? OR cognome LIKE ? OR citta LIKE ? OR partita_iva LIKE ?)
+            ORDER BY creato_il DESC
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->execute([$like, $like, $like, $like, $like, $like, $limit, $offset]);
+    } else {
+        $stmt = $pdo->prepare("
+            SELECT id, username, email, nome, cognome, ragione_sociale,
+                   partita_iva, tipo_attivita, sconto_percentuale, citta, creato_il
+            FROM utenti
+            WHERE ruolo = 'professional'
+            ORDER BY creato_il DESC
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->execute([$limit, $offset]);
+    }
     return $stmt->fetchAll();
+}
+
+function countAllProfessionals(string $search = ''): int
+{
+    global $pdo;
+    if ($search !== '') {
+        $like = '%' . $search . '%';
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) FROM utenti
+            WHERE ruolo = 'professional'
+              AND (ragione_sociale LIKE ? OR email LIKE ? OR nome LIKE ? OR cognome LIKE ? OR citta LIKE ? OR partita_iva LIKE ?)
+        ");
+        $stmt->execute([$like, $like, $like, $like, $like, $like]);
+    } else {
+        $stmt = $pdo->query("SELECT COUNT(*) FROM utenti WHERE ruolo = 'professional'");
+    }
+    return (int) $stmt->fetchColumn();
 }
 
 function getUserById($userId)
