@@ -67,6 +67,7 @@ $routes = [
     // API
     '/api/percorso'                 => ['file' => 'api/route-calc.php'],
     '/api/preventivo'               => ['file' => 'api/preventivo.php'],
+    '/api/salva-bozza'              => ['file' => 'api/save-draft.php'],
     '/api/create-payment-intent'    => ['file' => 'api/create-payment-intent.php'],
     '/api/webhook-stripe'           => ['file' => 'api/webhook-stripe.php'],
 ];

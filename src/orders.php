@@ -209,9 +209,26 @@ function getUserPreventivi($userId, $limit = 50)
         FROM preventivi p
         LEFT JOIN pagamenti pg ON pg.preventivo_id = p.id
         WHERE p.user_id = ?
+          AND p.stato != 'bozza'
         ORDER BY p.creato_il DESC
         LIMIT ?
     ");
     $stmt->execute([$userId, $limit]);
+    return $stmt->fetchAll();
+}
+
+function getDraftPreventivi($userId)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT *
+        FROM preventivi
+        WHERE user_id = ?
+          AND stato = 'bozza'
+          AND (scadenza_il IS NULL OR scadenza_il > CURRENT_TIMESTAMP)
+          AND (data_ritiro IS NULL OR data_ritiro > DATE('now'))
+        ORDER BY creato_il DESC
+    ");
+    $stmt->execute([$userId]);
     return $stmt->fetchAll();
 }

@@ -425,6 +425,18 @@
 
                     <p class="quote-summary__disclaimer">Cliccando "Conferma e Paga" verrai portato al pagamento sicuro integrato.</p>
                 </div>
+
+                <!-- Pannello successo salvataggio bozza (nascosto di default) -->
+                <div class="quote-draft-saved" id="quoteDraftSaved" hidden>
+                    <svg class="quote-draft-saved__icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    <h4 class="quote-draft-saved__title">Preventivo salvato!</h4>
+                    <p class="quote-draft-saved__msg">Trovi la bozza nella tua dashboard e hai tempo di completare il pagamento entro il <strong id="quoteDraftExpiry">&mdash;</strong>.</p>
+                    <a class="quote-draft-saved__link" href="/dashboard?sezione=ordini">Vai alla dashboard &rarr;</a>
+                </div>
             </div>
 
             <!-- STEP 6: Pagamento Stripe -->
@@ -501,6 +513,16 @@
                     <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
             </button>
+            <?php if (!empty($user)): ?>
+                <button class="quote-btn quote-btn--save-draft" id="quoteSaveDraftBtn" style="display:none;" title="Salva il preventivo per completare il pagamento in seguito">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Salva per dopo
+                </button>
+            <?php endif; ?>
             <button class="quote-btn quote-btn--confirm" id="quoteConfirmBtn" style="display:none;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="1" y="4" width="22" height="16" rx="2"></rect>

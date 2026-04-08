@@ -186,6 +186,8 @@ $migrations = [
         'stripe_payment_intent_id'   => 'TEXT',
         'pagamento_stato'            => "TEXT DEFAULT 'non_pagato'",
         'pagamento_id'               => 'INTEGER',
+        'scadenza_il'                => 'DATETIME',
+        'route_data_json'            => 'TEXT',
     ],
 ];
 

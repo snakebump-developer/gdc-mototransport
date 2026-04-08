@@ -15,7 +15,15 @@ $success = '';
 $error   = '';
 $pageTitle     = 'Dashboard Professionista - GDC MotoTransport';
 $noFontAwesome = true;
-$extraCss = ['css/modules/dashboard.css'];
+$extraCss = ['css/modules/dashboard.css', 'css/modules/quote-modal.css'];
+$config   = require __DIR__ . '/../src/config.php';
+$stripePk = htmlspecialchars($config['stripe']['public_key'] ?? '', ENT_QUOTES, 'UTF-8');
+$quoteUserData = [
+    'nome'     => trim(($user['nome'] ?? '') . ' ' . ($user['cognome'] ?? '')),
+    'email'    => $user['email'] ?? '',
+    'telefono' => $user['telefono'] ?? '',
+    'cf'       => $user['codice_fiscale_azienda'] ?? '',
+];
 
 // ---- POST ----
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -86,8 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $ordini = [];
+$bozze  = [];
 $moto   = [];
-if ($section === 'orders')      $ordini = getUserOrders($user['id']);
+if ($section === 'orders') {
+    $ordini = getUserOrders($user['id']);
+    $bozze  = getDraftPreventivi($user['id']);
+}
 if ($section === 'motorcycles') $moto   = getUserMotorcycles($user['id']);
 
 $csrf   = generateCsrfToken();
@@ -372,6 +384,50 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
                         Storico degli ordini con sconto professionista applicato
                     </p>
 
+                    <?php if (!empty($bozze)): ?>
+                        <!-- Bozze preventivi in attesa di pagamento -->
+                        <h3 class="draft-section-title">Bozze salvate</h3>
+                        <div class="draft-cards">
+                            <?php foreach ($bozze as $b):
+                                $scadenza = $b['scadenza_il'] ? new DateTime($b['scadenza_il']) : null;
+                                $now      = new DateTime();
+                                $giorniRimasti = $scadenza ? (int)$now->diff($scadenza)->format('%r%a') : null;
+                                $expiryClass = '';
+                                if ($giorniRimasti !== null) {
+                                    if ($giorniRimasti <= 1) $expiryClass = 'draft-card__expiry--critical';
+                                    elseif ($giorniRimasti <= 3) $expiryClass = 'draft-card__expiry--warning';
+                                }
+                                $draftJson = json_encode([
+                                    'marca_moto'   => $b['marca_moto'],
+                                    'modello_moto' => $b['modello_moto'],
+                                    'cilindrata'   => $b['cilindrata'],
+                                ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+                            ?>
+                                <div class="draft-card">
+                                    <div class="draft-card__header">
+                                        <span class="draft-card__moto"><?= htmlspecialchars(trim(($b['marca_moto'] ?? '') . ' ' . ($b['modello_moto'] ?? '') . ($b['cilindrata'] ? ' · ' . $b['cilindrata'] : '')), ENT_QUOTES, 'UTF-8') ?></span>
+                                        <?php if ($scadenza && $giorniRimasti !== null): ?>
+                                            <span class="draft-card__expiry <?= $expiryClass ?>">
+                                                <?php if ($giorniRimasti <= 0): ?>Scade oggi<?php elseif ($giorniRimasti === 1): ?>Scade domani<?php else: ?>Scade tra <?= $giorniRimasti ?> giorni<?php endif; ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <p class="draft-card__route">
+                                        <?= htmlspecialchars($b['indirizzo_ritiro'] ?? '—', ENT_QUOTES, 'UTF-8') ?> &rarr;
+                                        <?= htmlspecialchars($b['indirizzo_consegna'] ?? '—', ENT_QUOTES, 'UTF-8') ?>
+                                    </p>
+                                    <div class="draft-card__footer">
+                                        <strong class="draft-card__price">&euro;<?= number_format((float)($b['prezzo_finale'] ?? 0), 2, ',', '.') ?></strong>
+                                        <button class="btn btn-primary btn-sm"
+                                            onclick="window.resumeDraft(<?= (int)$b['id'] ?>, <?= htmlspecialchars($draftJson, ENT_QUOTES, 'UTF-8') ?>)">
+                                            Completa pagamento &rarr;
+                                        </button>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
                     <?php if (empty($ordini)): ?>
                         <div class="empty-state">
                             <div class="empty-state__icon">&#128230;</div>
@@ -419,6 +475,24 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
     </div>
 
     <script src="/js/modules/nav.js"></script>
+    <?php if ($section === 'orders' && !empty($bozze)): ?>
+        <!-- Quote modal per riprendere bozze -->
+        <?php include 'includes/quote-modal.php'; ?>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script>
+            window.STRIPE_PUBLIC_KEY = <?= json_encode($stripePk, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+            window.QUOTE_USER_DATA = <?= json_encode($quoteUserData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+        </script>
+        <script src="/js/modules/quote-modal.js"></script>
+        <script>
+            if (typeof window.resumeDraft !== 'function') {
+                console.error('[dashboard-pro] quote-modal.js non ha definito window.resumeDraft.');
+                window.resumeDraft = function(draftId) {
+                    alert('Impossibile aprire il pagamento: il sistema modale non si è caricato correttamente. Ricarica la pagina e riprova.');
+                };
+            }
+        </script>
+    <?php endif; ?>
     <script>
         (function() {
             const addCard = document.getElementById('addMotoCard');
