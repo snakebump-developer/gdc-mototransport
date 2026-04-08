@@ -116,6 +116,19 @@ function updateUserRole($userId, $ruolo)
     return $stmt->execute([$ruolo, $userId]);
 }
 
+function updateProfessionalDiscount(int $userId, float $sconto): void
+{
+    global $pdo;
+    if ($sconto < 0 || $sconto > 100) {
+        throw new Exception("Percentuale di sconto non valida (0–100)");
+    }
+    $stmt = $pdo->prepare("UPDATE utenti SET sconto_percentuale = ? WHERE id = ? AND ruolo = 'professional'");
+    $stmt->execute([$sconto, $userId]);
+    if ($stmt->rowCount() === 0) {
+        throw new Exception("Utente non trovato o non è un professionista");
+    }
+}
+
 function getUserStats()
 {
     global $pdo;

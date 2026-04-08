@@ -29,6 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } elseif ($_POST['action'] === 'update_user_role') {
             updateUserRole($_POST['user_id'], $_POST['role']);
             $success = "Ruolo utente aggiornato!";
+        } elseif ($_POST['action'] === 'update_discount') {
+            $sconto = (float)str_replace(',', '.', $_POST['sconto'] ?? '0');
+            updateProfessionalDiscount((int)$_POST['user_id'], $sconto);
+            $success = "Sconto aggiornato!";
         }
     } catch (Exception $e) {
         $error = "Errore: " . $e->getMessage();
@@ -595,7 +599,21 @@ if ($section === 'panoramica') {
                                             <td data-col="piva"><?= htmlspecialchars($p['partita_iva'] ?? '-') ?></td>
                                             <td data-col="attivita" class="td-wrap"><?= htmlspecialchars($p['tipo_attivita'] ?? '-') ?></td>
                                             <td data-col="citta"><?= htmlspecialchars($p['citta'] ?? '-') ?></td>
-                                            <td data-col="sconto"><?= number_format((float)($p['sconto_percentuale'] ?? 0), 1) ?>%</td>
+                                            <td data-col="sconto">
+                                                <form method="POST" class="inline-form discount-form">
+                                                    <input type="hidden" name="action" value="update_discount">
+                                                    <input type="hidden" name="user_id" value="<?= $p['id'] ?>">
+                                                    <div class="discount-inline">
+                                                        <input type="number" name="sconto"
+                                                            value="<?= number_format((float)($p['sconto_percentuale'] ?? 0), 1, '.', '') ?>"
+                                                            min="0" max="100" step="0.5"
+                                                            class="discount-input"
+                                                            aria-label="Sconto %">
+                                                        <span class="discount-pct">%</span>
+                                                        <button type="submit" class="btn btn-xs btn-save" title="Salva sconto">&#10003;</button>
+                                                    </div>
+                                                </form>
+                                            </td>
                                             <td data-col="registrato"><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
                                             <td data-col="azioni" class="td-actions">
                                                 <div class="td-actions-inner">

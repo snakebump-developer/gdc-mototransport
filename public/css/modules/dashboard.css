@@ -1140,3 +1140,93 @@
     background: #f9fafb;
     border-color: #9ca3af;
 }
+
+/* ===== SCONTO INLINE (tabella professionisti) ===== */
+.discount-form {
+    margin: 0;
+}
+
+.discount-inline {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+}
+
+.discount-input {
+    width: 62px;
+    padding: .3rem .4rem;
+    border: 1px solid #d1d5db;
+    border-radius: .35rem;
+    font-size: .82rem;
+    color: #111827;
+    text-align: right;
+    background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+    -moz-appearance: textfield;
+}
+
+.discount-input::-webkit-inner-spin-button,
+.discount-input::-webkit-outer-spin-button { opacity: 1; }
+
+.discount-input:focus {
+    outline: none;
+    border-color: #e85252;
+    box-shadow: 0 0 0 3px rgba(232,82,82,.12);
+}
+
+.discount-pct {
+    font-size: .82rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Bottone salva (segno di spunta) */
+.btn-xs {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    font-size: .9rem;
+    border-radius: .35rem;
+    border: none;
+    cursor: pointer;
+    transition: background .15s;
+}
+
+.btn-save {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.btn-save:hover {
+    background: #a7f3d0;
+}
+
+/* ===== SCONTO DETTAGLIO (admin-utente) ===== */
+.discount-detail-form {
+    display: inline-block;
+}
+
+.discount-detail-row {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+
+.discount-input--lg {
+    width: 80px;
+    font-size: .9rem;
+    padding: .38rem .5rem;
+}
+
+.discount-msg {
+    font-size: .78rem;
+    margin: .35rem 0 0;
+    font-weight: 500;
+}
+
+.discount-msg--ok  { color: #059669; }
+.discount-msg--err { color: #dc2626; }

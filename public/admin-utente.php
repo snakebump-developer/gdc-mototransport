@@ -37,6 +37,23 @@ $sezioneRitorno = $soggetto['ruolo'] === 'professional' ? 'professionisti' : 'ut
 $labelRitorno   = $soggetto['ruolo'] === 'professional' ? 'Professionisti' : 'Clienti';
 $urlRitorno     = '/admin/' . $sezioneRitorno;
 
+// Gestione POST
+$ud_success = '';
+$ud_error   = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    if ($_POST['action'] === 'update_discount') {
+        try {
+            $sconto = (float)str_replace(',', '.', $_POST['sconto'] ?? '0');
+            updateProfessionalDiscount($userId, $sconto);
+            // Ricarica per mostrare il valore aggiornato
+            $soggetto['sconto_percentuale'] = $sconto;
+            $ud_success = 'Sconto aggiornato con successo.';
+        } catch (Exception $e) {
+            $ud_error = $e->getMessage();
+        }
+    }
+}
+
 // Preventivi collegati
 $preventivi_utente = getUserPreventivi($userId);
 
@@ -208,7 +225,23 @@ function val(mixed $v, string $empty = '—'): string
                             <div class="ud-field">
                                 <span class="ud-field__label">Sconto applicato</span>
                                 <span class="ud-field__value">
-                                    <?= number_format((float)($soggetto['sconto_percentuale'] ?? 0), 1) ?>%
+                                    <form method="POST" class="discount-detail-form">
+                                        <input type="hidden" name="action" value="update_discount">
+                                        <div class="discount-detail-row">
+                                            <input type="number" name="sconto"
+                                                value="<?= number_format((float)($soggetto['sconto_percentuale'] ?? 0), 1, '.', '') ?>"
+                                                min="0" max="100" step="0.5"
+                                                class="discount-input discount-input--lg"
+                                                aria-label="Percentuale sconto">
+                                            <span class="discount-pct">%</span>
+                                            <button type="submit" class="btn btn-primary btn-sm">Salva</button>
+                                        </div>
+                                        <?php if ($ud_success): ?>
+                                            <p class="discount-msg discount-msg--ok"><?= htmlspecialchars($ud_success) ?></p>
+                                        <?php elseif ($ud_error): ?>
+                                            <p class="discount-msg discount-msg--err"><?= htmlspecialchars($ud_error) ?></p>
+                                        <?php endif; ?>
+                                    </form>
                                 </span>
                             </div>
                         </div>
