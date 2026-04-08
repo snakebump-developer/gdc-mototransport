@@ -114,7 +114,24 @@ try {
         $prezzoFinale,
     ]);
 
-    echo json_encode(['success' => true, 'id' => (int) $pdo->lastInsertId()]);
+    $preventivoId = (int) $pdo->lastInsertId();
+
+    // Se l'utente è loggato e ha fornito un CF, salvarlo nel profilo se ancora assente
+    $cfCliente = trim($data['codice_fiscale_cliente'] ?? '');
+    if ($userId && $cfCliente !== '') {
+        $cfCliente = strtoupper($cfCliente);
+        if (preg_match('/^[A-Z0-9]{11,16}$/', $cfCliente)) {
+            $chk = $pdo->prepare("SELECT codice_fiscale_azienda FROM utenti WHERE id = ?");
+            $chk->execute([$userId]);
+            $profileCf = $chk->fetchColumn();
+            if (empty($profileCf)) {
+                $upd = $pdo->prepare("UPDATE utenti SET codice_fiscale_azienda = ?, aggiornato_il = CURRENT_TIMESTAMP WHERE id = ?");
+                $upd->execute([$cfCliente, $userId]);
+            }
+        }
+    }
+
+    echo json_encode(['success' => true, 'id' => $preventivoId]);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Errore nel salvataggio. Riprova.']);

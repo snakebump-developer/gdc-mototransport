@@ -119,14 +119,21 @@ function updateUserProfile($userId, $data)
 {
     global $pdo;
 
-    $allowed = ['nome', 'cognome', 'telefono', 'indirizzo', 'citta', 'cap', 'paese'];
+    $allowed = ['nome', 'cognome', 'telefono', 'indirizzo', 'citta', 'cap', 'paese', 'codice_fiscale_azienda'];
     $fields = [];
     $values = [];
 
     foreach ($allowed as $field) {
         if (isset($data[$field])) {
+            $val = $data[$field];
+            if ($field === 'codice_fiscale_azienda' && $val !== '') {
+                $val = strtoupper(trim($val));
+                if (!preg_match('/^[A-Z0-9]{11,16}$/', $val)) {
+                    throw new Exception("Codice fiscale non valido.");
+                }
+            }
             $fields[] = "$field = ?";
-            $values[] = $data[$field];
+            $values[] = $val;
         }
     }
 

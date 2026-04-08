@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $section === 'profile') {
             $user    = getCurrentUser();
         }
         // Aggiornamento dati profilo (solo se ci sono campi POST oltre csrf/action)
-        $profileFields = array_intersect_key($_POST, array_flip(['nome', 'cognome', 'telefono', 'indirizzo', 'citta', 'cap', 'paese']));
+        $profileFields = array_intersect_key($_POST, array_flip(['nome', 'cognome', 'telefono', 'indirizzo', 'citta', 'cap', 'paese', 'codice_fiscale_azienda']));
         if (!empty($profileFields)) {
             updateUserProfile($user['id'], $_POST);
             if (empty($success)) $success = "Profilo aggiornato con successo!";
@@ -176,6 +176,20 @@ if ($section === 'orders') {
                                 <label for="telefono">Telefono</label>
                                 <input type="tel" id="telefono" name="telefono" value="<?= htmlspecialchars($user['telefono'] ?? '') ?>">
                             </div>
+                            <div class="form-group">
+                                <label for="codice_fiscale_azienda">Codice Fiscale</label>
+                                <input type="text" id="codice_fiscale_azienda" name="codice_fiscale_azienda"
+                                    value="<?= htmlspecialchars($user['codice_fiscale_azienda'] ?? '') ?>"
+                                    placeholder="Es. RSSMRC92A01H501Z"
+                                    maxlength="16"
+                                    style="text-transform:uppercase;">
+                                <?php if (empty($user['codice_fiscale_azienda'])): ?>
+                                    <small>Verrà salvato automaticamente al primo preventivo</small>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group">
                                 <label for="indirizzo">Indirizzo</label>
                                 <input type="text" id="indirizzo" name="indirizzo" value="<?= htmlspecialchars($user['indirizzo'] ?? '') ?>">
