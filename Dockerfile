@@ -1,11 +1,13 @@
 FROM php:8.2-apache
 
+# Disabilita TUTTI gli MPM
+RUN a2dismod mpm_event mpm_worker mpm_prefork || true
+
+# Abilita solo mpm_prefork
+RUN a2enmod mpm_prefork rewrite
+
 # Estensioni PHP necessarie
 RUN docker-php-ext-install pdo pdo_mysql
-
-# Abilita mod_rewrite di Apache (disabilita MPM conflittuali prima)
-RUN a2dismod mpm_event mpm_worker || true && \
-    a2enmod mpm_prefork rewrite
 
 # Copia tutto il progetto
 COPY . /var/www/html/
@@ -20,7 +22,7 @@ RUN echo '<Directory /var/www/html/public>\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/apache2.conf
 
-# Installa git e unzip (richiesti da Composer per scaricare le dipendenze)
+# Installa git e unzip
 RUN apt-get update && apt-get install -y git unzip && rm -rf /var/lib/apt/lists/*
 
 # Installa Composer e le dipendenze PHP
