@@ -53,10 +53,9 @@ $totalItems   = 0;
 $totalPages   = 1;
 
 if ($section === 'panoramica') {
-    $orderStats = getOrderStats();
+    $preventiviStats = getPreventiviStats();
     $userStats = getUserStats();
-    $stats = array_merge($orderStats, $userStats);
-    $ultimi_ordini = getAllOrders(5);
+    $ultimi_preventivi = getLastPreventivi(5);
     $ultimi_utenti = getAllUsers(5);
 } elseif ($section === 'preventivi') {
     $preventivi = getAllPreventivi();
@@ -106,11 +105,11 @@ if ($section === 'panoramica') {
                                 </svg>
                             </div>
                             <div class="ov-card__body">
-                                <span class="ov-card__value"><?= (int)$stats['totale_utenti'] ?></span>
+                                <span class="ov-card__value" id="stat-totale-utenti"><?= (int)$userStats['totale_utenti'] ?></span>
                                 <span class="ov-card__label">Utenti totali</span>
                             </div>
                             <div class="ov-card__sub">
-                                <span class="ov-badge ov-badge--green">+<?= (int)$stats['nuovi_oggi'] ?> oggi</span>
+                                <span class="ov-badge ov-badge--green" id="stat-nuovi-oggi">+<?= (int)$userStats['nuovi_oggi'] ?> oggi</span>
                             </div>
                         </div>
 
@@ -122,11 +121,11 @@ if ($section === 'panoramica') {
                                 </svg>
                             </div>
                             <div class="ov-card__body">
-                                <span class="ov-card__value"><?= (int)($stats['totale_professionisti'] ?? 0) ?></span>
+                                <span class="ov-card__value" id="stat-totale-professionisti"><?= (int)($userStats['totale_professionisti'] ?? 0) ?></span>
                                 <span class="ov-card__label">Professionisti</span>
                             </div>
                             <div class="ov-card__sub">
-                                <span class="ov-badge ov-badge--gray"><?= (int)$stats['totale_clienti'] ?> clienti</span>
+                                <span class="ov-badge ov-badge--gray" id="stat-totale-clienti"><?= (int)$userStats['totale_clienti'] ?> clienti</span>
                             </div>
                         </div>
 
@@ -139,12 +138,12 @@ if ($section === 'panoramica') {
                                 </svg>
                             </div>
                             <div class="ov-card__body">
-                                <span class="ov-card__value"><?= (int)$stats['totale_ordini'] ?></span>
-                                <span class="ov-card__label">Ordini totali</span>
+                                <span class="ov-card__value" id="stat-totale-preventivi"><?= (int)$preventiviStats['totale_preventivi'] ?></span>
+                                <span class="ov-card__label">Preventivi totali</span>
                             </div>
                             <div class="ov-card__sub">
-                                <span class="ov-badge ov-badge--orange"><?= (int)$stats['ordini_pending'] ?> in attesa</span>
-                                <span class="ov-badge ov-badge--blue"><?= (int)$stats['ordini_processing'] ?> in lavorazione</span>
+                                <span class="ov-badge ov-badge--orange" id="stat-preventivi-inviati"><?= (int)$preventiviStats['preventivi_inviati'] ?> inviati</span>
+                                <span class="ov-badge ov-badge--blue" id="stat-preventivi-in-lavorazione"><?= (int)$preventiviStats['preventivi_in_lavorazione'] ?> in lavorazione</span>
                             </div>
                         </div>
 
@@ -156,41 +155,43 @@ if ($section === 'panoramica') {
                                 </svg>
                             </div>
                             <div class="ov-card__body">
-                                <span class="ov-card__value">&euro;<?= number_format((float)$stats['totale_vendite'], 2, ',', '.') ?></span>
+                                <span class="ov-card__value" id="stat-totale-fatturato">&euro;<?= number_format((float)$preventiviStats['totale_fatturato'], 2, ',', '.') ?></span>
                                 <span class="ov-card__label">Fatturato totale</span>
                             </div>
                             <div class="ov-card__sub">
-                                <span class="ov-badge ov-badge--green"><?= (int)$stats['ordini_completati'] ?> completati</span>
+                                <span class="ov-badge ov-badge--green" id="stat-preventivi-confermati"><?= (int)$preventiviStats['preventivi_confermati'] ?> confermati</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Attività recente -->
                     <div class="overview-recent">
-                        <!-- Ultimi ordini -->
+                        <!-- Ultimi preventivi -->
                         <div class="recent-block">
                             <div class="recent-block__header">
-                                <h3>Ultimi ordini</h3>
+                                <h3>Ultimi preventivi</h3>
                                 <a href="/admin/preventivi" class="recent-block__link">Vedi tutti →</a>
                             </div>
-                            <?php if (empty($ultimi_ordini)): ?>
-                                <p class="recent-block__empty">Nessun ordine ancora.</p>
+                            <div id="ultimi-preventivi-wrap">
+                            <?php if (empty($ultimi_preventivi)): ?>
+                                <p class="recent-block__empty">Nessun preventivo ancora.</p>
                             <?php else: ?>
                                 <div class="recent-list">
-                                    <?php foreach ($ultimi_ordini as $o): ?>
+                                    <?php foreach ($ultimi_preventivi as $p): ?>
                                         <div class="recent-item">
                                             <div class="recent-item__info">
-                                                <span class="recent-item__title">#<?= $o['id'] ?> — <?= htmlspecialchars($o['username'] ?? 'N/A') ?></span>
-                                                <span class="recent-item__date"><?= date('d/m/Y H:i', strtotime($o['creato_il'])) ?></span>
+                                                <span class="recent-item__title">#<?= $p['id'] ?> — <?= htmlspecialchars($p['cliente'] ?? 'N/A') ?></span>
+                                                <span class="recent-item__date"><?= date('d/m/Y H:i', strtotime($p['creato_il'])) ?></span>
                                             </div>
                                             <div class="recent-item__right">
-                                                <span class="recent-item__amount">&euro;<?= number_format((float)($o['totale'] ?? 0), 2, ',', '.') ?></span>
-                                                <span class="ov-status ov-status--<?= $o['stato'] ?>"><?= ucfirst($o['stato']) ?></span>
+                                                <span class="recent-item__amount">&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></span>
+                                                <span class="ov-status ov-status--<?= $p['stato'] ?>"><?= ucfirst(str_replace('_', ' ', $p['stato'])) ?></span>
                                             </div>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
+                            </div>
                         </div>
 
                         <!-- Ultimi utenti -->
@@ -199,6 +200,7 @@ if ($section === 'panoramica') {
                                 <h3>Ultimi utenti registrati</h3>
                                 <a href="/admin/utenti" class="recent-block__link">Vedi tutti →</a>
                             </div>
+                            <div id="ultimi-utenti-wrap">
                             <?php if (empty($ultimi_utenti)): ?>
                                 <p class="recent-block__empty">Nessun utente ancora.</p>
                             <?php else: ?>
@@ -217,6 +219,7 @@ if ($section === 'panoramica') {
                                     <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -627,6 +630,108 @@ if ($section === 'panoramica') {
 
     <script src="/js/modules/nav.js"></script>
     <script src="/js/modules/forms.js"></script>
+    <?php if ($section === 'panoramica'): ?>
+    <script>
+    (function () {
+        'use strict';
+
+        var POLL_INTERVAL = 30000; // 30 secondi
+
+        function fmt(n) {
+            return new Intl.NumberFormat('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+        }
+
+        function fmtDate(iso) {
+            var d = new Date(iso.replace(' ', 'T'));
+            return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function setText(id, val) {
+            var el = document.getElementById(id);
+            if (el) el.textContent = val;
+        }
+
+        function esc(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        function renderPreventivi(preventivi) {
+            var wrap = document.getElementById('ultimi-preventivi-wrap');
+            if (!wrap) return;
+            if (!preventivi || preventivi.length === 0) {
+                wrap.innerHTML = '<p class="recent-block__empty">Nessun preventivo ancora.</p>';
+                return;
+            }
+            var html = '<div class="recent-list">';
+            preventivi.forEach(function (p) {
+                var statoLabel = p.stato.replace(/_/g, ' ');
+                statoLabel = statoLabel.charAt(0).toUpperCase() + statoLabel.slice(1);
+                html += '<div class="recent-item">' +
+                    '<div class="recent-item__info">' +
+                        '<span class="recent-item__title">#' + p.id + ' \u2014 ' + esc(p.cliente) + '</span>' +
+                        '<span class="recent-item__date">' + fmtDate(p.creato_il) + '</span>' +
+                    '</div>' +
+                    '<div class="recent-item__right">' +
+                        '<span class="recent-item__amount">&euro;' + fmt(p.prezzo_finale) + '</span>' +
+                        '<span class="ov-status ov-status--' + esc(p.stato) + '">' + statoLabel + '</span>' +
+                    '</div>' +
+                '</div>';
+            });
+            html += '</div>';
+            wrap.innerHTML = html;
+        }
+
+        function renderUtenti(utenti) {
+            var wrap = document.getElementById('ultimi-utenti-wrap');
+            if (!wrap) return;
+            if (!utenti || utenti.length === 0) {
+                wrap.innerHTML = '<p class="recent-block__empty">Nessun utente ancora.</p>';
+                return;
+            }
+            var html = '<div class="recent-list">';
+            utenti.forEach(function (u) {
+                html += '<div class="recent-item">' +
+                    '<div class="recent-item__avatar">' + esc(u.username.charAt(0).toUpperCase()) + '</div>' +
+                    '<div class="recent-item__info">' +
+                        '<span class="recent-item__title">' + esc(u.username) + '</span>' +
+                        '<span class="recent-item__date">' + esc(u.email) + '</span>' +
+                    '</div>' +
+                    '<div class="recent-item__right">' +
+                        '<span class="ov-role ov-role--' + esc(u.ruolo) + '">' + esc(u.ruolo.charAt(0).toUpperCase() + u.ruolo.slice(1)) + '</span>' +
+                    '</div>' +
+                '</div>';
+            });
+            html += '</div>';
+            wrap.innerHTML = html;
+        }
+
+        function refreshStats() {
+            fetch('/api/admin-stats.php', { credentials: 'same-origin' })
+                .then(function (res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json();
+                })
+                .then(function (data) {
+                    var s = data.preventivi_stats;
+                    setText('stat-totale-utenti',              s.totale_utenti);
+                    setText('stat-nuovi-oggi',                 '+' + s.nuovi_oggi + ' oggi');
+                    setText('stat-totale-professionisti',      s.totale_professionisti || 0);
+                    setText('stat-totale-clienti',             s.totale_clienti + ' clienti');
+                    setText('stat-totale-preventivi',          s.totale_preventivi);
+                    setText('stat-preventivi-inviati',         s.preventivi_inviati + ' inviati');
+                    setText('stat-preventivi-in-lavorazione',  s.preventivi_in_lavorazione + ' in lavorazione');
+                    setText('stat-totale-fatturato',           '\u20AC' + fmt(s.totale_fatturato));
+                    setText('stat-preventivi-confermati',      s.preventivi_confermati + ' confermati');
+                    renderPreventivi(data.ultimi_preventivi);
+                    renderUtenti(data.ultimi_utenti);
+                })
+                .catch(function () { /* silenzioso — i dati restano invariati */ });
+        }
+
+        setInterval(refreshStats, POLL_INTERVAL);
+    }());
+    </script>
+    <?php endif; ?>
     <?php if ($section === 'utenti' || $section === 'professionisti'): ?>
         <script>
             (function() {

@@ -139,6 +139,46 @@ function getOrderStats()
     return $stmt->fetch();
 }
 
+function getPreventiviStats(): array
+{
+    global $pdo;
+
+    $stmt = $pdo->query("
+        SELECT
+            COUNT(*) as totale_preventivi,
+            COALESCE(SUM(prezzo_finale), 0)                                                        as totale_fatturato,
+            COUNT(CASE WHEN stato = 'bozza'        THEN 1 END)                                    as preventivi_bozza,
+            COUNT(CASE WHEN stato = 'inviato'      THEN 1 END)                                    as preventivi_inviati,
+            COUNT(CASE WHEN stato = 'confermato'   THEN 1 END)                                    as preventivi_confermati,
+            COUNT(CASE WHEN stato = 'in_lavorazione' THEN 1 END)                                  as preventivi_in_lavorazione,
+            COUNT(CASE WHEN stato = 'completato'   THEN 1 END)                                    as preventivi_completati,
+            COUNT(CASE WHEN stato = 'annullato'    THEN 1 END)                                    as preventivi_annullati,
+            COUNT(CASE WHEN DATE(creato_il) = DATE('now') THEN 1 END)                             as nuovi_oggi
+        FROM preventivi
+    ");
+
+    return $stmt->fetch() ?: [];
+}
+
+function getLastPreventivi(int $limit = 5): array
+{
+    global $pdo;
+
+    $stmt = $pdo->prepare("
+        SELECT p.id,
+               COALESCE(u.username, p.nome_cliente) AS cliente,
+               p.creato_il,
+               p.prezzo_finale,
+               p.stato
+        FROM preventivi p
+        LEFT JOIN utenti u ON p.user_id = u.id
+        ORDER BY p.creato_il DESC
+        LIMIT ?
+    ");
+    $stmt->execute([$limit]);
+    return $stmt->fetchAll();
+}
+
 function getAllPreventivi($limit = 100, $offset = 0)
 {
     global $pdo;
