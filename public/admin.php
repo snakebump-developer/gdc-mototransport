@@ -173,24 +173,24 @@ if ($section === 'panoramica') {
                                 <a href="/admin/preventivi" class="recent-block__link">Vedi tutti →</a>
                             </div>
                             <div id="ultimi-preventivi-wrap">
-                            <?php if (empty($ultimi_preventivi)): ?>
-                                <p class="recent-block__empty">Nessun preventivo ancora.</p>
-                            <?php else: ?>
-                                <div class="recent-list">
-                                    <?php foreach ($ultimi_preventivi as $p): ?>
-                                        <div class="recent-item">
-                                            <div class="recent-item__info">
-                                                <span class="recent-item__title">#<?= $p['id'] ?> — <?= htmlspecialchars($p['cliente'] ?? 'N/A') ?></span>
-                                                <span class="recent-item__date"><?= date('d/m/Y H:i', strtotime($p['creato_il'])) ?></span>
+                                <?php if (empty($ultimi_preventivi)): ?>
+                                    <p class="recent-block__empty">Nessun preventivo ancora.</p>
+                                <?php else: ?>
+                                    <div class="recent-list">
+                                        <?php foreach ($ultimi_preventivi as $p): ?>
+                                            <div class="recent-item">
+                                                <div class="recent-item__info">
+                                                    <span class="recent-item__title">#<?= $p['id'] ?> — <?= htmlspecialchars($p['cliente'] ?? 'N/A') ?></span>
+                                                    <span class="recent-item__date"><?= date('d/m/Y H:i', strtotime($p['creato_il'])) ?></span>
+                                                </div>
+                                                <div class="recent-item__right">
+                                                    <span class="recent-item__amount">&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></span>
+                                                    <span class="ov-status ov-status--<?= $p['stato'] ?>"><?= ucfirst(str_replace('_', ' ', $p['stato'])) ?></span>
+                                                </div>
                                             </div>
-                                            <div class="recent-item__right">
-                                                <span class="recent-item__amount">&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></span>
-                                                <span class="ov-status ov-status--<?= $p['stato'] ?>"><?= ucfirst(str_replace('_', ' ', $p['stato'])) ?></span>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
@@ -201,24 +201,24 @@ if ($section === 'panoramica') {
                                 <a href="/admin/utenti" class="recent-block__link">Vedi tutti →</a>
                             </div>
                             <div id="ultimi-utenti-wrap">
-                            <?php if (empty($ultimi_utenti)): ?>
-                                <p class="recent-block__empty">Nessun utente ancora.</p>
-                            <?php else: ?>
-                                <div class="recent-list">
-                                    <?php foreach ($ultimi_utenti as $u): ?>
-                                        <div class="recent-item">
-                                            <div class="recent-item__avatar"><?= mb_strtoupper(mb_substr($u['username'], 0, 1)) ?></div>
-                                            <div class="recent-item__info">
-                                                <span class="recent-item__title"><?= htmlspecialchars($u['username']) ?></span>
-                                                <span class="recent-item__date"><?= htmlspecialchars($u['email']) ?></span>
+                                <?php if (empty($ultimi_utenti)): ?>
+                                    <p class="recent-block__empty">Nessun utente ancora.</p>
+                                <?php else: ?>
+                                    <div class="recent-list">
+                                        <?php foreach ($ultimi_utenti as $u): ?>
+                                            <div class="recent-item">
+                                                <div class="recent-item__avatar"><?= mb_strtoupper(mb_substr($u['username'], 0, 1)) ?></div>
+                                                <div class="recent-item__info">
+                                                    <span class="recent-item__title"><?= htmlspecialchars($u['username']) ?></span>
+                                                    <span class="recent-item__date"><?= htmlspecialchars($u['email']) ?></span>
+                                                </div>
+                                                <div class="recent-item__right">
+                                                    <span class="ov-role ov-role--<?= $u['ruolo'] ?>"><?= ucfirst($u['ruolo']) ?></span>
+                                                </div>
                                             </div>
-                                            <div class="recent-item__right">
-                                                <span class="ov-role ov-role--<?= $u['ruolo'] ?>"><?= ucfirst($u['ruolo']) ?></span>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -631,106 +631,115 @@ if ($section === 'panoramica') {
     <script src="/js/modules/nav.js"></script>
     <script src="/js/modules/forms.js"></script>
     <?php if ($section === 'panoramica'): ?>
-    <script>
-    (function () {
-        'use strict';
+        <script>
+            (function() {
+                'use strict';
 
-        var POLL_INTERVAL = 30000; // 30 secondi
+                var POLL_INTERVAL = 30000; // 30 secondi
 
-        function fmt(n) {
-            return new Intl.NumberFormat('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
-        }
+                function fmt(n) {
+                    return new Intl.NumberFormat('it-IT', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }).format(n);
+                }
 
-        function fmtDate(iso) {
-            var d = new Date(iso.replace(' ', 'T'));
-            return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-        }
+                function fmtDate(iso) {
+                    var d = new Date(iso.replace(' ', 'T'));
+                    return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
 
-        function setText(id, val) {
-            var el = document.getElementById(id);
-            if (el) el.textContent = val;
-        }
+                function setText(id, val) {
+                    var el = document.getElementById(id);
+                    if (el) el.textContent = val;
+                }
 
-        function esc(str) {
-            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        }
+                function esc(str) {
+                    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                }
 
-        function renderPreventivi(preventivi) {
-            var wrap = document.getElementById('ultimi-preventivi-wrap');
-            if (!wrap) return;
-            if (!preventivi || preventivi.length === 0) {
-                wrap.innerHTML = '<p class="recent-block__empty">Nessun preventivo ancora.</p>';
-                return;
-            }
-            var html = '<div class="recent-list">';
-            preventivi.forEach(function (p) {
-                var statoLabel = p.stato.replace(/_/g, ' ');
-                statoLabel = statoLabel.charAt(0).toUpperCase() + statoLabel.slice(1);
-                html += '<div class="recent-item">' +
-                    '<div class="recent-item__info">' +
-                        '<span class="recent-item__title">#' + p.id + ' \u2014 ' + esc(p.cliente) + '</span>' +
-                        '<span class="recent-item__date">' + fmtDate(p.creato_il) + '</span>' +
-                    '</div>' +
-                    '<div class="recent-item__right">' +
-                        '<span class="recent-item__amount">&euro;' + fmt(p.prezzo_finale) + '</span>' +
-                        '<span class="ov-status ov-status--' + esc(p.stato) + '">' + statoLabel + '</span>' +
-                    '</div>' +
-                '</div>';
-            });
-            html += '</div>';
-            wrap.innerHTML = html;
-        }
+                function renderPreventivi(preventivi) {
+                    var wrap = document.getElementById('ultimi-preventivi-wrap');
+                    if (!wrap) return;
+                    if (!preventivi || preventivi.length === 0) {
+                        wrap.innerHTML = '<p class="recent-block__empty">Nessun preventivo ancora.</p>';
+                        return;
+                    }
+                    var html = '<div class="recent-list">';
+                    preventivi.forEach(function(p) {
+                        var statoLabel = p.stato.replace(/_/g, ' ');
+                        statoLabel = statoLabel.charAt(0).toUpperCase() + statoLabel.slice(1);
+                        html += '<div class="recent-item">' +
+                            '<div class="recent-item__info">' +
+                            '<span class="recent-item__title">#' + p.id + ' \u2014 ' + esc(p.cliente) + '</span>' +
+                            '<span class="recent-item__date">' + fmtDate(p.creato_il) + '</span>' +
+                            '</div>' +
+                            '<div class="recent-item__right">' +
+                            '<span class="recent-item__amount">&euro;' + fmt(p.prezzo_finale) + '</span>' +
+                            '<span class="ov-status ov-status--' + esc(p.stato) + '">' + statoLabel + '</span>' +
+                            '</div>' +
+                            '</div>';
+                    });
+                    html += '</div>';
+                    wrap.innerHTML = html;
+                }
 
-        function renderUtenti(utenti) {
-            var wrap = document.getElementById('ultimi-utenti-wrap');
-            if (!wrap) return;
-            if (!utenti || utenti.length === 0) {
-                wrap.innerHTML = '<p class="recent-block__empty">Nessun utente ancora.</p>';
-                return;
-            }
-            var html = '<div class="recent-list">';
-            utenti.forEach(function (u) {
-                html += '<div class="recent-item">' +
-                    '<div class="recent-item__avatar">' + esc(u.username.charAt(0).toUpperCase()) + '</div>' +
-                    '<div class="recent-item__info">' +
-                        '<span class="recent-item__title">' + esc(u.username) + '</span>' +
-                        '<span class="recent-item__date">' + esc(u.email) + '</span>' +
-                    '</div>' +
-                    '<div class="recent-item__right">' +
-                        '<span class="ov-role ov-role--' + esc(u.ruolo) + '">' + esc(u.ruolo.charAt(0).toUpperCase() + u.ruolo.slice(1)) + '</span>' +
-                    '</div>' +
-                '</div>';
-            });
-            html += '</div>';
-            wrap.innerHTML = html;
-        }
+                function renderUtenti(utenti) {
+                    var wrap = document.getElementById('ultimi-utenti-wrap');
+                    if (!wrap) return;
+                    if (!utenti || utenti.length === 0) {
+                        wrap.innerHTML = '<p class="recent-block__empty">Nessun utente ancora.</p>';
+                        return;
+                    }
+                    var html = '<div class="recent-list">';
+                    utenti.forEach(function(u) {
+                        html += '<div class="recent-item">' +
+                            '<div class="recent-item__avatar">' + esc(u.username.charAt(0).toUpperCase()) + '</div>' +
+                            '<div class="recent-item__info">' +
+                            '<span class="recent-item__title">' + esc(u.username) + '</span>' +
+                            '<span class="recent-item__date">' + esc(u.email) + '</span>' +
+                            '</div>' +
+                            '<div class="recent-item__right">' +
+                            '<span class="ov-role ov-role--' + esc(u.ruolo) + '">' + esc(u.ruolo.charAt(0).toUpperCase() + u.ruolo.slice(1)) + '</span>' +
+                            '</div>' +
+                            '</div>';
+                    });
+                    html += '</div>';
+                    wrap.innerHTML = html;
+                }
 
-        function refreshStats() {
-            fetch('/api/admin-stats.php', { credentials: 'same-origin' })
-                .then(function (res) {
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    return res.json();
-                })
-                .then(function (data) {
-                    var s = data.preventivi_stats;
-                    setText('stat-totale-utenti',              s.totale_utenti);
-                    setText('stat-nuovi-oggi',                 '+' + s.nuovi_oggi + ' oggi');
-                    setText('stat-totale-professionisti',      s.totale_professionisti || 0);
-                    setText('stat-totale-clienti',             s.totale_clienti + ' clienti');
-                    setText('stat-totale-preventivi',          s.totale_preventivi);
-                    setText('stat-preventivi-inviati',         s.preventivi_inviati + ' inviati');
-                    setText('stat-preventivi-in-lavorazione',  s.preventivi_in_lavorazione + ' in lavorazione');
-                    setText('stat-totale-fatturato',           '\u20AC' + fmt(s.totale_fatturato));
-                    setText('stat-preventivi-confermati',      s.preventivi_confermati + ' confermati');
-                    renderPreventivi(data.ultimi_preventivi);
-                    renderUtenti(data.ultimi_utenti);
-                })
-                .catch(function () { /* silenzioso — i dati restano invariati */ });
-        }
+                function refreshStats() {
+                    fetch('/api/admin-stats.php', {
+                            credentials: 'same-origin'
+                        })
+                        .then(function(res) {
+                            if (!res.ok) throw new Error('HTTP ' + res.status);
+                            return res.json();
+                        })
+                        .then(function(data) {
+                            var s = data.preventivi_stats;
+                            setText('stat-totale-utenti', s.totale_utenti);
+                            setText('stat-nuovi-oggi', '+' + s.nuovi_oggi + ' oggi');
+                            setText('stat-totale-professionisti', s.totale_professionisti || 0);
+                            setText('stat-totale-clienti', s.totale_clienti + ' clienti');
+                            setText('stat-totale-preventivi', s.totale_preventivi);
+                            setText('stat-preventivi-inviati', s.preventivi_inviati + ' inviati');
+                            setText('stat-preventivi-in-lavorazione', s.preventivi_in_lavorazione + ' in lavorazione');
+                            setText('stat-totale-fatturato', '\u20AC' + fmt(s.totale_fatturato));
+                            setText('stat-preventivi-confermati', s.preventivi_confermati + ' confermati');
+                            renderPreventivi(data.ultimi_preventivi);
+                            renderUtenti(data.ultimi_utenti);
+                        })
+                        .catch(function() {
+                            /* silenzioso — i dati restano invariati */ });
+                }
 
-        setInterval(refreshStats, POLL_INTERVAL);
-    }());
-    </script>
+                setInterval(refreshStats, POLL_INTERVAL);
+            }());
+        </script>
     <?php endif; ?>
     <?php if ($section === 'utenti' || $section === 'professionisti'): ?>
         <script>
