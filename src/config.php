@@ -21,14 +21,24 @@ if (file_exists($envFile)) {
     }
 }
 
+// Helper per leggere env vars in qualsiasi contesto PHP (getenv, $_ENV, $_SERVER)
+function env(string $key, $default = null)
+{
+    $val = getenv($key);
+    if ($val !== false) return $val;
+    if (isset($_ENV[$key])) return $_ENV[$key];
+    if (isset($_SERVER[$key])) return $_SERVER[$key];
+    return $default;
+}
+
 return [
-    // Configurazione MySQL (MAMP)
+    // Configurazione MySQL
     'db' => [
-        'host'     => getenv('DB_HOST')     ?: '127.0.0.1',
-        'port'     => getenv('DB_PORT')     ?: '8889',
-        'name'     => getenv('DB_NAME')     ?: 'gdctrasporti_db',
-        'user'     => getenv('DB_USER')     ?: 'root',
-        'password' => getenv('DB_PASSWORD') ?: 'root',
+        'host'     => env('DB_HOST',     '127.0.0.1'),
+        'port'     => env('DB_PORT',     '8889'),
+        'name'     => env('DB_NAME',     'gdctrasporti_db'),
+        'user'     => env('DB_USER',     'root'),
+        'password' => env('DB_PASSWORD', 'root'),
         'charset'  => 'utf8mb4',
     ],
 
@@ -41,17 +51,17 @@ return [
 
     // Configurazione pagamenti (da configurare con le tue chiavi)
     'stripe' => [
-        'secret_key' => getenv('STRIPE_SECRET_KEY') ?: '',
-        'public_key' => getenv('STRIPE_PUBLIC_KEY') ?: '',
-        'webhook_secret' => getenv('STRIPE_WEBHOOK_SECRET') ?: ''
+        'secret_key'     => env('STRIPE_SECRET_KEY', ''),
+        'public_key'     => env('STRIPE_PUBLIC_KEY', ''),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET', ''),
     ],
 
     'paypal' => [
-        'client_id' => getenv('PAYPAL_CLIENT_ID') ?: '',
-        'client_secret' => getenv('PAYPAL_CLIENT_SECRET') ?: '',
-        'mode' => 'sandbox' // 'sandbox' per test, 'live' per produzione
+        'client_id'     => env('PAYPAL_CLIENT_ID', ''),
+        'client_secret' => env('PAYPAL_CLIENT_SECRET', ''),
+        'mode'          => 'sandbox', // 'sandbox' per test, 'live' per produzione
     ],
 
     // Google Maps
-    'google_maps_api_key' => getenv('GOOGLE_MAPS_API_KEY') ?: ''
+    'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', '')
 ];
