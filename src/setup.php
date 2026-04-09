@@ -148,6 +148,30 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS pagamenti (
 )");
 
 // =========================================================
+// CATALOGO MOTO UFFICIALE
+// =========================================================
+$pdo->exec("CREATE TABLE IF NOT EXISTS catalogo_moto (
+    id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    marca   TEXT NOT NULL,
+    modello TEXT NOT NULL,
+    UNIQUE(marca, modello)
+)");
+
+// =========================================================
+// MOTO IN BOZZA (proposte utenti, in attesa di approvazione admin)
+// =========================================================
+$pdo->exec("CREATE TABLE IF NOT EXISTS moto_bozze (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    marca      TEXT    NOT NULL,
+    modello    TEXT    NOT NULL,
+    stato      TEXT    DEFAULT 'in_attesa'
+                       CHECK(stato IN ('in_attesa','approvata','rifiutata')),
+    note_admin TEXT,
+    creato_il  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(marca, modello)
+)");
+
+// =========================================================
 // MIGRAZIONI: aggiunge colonne mancanti su DB esistenti
 // =========================================================
 function columnExists(PDO $db, string $table, string $column): bool

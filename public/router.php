@@ -63,6 +63,7 @@ $routes = [
     '/admin/utenti'          => ['file' => 'admin.php',         'get' => ['sezione' => 'utenti']],
     '/admin/professionisti'  => ['file' => 'admin.php',         'get' => ['sezione' => 'professionisti']],
     '/admin/preventivi'      => ['file' => 'admin.php',         'get' => ['sezione' => 'preventivi']],
+    '/admin/moto-bozze'      => ['file' => 'admin.php',         'get' => ['sezione' => 'moto-bozze']],
 
     // API
     '/api/percorso'                 => ['file' => 'api/route-calc.php'],
@@ -70,6 +71,7 @@ $routes = [
     '/api/salva-bozza'              => ['file' => 'api/save-draft.php'],
     '/api/create-payment-intent'    => ['file' => 'api/create-payment-intent.php'],
     '/api/webhook-stripe'           => ['file' => 'api/webhook-stripe.php'],
+    '/api/moto-catalogo'            => ['file' => 'api/moto-catalogo.php'],
 ];
 
 if (isset($routes[$uri])) {

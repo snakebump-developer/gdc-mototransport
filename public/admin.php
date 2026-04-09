@@ -33,6 +33,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $sconto = (float)str_replace(',', '.', $_POST['sconto'] ?? '0');
             updateProfessionalDiscount((int)$_POST['user_id'], $sconto);
             $success = "Sconto aggiornato!";
+        } elseif ($_POST['action'] === 'approve_moto_bozza') {
+            require_once __DIR__ . '/../src/db.php';
+            $bId = (int)$_POST['bozza_id'];
+            $bozza = $pdo->prepare("SELECT * FROM moto_bozze WHERE id=? AND stato='in_attesa'")->execute([$bId]) ? $pdo->query("SELECT * FROM moto_bozze WHERE id=$bId AND stato='in_attesa'")->fetch() : null;
+            if ($bozza) {
+                $pdo->prepare("INSERT OR IGNORE INTO catalogo_moto (marca, modello) VALUES (?,?)")->execute([$bozza['marca'], $bozza['modello']]);
+                $pdo->prepare("UPDATE moto_bozze SET stato='approvata' WHERE id=?")->execute([$bId]);
+                $success = "Moto approvata e aggiunta al catalogo!";
+            }
+        } elseif ($_POST['action'] === 'reject_moto_bozza') {
+            require_once __DIR__ . '/../src/db.php';
+            $bId = (int)$_POST['bozza_id'];
+            $pdo->prepare("UPDATE moto_bozze SET stato='rifiutata', note_admin=? WHERE id=?")->execute([
+                htmlspecialchars(strip_tags($_POST['nota'] ?? ''), ENT_QUOTES, 'UTF-8'),
+                $bId,
+            ]);
+            $success = "Proposta rifiutata.";
         }
     } catch (Exception $e) {
         $error = "Errore: " . $e->getMessage();
@@ -64,6 +81,9 @@ if ($section === 'panoramica') {
     $utenti = getAllUsers(PHP_INT_MAX, 0);
 } elseif ($section === 'professionisti') {
     $professionisti = getAllProfessionals(PHP_INT_MAX, 0);
+} elseif ($section === 'moto-bozze') {
+    require_once __DIR__ . '/../src/db.php';
+    $motoBozze = $pdo->query("SELECT * FROM moto_bozze ORDER BY stato='in_attesa' DESC, creato_il DESC")->fetchAll();
 }
 ?>
 <!DOCTYPE html>
@@ -624,6 +644,108 @@ if ($section === 'panoramica') {
                     <?php endif; ?>
                 </div>
 
+            <?php elseif ($section === 'moto-bozze'): ?>
+                <!-- Gestione Moto in Bozza -->
+                <div class="dashboard-section">
+                    <h1>Moto in bozza</h1>
+                    <p class="section-description">Proposte di moto inserite dagli utenti — approva per aggiungere al catalogo ufficiale</p>
+
+                    <?php
+                    $bozzeInAttesa  = array_values(array_filter($motoBozze ?? [], fn($b) => $b['stato'] === 'in_attesa'));
+                    $bozzeProcessed = array_values(array_filter($motoBozze ?? [], fn($b) => $b['stato'] !== 'in_attesa'));
+                    ?>
+
+                    <!-- Sezione in attesa -->
+                    <h2 style="font-size:1.05rem;font-weight:600;margin:1.5rem 0 .75rem;color:var(--text-primary)">
+                        In attesa di revisione
+                        <?php if (count($bozzeInAttesa) > 0): ?>
+                            <span style="background:#fef08a;color:#713f12;border-radius:999px;padding:.1em .55em;font-size:.8em;font-weight:700;margin-left:.4em"><?= count($bozzeInAttesa) ?></span>
+                        <?php endif; ?>
+                    </h2>
+
+                    <?php if (empty($bozzeInAttesa)): ?>
+                        <div class="empty-state" style="padding:2rem 0">
+                            <div class="empty-icon">✅</div>
+                            <h3>Nessuna proposta in attesa!</h3>
+                        </div>
+                    <?php else: ?>
+                        <div class="orders-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Marca</th>
+                                        <th>Modello</th>
+                                        <th>Ricevuta il</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($bozzeInAttesa as $b): ?>
+                                        <tr>
+                                            <td><?= $b['id'] ?></td>
+                                            <td><strong><?= htmlspecialchars($b['marca']) ?></strong></td>
+                                            <td><?= htmlspecialchars($b['modello']) ?></td>
+                                            <td><?= date('d/m/Y H:i', strtotime($b['creato_il'])) ?></td>
+                                            <td class="td-actions">
+                                                <div class="td-actions-inner">
+                                                    <!-- Approva -->
+                                                    <form method="POST" class="inline-form" onsubmit="return confirm('Aggiungere «<?= htmlspecialchars(addslashes($b['marca'] . ' ' . $b['modello'])) ?>» al catalogo ufficiale?')">
+                                                        <input type="hidden" name="action" value="approve_moto_bozza">
+                                                        <input type="hidden" name="bozza_id" value="<?= $b['id'] ?>">
+                                                        <button type="submit" class="btn btn-small" style="background:#16a34a;color:#fff;border:none">✓ Approva</button>
+                                                    </form>
+                                                    <!-- Rifiuta -->
+                                                    <form method="POST" class="inline-form" onsubmit="return confirm('Rifiutare questa proposta?')">
+                                                        <input type="hidden" name="action" value="reject_moto_bozza">
+                                                        <input type="hidden" name="bozza_id" value="<?= $b['id'] ?>">
+                                                        <button type="submit" class="btn btn-small btn-danger">✕ Rifiuta</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Storico bozze processate -->
+                    <?php if (!empty($bozzeProcessed)): ?>
+                        <h2 style="font-size:1.05rem;font-weight:600;margin:2rem 0 .75rem;color:var(--text-primary)">Storico</h2>
+                        <div class="orders-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Marca</th>
+                                        <th>Modello</th>
+                                        <th>Stato</th>
+                                        <th>Ricevuta il</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($bozzeProcessed as $b): ?>
+                                        <tr>
+                                            <td><?= $b['id'] ?></td>
+                                            <td><?= htmlspecialchars($b['marca']) ?></td>
+                                            <td><?= htmlspecialchars($b['modello']) ?></td>
+                                            <td>
+                                                <?php if ($b['stato'] === 'approvata'): ?>
+                                                    <span class="badge" style="background:#dcfce7;color:#166534">✓ Approvata</span>
+                                                <?php else: ?>
+                                                    <span class="badge" style="background:#fee2e2;color:#991b1b">✕ Rifiutata</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><?= date('d/m/Y', strtotime($b['creato_il'])) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
             <?php endif; ?>
         </main>
     </div>
@@ -734,7 +856,8 @@ if ($section === 'panoramica') {
                             renderUtenti(data.ultimi_utenti);
                         })
                         .catch(function() {
-                            /* silenzioso — i dati restano invariati */ });
+                            /* silenzioso — i dati restano invariati */
+                        });
                 }
 
                 setInterval(refreshStats, POLL_INTERVAL);

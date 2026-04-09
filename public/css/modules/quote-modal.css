@@ -284,6 +284,109 @@
     font-weight: 500;
 }
 
+/* Sezione "Altro" per moto non in catalogo */
+.quote-form__altro-section {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin-top: .25rem;
+}
+
+.quote-form__altro-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: .5rem;
+    padding: .75rem 1rem;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: .625rem;
+    font-size: .82rem;
+    color: #1e40af;
+    line-height: 1.4;
+}
+
+.quote-form__altro-notice svg {
+    flex-shrink: 0;
+    margin-top: .05rem;
+}
+
+/* Stato di errore sui select */
+.quote-form__select.is-error {
+    border-color: var(--danger-color, #ef4444);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, .15);
+}
+
+/* ===== COMBOBOX MOTO ===== */
+.moto-combobox {
+    position: relative;
+}
+
+.moto-combobox__input.is-error {
+    border-color: var(--danger-color, #ef4444);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, .15);
+}
+
+.moto-combobox__list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: .625rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 3000;
+    margin: 0;
+    padding: .25rem 0;
+    list-style: none;
+    scroll-behavior: smooth;
+}
+
+.moto-combobox__list::-webkit-scrollbar { width: 6px; }
+.moto-combobox__list::-webkit-scrollbar-track { background: transparent; }
+.moto-combobox__list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+.moto-combobox__item {
+    padding: .55rem 1rem;
+    cursor: pointer;
+    font-size: .9rem;
+    color: var(--text-primary, #1e293b);
+    transition: background .1s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.moto-combobox__item:hover,
+.moto-combobox__item[aria-selected="true"] {
+    background: #f1f5f9;
+    color: var(--primary-color, #0284c7);
+}
+
+.moto-combobox__item--altro {
+    border-top: 1px solid #e2e8f0;
+    margin-top: .25rem;
+    padding-top: .65rem;
+    font-style: italic;
+    color: #64748b;
+}
+
+.moto-combobox__item--altro:hover,
+.moto-combobox__item--altro[aria-selected="true"] {
+    background: #f8fafc;
+    color: var(--primary-color, #0284c7);
+}
+
+.moto-combobox__hint {
+    padding: .5rem 1rem;
+    font-size: .8rem;
+    color: #94a3b8;
+    font-style: italic;
+    pointer-events: none;
+}
+
 /* Checkbox */
 .quote-form__checkbox {
     display: flex;

@@ -27,6 +27,18 @@ $section = $section ?? 'panoramica';
         <a href="/admin/preventivi"
             class="sidebar-link <?= $section === 'preventivi' ? 'active' : '' ?>">
             <span class="icon">�</span> Preventivi
+        </a> <a href="/admin/moto-bozze"
+            class="sidebar-link <?= $section === 'moto-bozze' ? 'active' : '' ?>">
+            <span class="icon">🏍️</span> Moto in bozza
+            <?php
+            // Badge contatore bozze in attesa
+            try {
+                require_once __DIR__ . '/../../src/db.php';
+                $cnt = (int)$pdo->query("SELECT COUNT(*) FROM moto_bozze WHERE stato='in_attesa'")->fetchColumn();
+                if ($cnt > 0) echo '<span class="sidebar-badge">' . $cnt . '</span>';
+            } catch (Exception $e) {
+            }
+            ?>
         </a>
         <hr>
         <a href="/" class="sidebar-link">

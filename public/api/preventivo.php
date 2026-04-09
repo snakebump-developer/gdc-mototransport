@@ -116,6 +116,16 @@ try {
 
     $preventivoId = (int) $pdo->lastInsertId();
 
+    // Se la moto non è nel catalogo ufficiale, salvarla come bozza per revisione admin
+    $marcaBozza   = htmlspecialchars(strip_tags($data['marca_moto']),   ENT_QUOTES, 'UTF-8');
+    $modelloBozza = htmlspecialchars(strip_tags($data['modello_moto']), ENT_QUOTES, 'UTF-8');
+    $chkCat = $pdo->prepare("SELECT id FROM catalogo_moto WHERE marca=? AND modello=? LIMIT 1");
+    $chkCat->execute([$marcaBozza, $modelloBozza]);
+    if (!$chkCat->fetch()) {
+        $pdo->prepare("INSERT OR IGNORE INTO moto_bozze (marca, modello) VALUES (?, ?)")
+            ->execute([$marcaBozza, $modelloBozza]);
+    }
+
     // Se l'utente è loggato e ha fornito un CF, salvarlo nel profilo se ancora assente
     $cfCliente = trim($data['codice_fiscale_cliente'] ?? '');
     if ($userId && $cfCliente !== '') {

@@ -252,6 +252,17 @@ try {
         }
     }
 
+    // 2c. Se la moto non è nel catalogo ufficiale, salvare come bozza per revisione admin
+    $marcaBozza   = htmlspecialchars(strip_tags($data['marca_moto']),   ENT_QUOTES, 'UTF-8');
+    $modelloBozza = htmlspecialchars(strip_tags($data['modello_moto']), ENT_QUOTES, 'UTF-8');
+    $chkCatalogo  = $pdo->prepare("SELECT id FROM catalogo_moto WHERE marca=? AND modello=? LIMIT 1");
+    $chkCatalogo->execute([$marcaBozza, $modelloBozza]);
+    if (!$chkCatalogo->fetch()) {
+        // Non è nel catalogo → inserisce come bozza (ignora duplicati)
+        $pdo->prepare("INSERT OR IGNORE INTO moto_bozze (marca, modello) VALUES (?, ?)")
+            ->execute([$marcaBozza, $modelloBozza]);
+    }
+
     // 3. Crea PaymentIntent su Stripe
     require_once __DIR__ . '/../../src/payments/stripe.php';
     $intent = createPaymentIntent($preventivoId, $prezzoFinale, $data['email_cliente']);

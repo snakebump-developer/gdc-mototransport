@@ -109,16 +109,57 @@
             <div class="quote-step" id="quoteStep1">
                 <h3 class="quote-step__title">Dettagli della moto</h3>
                 <div class="quote-form">
-                    <div class="quote-form__row">
-                        <div class="quote-form__group">
-                            <label class="quote-form__label" for="motoBrand">Marca <span class="quote-form__required">*</span></label>
-                            <input class="quote-form__input" type="text" id="motoBrand" name="motoBrand" placeholder="Es. Ducati">
-                        </div>
-                        <div class="quote-form__group">
-                            <label class="quote-form__label" for="motoModel">Modello <span class="quote-form__required">*</span></label>
-                            <input class="quote-form__input" type="text" id="motoModel" name="motoModel" placeholder="Es. Panigale V4">
+
+                    <!-- Combobox marca -->
+                    <div class="quote-form__group">
+                        <label class="quote-form__label" for="motoBrandInput">Marca <span class="quote-form__required">*</span></label>
+                        <div class="moto-combobox" id="motoBrandCombo">
+                            <input class="quote-form__input moto-combobox__input"
+                                type="text"
+                                id="motoBrandInput"
+                                placeholder="Scrivi la marca…"
+                                autocomplete="off"
+                                role="combobox"
+                                aria-autocomplete="list"
+                                aria-expanded="false"
+                                aria-controls="motoBrandList">
+                            <ul class="moto-combobox__list" id="motoBrandList" role="listbox" hidden></ul>
                         </div>
                     </div>
+
+                    <!-- Combobox modello (visibile dopo aver scelto la marca) -->
+                    <div class="quote-form__group" id="motoModelGroup" style="display:none">
+                        <label class="quote-form__label" for="motoModelInput">Modello <span class="quote-form__required">*</span></label>
+                        <div class="moto-combobox" id="motoModelCombo">
+                            <input class="quote-form__input moto-combobox__input"
+                                type="text"
+                                id="motoModelInput"
+                                placeholder="Scrivi il modello…"
+                                autocomplete="off"
+                                role="combobox"
+                                aria-autocomplete="list"
+                                aria-expanded="false"
+                                aria-controls="motoModelList">
+                            <ul class="moto-combobox__list" id="motoModelList" role="listbox" hidden></ul>
+                        </div>
+                    </div>
+
+                    <!-- Sezione "Altro": mostrata quando l'utente scrive una marca/modello non in lista e conferma -->
+                    <div class="quote-form__altro-section" id="motoAltroSection" style="display:none">
+                        <div class="quote-form__altro-notice">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            Moto non trovata in lista — verrà proposta per l'aggiunta al catalogo e potrai usarla subito per il preventivo.
+                        </div>
+                    </div>
+
+                    <!-- Campi nascosti: compatibilità con logica JS/PHP esistente -->
+                    <input type="hidden" id="motoBrand" name="motoBrand">
+                    <input type="hidden" id="motoModel" name="motoModel">
+
                     <div class="quote-form__group">
                         <label class="quote-form__label" for="motoCc">Cilindrata <span class="quote-form__required">*</span></label>
                         <input class="quote-form__input" type="text" id="motoCc" name="motoCc" placeholder="Es. 1103cc">

@@ -1,0 +1,2999 @@
+[
+  {
+    "marca": "Adiva",
+    "moto": [
+      "AD 2 ruote",
+      "AD 3 ruote",
+      "AR"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Adly",
+    "moto": [
+      "GTC",
+      "RT"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Aeon",
+    "moto": [
+      "Elite",
+      "Urban"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "AJP Moto",
+    "moto": [
+      "PR3",
+      "PR4",
+      "PR5",
+      "PR7",
+      "SPR"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Alien Motors",
+    "moto": [
+      "Atlas",
+      "Darwin",
+      "Newton",
+      "Zoom-X"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Aprilia",
+    "moto": [
+      "Atlantic",
+      "Caponord",
+      "Dorsoduro",
+      "Mana",
+      "RS",
+      "RS 457",
+      "RS 660",
+      "RS4",
+      "RSV4",
+      "RX",
+      "RXV",
+      "SR",
+      "SR GT",
+      "SR Max",
+      "SRV",
+      "SX",
+      "SXR",
+      "SXV",
+      "Shiver",
+      "Sportcity",
+      "Tuareg",
+      "Tuono 125",
+      "Tuono 457",
+      "Tuono 660",
+      "Tuono V4"
+    ],
+    "totale_moto": 25
+  },
+  {
+    "marca": "Archive Motorcycle",
+    "moto": [
+      "Cafe Racer",
+      "Scrambler"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Askoll",
+    "moto": [
+      "EVOlution",
+      "NGS",
+      "XKP",
+      "eS1",
+      "eS2",
+      "eS3"
+    ],
+    "totale_moto": 6
+  },
+  {
+    "marca": "Aspes",
+    "moto": [
+      "Perseo",
+      "Vega"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Atul",
+    "moto": [
+      "Energie",
+      "Mobili"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Axy",
+    "moto": [
+      "Artery",
+      "Bang",
+      "Gulp",
+      "Roar",
+      "Slurp",
+      "XY",
+      "Yuk"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Baotian",
+    "moto": [
+      "Holiday",
+      "Spirit",
+      "Tia-go!",
+      "Victoria"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Benda Motorcycle",
+    "moto": [
+      "BD",
+      "Chinchilla",
+      "LFC",
+      "Napoleonbob"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Benelli",
+    "moto": [
+      "302R",
+      "302S",
+      "502 C",
+      "752 S",
+      "BKX",
+      "BN",
+      "BN GT",
+      "Caffénero",
+      "Imperiale",
+      "Leoncino",
+      "Leoncino 125/250",
+      "Leoncino 250",
+      "Leoncino 500",
+      "Leoncino 800",
+      "Leoncino Bobber 400",
+      "Macis",
+      "Pepe",
+      "TNT",
+      "TRE K",
+      "TRK",
+      "TRK 702",
+      "Tornado",
+      "Velvet",
+      "X",
+      "ZenZero"
+    ],
+    "totale_moto": 25
+  },
+  {
+    "marca": "Bertini",
+    "moto": [
+      "CityZen",
+      "Tropicana",
+      "Zaion"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Betamotor",
+    "moto": [
+      "50/125 RR",
+      "Alp",
+      "Ark",
+      "Enduro",
+      "Evo",
+      "M4",
+      "Motard",
+      "Urban",
+      "Xtrainer"
+    ],
+    "totale_moto": 9
+  },
+  {
+    "marca": "Bimota",
+    "moto": [
+      "BB3",
+      "DB10 B.Motard",
+      "DB11",
+      "DB5",
+      "DB6 Delirio",
+      "DB7",
+      "DB8",
+      "DB9 Brivido",
+      "DBx",
+      "Impeto",
+      "KB4",
+      "Tesi 3D",
+      "Tesi H2"
+    ],
+    "totale_moto": 13
+  },
+  {
+    "marca": "Black Douglas",
+    "moto": [
+      "Sterling"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Bluroc Motorcycles",
+    "moto": [
+      "Hero",
+      "Hunt",
+      "Legend",
+      "Tracker"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "BMW",
+    "moto": [
+      "C 400 GT",
+      "C 400 X",
+      "CE 02",
+      "CE 04",
+      "F 450 GS",
+      "F 800 GS",
+      "F 900 GS",
+      "F 900 R",
+      "F 900 XR",
+      "G 310 GS",
+      "G 310 R",
+      "HP",
+      "M 1000 R",
+      "M 1000 RR",
+      "M 1000 XR",
+      "R 12",
+      "R 12 G/S",
+      "R 12 S",
+      "R 12 nineT",
+      "R 1250 GS",
+      "R 1250 R",
+      "R 1250 RS",
+      "R 1250 RT",
+      "R 1300 GS",
+      "R 1300 GS Adventure",
+      "R 1300 R",
+      "R 1300 RS",
+      "R 1300 RT",
+      "R 18",
+      "R 18 B/Transcontinental",
+      "R nineT",
+      "R nineT Scrambler",
+      "S 1000 R",
+      "S 1000 RR",
+      "S 1000 XR",
+      "Serie C",
+      "Serie F GS",
+      "Serie F R/GT",
+      "Serie F R/ST/GT",
+      "Serie F XR",
+      "Serie G",
+      "Serie G 310",
+      "Serie K",
+      "Serie K 1600",
+      "Serie R",
+      "Serie R GS",
+      "Serie S"
+    ],
+    "totale_moto": 47
+  },
+  {
+    "marca": "Borile",
+    "moto": [
+      "B 300",
+      "Bastard",
+      "Multiuso",
+      "Ricki",
+      "Scrambler"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Boss Hoss Cycles",
+    "moto": [
+      "BHC-3 Bike",
+      "BHC-9 Trike"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Bottpower",
+    "moto": [
+      "XR1"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Brammo",
+    "moto": [
+      "Empulse",
+      "Enertia"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Brixton",
+    "moto": [
+      "BX",
+      "Cromwell 1200",
+      "Cromwell 125/250",
+      "Crossfire 125",
+      "Crossfire 125 XS",
+      "Crossfire 500",
+      "Felsberg",
+      "Glanville",
+      "Rayburn",
+      "Saxby",
+      "Sunray"
+    ],
+    "totale_moto": 11
+  },
+  {
+    "marca": "BSA",
+    "moto": [
+      "Bantam",
+      "Gold Star",
+      "Scrambler"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "BTC",
+    "moto": [
+      "e-Cruise"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Bultaco",
+    "moto": [
+      "Albero",
+      "Brinco"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Cagiva",
+    "moto": [
+      "Mito",
+      "Raptor"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Cake",
+    "moto": [
+      "Kalk",
+      "Makka",
+      "Ösa"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Can-Am",
+    "moto": [
+      "Cruiser Touring",
+      "Origin",
+      "Power Cruising",
+      "Pulse",
+      "Ryker",
+      "Spyder",
+      "Touring"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Centoallora",
+    "moto": [
+      "Kawasaki VN sidecar",
+      "LML Star De Luxe sidecar",
+      "Moto Guzzi V7 Classic sidecar",
+      "Triumph Bonneville sidecar",
+      "Vespa GTS/GTV sidecar"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Cezeta",
+    "moto": [
+      "Type 506"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "CFMoto",
+    "moto": [
+      "1000MT-X",
+      "125NK",
+      "300CL-X",
+      "300NK",
+      "400/650 NK",
+      "450CLC",
+      "450MT",
+      "450NK",
+      "450SR",
+      "650GT",
+      "650MT",
+      "650NK",
+      "675NK",
+      "675SR-R",
+      "700CL-X",
+      "700MT",
+      "700MT ADV",
+      "800MT",
+      "800MT-X",
+      "800NK"
+    ],
+    "totale_moto": 20
+  },
+  {
+    "marca": "ChangJiang",
+    "moto": [
+      "Siberian Express"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Com.Int.El.",
+    "moto": [
+      "City Power"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "CR&S",
+    "moto": [
+      "Duu",
+      "Vun"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "CRB",
+    "moto": [
+      "Airone",
+      "Eagle 1",
+      "Fenice",
+      "Roman",
+      "Sicily",
+      "Triò",
+      "Zeus"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Cyclone",
+    "moto": [
+      "Batllo5S",
+      "RA2",
+      "RT1",
+      "RT3S",
+      "RX600",
+      "RX650"
+    ],
+    "totale_moto": 6
+  },
+  {
+    "marca": "Daelim",
+    "moto": [
+      "A-Four",
+      "Aroma",
+      "B-Bone",
+      "Beagle",
+      "Besbi",
+      "Bonita",
+      "Daystar",
+      "Delfino",
+      "S 1",
+      "S-Five",
+      "S3",
+      "S4",
+      "Witty"
+    ],
+    "totale_moto": 13
+  },
+  {
+    "marca": "Derbi",
+    "moto": [
+      "Atlantis",
+      "Boulevard",
+      "GP1",
+      "GPR",
+      "Mulhacén",
+      "Rambla",
+      "Senda",
+      "Sonar",
+      "Terra",
+      "Variant"
+    ],
+    "totale_moto": 10
+  },
+  {
+    "marca": "Di Blasi",
+    "moto": [
+      "R7",
+      "R70"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Doohan",
+    "moto": [
+      "E.Swan",
+      "Uranus",
+      "iTango",
+      "iTank"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Ducati",
+    "moto": [
+      "848",
+      "848/1198",
+      "DesertX",
+      "Diavel",
+      "Diavel V4",
+      "Hypermotard",
+      "Hypermotard 698 Mono",
+      "Hypermotard V2",
+      "Hyperstrada",
+      "Monster",
+      "Multistrada",
+      "Multistrada V2",
+      "Panigale",
+      "Panigale V2",
+      "Panigale V4",
+      "Scrambler 1100",
+      "Scrambler 400",
+      "Scrambler 800",
+      "Streetfighter V2",
+      "Streetfighter V4",
+      "SuperSport",
+      "Superleggera",
+      "XDiavel",
+      "XDiavel V4"
+    ],
+    "totale_moto": 24
+  },
+  {
+    "marca": "E-max",
+    "moto": [
+      "E-max",
+      "VS1"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "E-move.me",
+    "moto": [
+      "Govecs GO",
+      "Ultra Motor A2B Metro"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "EBR",
+    "moto": [
+      "RX",
+      "SX"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Ebretti",
+    "moto": [
+      "318",
+      "518"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "eBroh",
+    "moto": [
+      "Bravo CR",
+      "Bravo GLE/GLS"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "ECO2Scooter",
+    "moto": [
+      "ECO2Scooter"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Ecobit",
+    "moto": [
+      "Eco Power",
+      "Legend",
+      "Maple",
+      "Smarty",
+      "Vax"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "EcoItalMotor",
+    "moto": [
+      "G-Eco"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Ecomission",
+    "moto": [
+      "Ecojumbo"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Ecooter",
+    "moto": [
+      "E2"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Ecostrada",
+    "moto": [
+      "Brezza",
+      "Ghibli",
+      "Levante",
+      "Libeccio",
+      "Maestrale",
+      "Zefiro"
+    ],
+    "totale_moto": 6
+  },
+  {
+    "marca": "Ecovolution",
+    "moto": [
+      "Ant",
+      "Eagle",
+      "Elettra",
+      "Oak",
+      "Tiger"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Electri",
+    "moto": [
+      "Vasco"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Electric Motion",
+    "moto": [
+      "ePure",
+      "eScape",
+      "eTrek",
+      "emLite",
+      "emSport"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Elettro",
+    "moto": [
+      "Eco Friendly"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Emco",
+    "moto": [
+      "Nova",
+      "Novantic",
+      "Novax",
+      "Novette Twin",
+      "Novi",
+      "Novum"
+    ],
+    "totale_moto": 6
+  },
+  {
+    "marca": "Energica",
+    "moto": [
+      "Ego",
+      "EsseEsse9",
+      "Eva",
+      "Experia"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Etriko",
+    "moto": [
+      "Rapido",
+      "SK"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Etropolis",
+    "moto": [
+      "Bel Air",
+      "Future",
+      "Miami",
+      "Reload",
+      "Retro"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "EVai",
+    "moto": [
+      "Asparago",
+      "Celadon",
+      "Felce",
+      "Giada",
+      "Lime",
+      "Menta",
+      "Pavone",
+      "Smeraldo"
+    ],
+    "totale_moto": 8
+  },
+  {
+    "marca": "Ezi",
+    "moto": [
+      "Citi",
+      "H1",
+      "HC200",
+      "Mini",
+      "R80"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Fantic Motor",
+    "moto": [
+      "125 Enduro/Motard",
+      "250 Enduro",
+      "250 Enduro/Motard",
+      "450 Enduro",
+      "50 Enduro/Motard",
+      "Caballero",
+      "Caballero 125",
+      "Caballero 250",
+      "Caballero 500",
+      "Caballero 700",
+      "Caballero/TZ",
+      "Enduro XE/XEF Racing",
+      "Issimo City",
+      "Stealth",
+      "TF/TR/TZ",
+      "TX",
+      "TZ",
+      "XEF Rally"
+    ],
+    "totale_moto": 18
+  },
+  {
+    "marca": "Faspider",
+    "moto": [
+      "Capri",
+      "Ciclone 2",
+      "Rider"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "FD Motors",
+    "moto": [
+      "F3-E/F5-E",
+      "F5-E"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Felo Moto",
+    "moto": [
+      "FW-06"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "FK Motors",
+    "moto": [
+      "Mini Scrambler",
+      "Street Fighter",
+      "Street Scrambler"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Futuro",
+    "moto": [
+      "FT01",
+      "FT02",
+      "FT03"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Galaxy",
+    "moto": [
+      "XTR"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Gamax",
+    "moto": [
+      "Spillo"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Garelli",
+    "moto": [
+      "Ciclone",
+      "Flexì",
+      "GSP",
+      "Xò"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Gas Gas",
+    "moto": [
+      "Cami",
+      "EC",
+      "ES/SM",
+      "Halley",
+      "Randonné",
+      "TXT"
+    ],
+    "totale_moto": 6
+  },
+  {
+    "marca": "Generic",
+    "moto": [
+      "Epico",
+      "Ideo",
+      "Onyx",
+      "Pandora",
+      "Roc",
+      "Sirion",
+      "Soho",
+      "Trigger",
+      "Worx",
+      "Xor",
+      "Zion",
+      "e-MO"
+    ],
+    "totale_moto": 12
+  },
+  {
+    "marca": "Gilera",
+    "moto": [
+      "Fuoco",
+      "GP",
+      "Nexus",
+      "Runner",
+      "Stalker"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Gipuma",
+    "moto": [
+      "Apollo",
+      "Ariel",
+      "Aventino",
+      "Citifly",
+      "Colibry",
+      "Energy",
+      "Falcon",
+      "Koala",
+      "Melody",
+      "Navona",
+      "Nuvola",
+      "Oasi",
+      "Olimpia",
+      "Piramide",
+      "Pitagora",
+      "Popolo",
+      "Portery",
+      "Rottaler",
+      "Sorrento",
+      "T-Rex",
+      "Tor",
+      "Verbano"
+    ],
+    "totale_moto": 22
+  },
+  {
+    "marca": "Govecs",
+    "moto": [
+      "Serie S",
+      "Serie T"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Green 23",
+    "moto": [
+      "Eco way",
+      "Green",
+      "Speed23"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Green Motors",
+    "moto": [
+      "Must"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "GTM",
+    "moto": [
+      "Columbus",
+      "Condor",
+      "Falcon",
+      "Raptor"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Hanway",
+    "moto": [
+      "Black Cafè",
+      "Flash",
+      "Furious",
+      "Muscle",
+      "Raw",
+      "Scrambler",
+      "X-Ray"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Harley-Davidson",
+    "moto": [
+      "CVO",
+      "Dyna",
+      "LiveWire",
+      "Nightster",
+      "Pan America",
+      "Softail",
+      "Sportster",
+      "Street",
+      "Street Rod",
+      "Touring",
+      "Trike",
+      "V-Rod",
+      "XR"
+    ],
+    "totale_moto": 13
+  },
+  {
+    "marca": "Headbanger",
+    "moto": [
+      "Foxy Lady",
+      "Gypsy Soul",
+      "High Flyin'",
+      "Hollister",
+      "Summertime",
+      "Woodstock Boogie"
+    ],
+    "totale_moto": 6
+  },
+  {
+    "marca": "Hero MotoCorp",
+    "moto": [
+      "Hunk",
+      "XPulse"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "HM",
+    "moto": [
+      "CRE",
+      "CRM",
+      "City/Locusta"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Honda",
+    "moto": [
+      "ADV 350",
+      "Africa Twin",
+      "CB 1000 R",
+      "CB 1100",
+      "CB 125 R",
+      "CB 1300",
+      "CB 300 R",
+      "CB 650 R",
+      "CB F",
+      "CB X",
+      "CBF 125",
+      "CBF 600/1000",
+      "CBR 1000 RR",
+      "CBR 125/250 R",
+      "CBR 300 R",
+      "CBR 500 R",
+      "CBR 600 F",
+      "CBR 600 RR",
+      "CBR 650 F",
+      "CBR 650 R",
+      "CL500",
+      "CMX",
+      "CRE",
+      "CRF",
+      "CRF enduro/motard",
+      "CRF300",
+      "CRM",
+      "CTX",
+      "CUV e:",
+      "Crossrunner",
+      "Crosstourer",
+      "DN-01",
+      "Dax",
+      "Deauville",
+      "EM1 e:",
+      "Forza 125",
+      "Forza 300",
+      "Forza 350",
+      "Forza 750",
+      "GB350S",
+      "Gold Wing",
+      "Hornet",
+      "Hornet 1000",
+      "Integra",
+      "MSX",
+      "Monkey",
+      "NC750S",
+      "NC750X",
+      "NM4 Vultus",
+      "NSC",
+      "NT1100",
+      "NX500",
+      "PCX",
+      "PS",
+      "Pan European",
+      "SH",
+      "SH 125/150",
+      "SH 350",
+      "SW-T",
+      "Shadow",
+      "Super Cub",
+      "Transalp",
+      "VFR",
+      "VT",
+      "Varadero",
+      "Vision",
+      "WN7",
+      "X-ADV",
+      "Zoomer"
+    ],
+    "totale_moto": 69
+  },
+  {
+    "marca": "Horwin",
+    "moto": [
+      "CR6",
+      "EK1/EK3",
+      "SK3"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "HP Power",
+    "moto": [
+      "Barium",
+      "Chromel",
+      "Copper",
+      "Facile",
+      "Iron",
+      "Lithium",
+      "Nickel",
+      "Radium",
+      "Tin"
+    ],
+    "totale_moto": 9
+  },
+  {
+    "marca": "Hupper",
+    "moto": [
+      "Challenge",
+      "Kyalami",
+      "Montclair",
+      "Montecarlo",
+      "Ouragan",
+      "Santo Domingo",
+      "Scugnizzo",
+      "Slalom",
+      "Sultano",
+      "Tomcat",
+      "Twenty 9",
+      "Yatagan"
+    ],
+    "totale_moto": 12
+  },
+  {
+    "marca": "Hurba",
+    "moto": [
+      "City Discovery",
+      "City Spark",
+      "Hurba",
+      "Naked Spark",
+      "Scooter",
+      "Street Raptor",
+      "Trendy",
+      "Urban Discovery",
+      "Zefiro"
+    ],
+    "totale_moto": 9
+  },
+  {
+    "marca": "Husaberg",
+    "moto": [
+      "FE",
+      "TE"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Husqvarna",
+    "moto": [
+      "701",
+      "FE",
+      "FE/TE",
+      "Norden",
+      "Nuda",
+      "SM 125",
+      "SM 449/511",
+      "SM 630",
+      "Svartpilen",
+      "Svartpilen 801",
+      "TE",
+      "TR",
+      "Vitpilen",
+      "Vitpilen 801",
+      "WR",
+      "WRE"
+    ],
+    "totale_moto": 16
+  },
+  {
+    "marca": "Hyosung",
+    "moto": [
+      "Aquila",
+      "Comet",
+      "GD N",
+      "GD R",
+      "GT P",
+      "GT R",
+      "GV",
+      "MS3",
+      "RT",
+      "RX",
+      "ST 7"
+    ],
+    "totale_moto": 11
+  },
+  {
+    "marca": "Indian Motorcycle",
+    "moto": [
+      "Challenger",
+      "Chief/Chieftain",
+      "FTR",
+      "Pursuit",
+      "Roadmaster",
+      "Scout",
+      "Springfield"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Innocenti",
+    "moto": [
+      "Barium",
+      "Copper",
+      "Facile",
+      "Lithium",
+      "Radium",
+      "Tin"
+    ],
+    "totale_moto": 6
+  },
+  {
+    "marca": "Isomoto",
+    "moto": [
+      "Anniversary",
+      "Competizione"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Italian Volt",
+    "moto": [
+      "Lacama"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Italjet",
+    "moto": [
+      "Dragster",
+      "Dragster 700"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Italmoto",
+    "moto": [
+      "Nevia",
+      "S",
+      "Tiquattro"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Jawa",
+    "moto": [
+      "CL",
+      "Classic",
+      "Dakar",
+      "Geeny",
+      "OHC",
+      "Robby",
+      "Travel"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Jonway",
+    "moto": [
+      "MJS-E Sport"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "K2O",
+    "moto": [
+      "Cento"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Kawasaki",
+    "moto": [
+      "ER",
+      "Eliminator",
+      "GTR",
+      "J",
+      "KLE",
+      "KLX",
+      "Ninja",
+      "Ninja 1000 SX",
+      "Ninja 1100 SX",
+      "Ninja 125",
+      "Ninja 400",
+      "Ninja 500",
+      "Ninja 650",
+      "Ninja 7 Hybrid",
+      "Ninja H2",
+      "Ninja ZX-10R",
+      "Ninja ZX-4R",
+      "Ninja ZX-6R",
+      "Ninja e-1",
+      "VN",
+      "Versys",
+      "Versys 1000",
+      "Versys 1100",
+      "Versys 650",
+      "Versys-X",
+      "Vulcan",
+      "W",
+      "W230/Meguro S1",
+      "W800",
+      "Z 7 Hybrid",
+      "Z H2",
+      "Z e-1",
+      "Z1000",
+      "Z1100",
+      "Z125",
+      "Z250",
+      "Z300",
+      "Z400",
+      "Z500",
+      "Z650",
+      "Z650 S",
+      "Z650RS",
+      "Z750",
+      "Z800",
+      "Z900",
+      "Z900RS",
+      "ZZR"
+    ],
+    "totale_moto": 47
+  },
+  {
+    "marca": "Keeway",
+    "moto": [
+      "Agorà",
+      "Blackster",
+      "City Blade",
+      "Cruiser",
+      "Dierre",
+      "F-ACT",
+      "Goccia",
+      "Icon",
+      "Index",
+      "Iskia",
+      "K-Light",
+      "Link",
+      "Logik",
+      "Outlook",
+      "RKF",
+      "RKR",
+      "RKS",
+      "RKV",
+      "RY6/RY8",
+      "Silver Blade",
+      "Sixties",
+      "Superlight",
+      "TX",
+      "Terrafina",
+      "V-Cruise",
+      "V302 C",
+      "Versilia",
+      "X Blade",
+      "X-Light",
+      "XDV",
+      "Zahara"
+    ],
+    "totale_moto": 31
+  },
+  {
+    "marca": "KL",
+    "moto": [
+      "Ariic Brera",
+      "Artiglio",
+      "B3",
+      "Brera",
+      "Brera GT",
+      "Brera X",
+      "Duel",
+      "Duel X",
+      "Gemma",
+      "KLX",
+      "KXE",
+      "Nexy",
+      "Raticosa",
+      "SM"
+    ],
+    "totale_moto": 14
+  },
+  {
+    "marca": "Koelliker",
+    "moto": [
+      "KL1",
+      "KL2"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Kove",
+    "moto": [
+      "350 RR",
+      "450 Rally",
+      "510F",
+      "510X",
+      "625V",
+      "800 Rally",
+      "800X"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "KRC Motors",
+    "moto": [
+      "Easy",
+      "Faster",
+      "Fox"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "KSR Moto",
+    "moto": [
+      "Classic",
+      "Code",
+      "Cracker",
+      "Demonio",
+      "Epico",
+      "GRS",
+      "Onyx",
+      "Pandora",
+      "Quip",
+      "Sirion",
+      "Soho",
+      "TR",
+      "TTX",
+      "TW",
+      "Toxic"
+    ],
+    "totale_moto": 15
+  },
+  {
+    "marca": "KTM",
+    "moto": [
+      "1050 Adventure",
+      "1090 Adventure",
+      "1190 Adventure",
+      "125 Duke",
+      "1290 Super Adventure",
+      "1390 Super Adventure",
+      "1390 Super Duke",
+      "390 Adventure",
+      "390 Duke",
+      "690 SMC/Enduro",
+      "790 Adventure",
+      "790 Duke",
+      "890 Adventure",
+      "890 Duke",
+      "890 SMT",
+      "990 Adventure",
+      "990 Duke",
+      "990 RC R",
+      "990 SM-T/Supermoto",
+      "Duke 125/200",
+      "Duke 690",
+      "EXC",
+      "Freeride",
+      "RC",
+      "RC8",
+      "SMC/Enduro",
+      "Super Duke",
+      "Super Duke GT"
+    ],
+    "totale_moto": 28
+  },
+  {
+    "marca": "KustomBike",
+    "moto": [
+      "Daytona"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Kymco",
+    "moto": [
+      "AK",
+      "Agility",
+      "Agility 300/350",
+      "Agility 350",
+      "Agility R16",
+      "Agility S",
+      "DTX 360",
+      "Dink",
+      "Dink X",
+      "Downtown",
+      "Filly",
+      "G-Dink",
+      "K-Pipe",
+      "K-XCT",
+      "KRV",
+      "Like",
+      "Micare",
+      "MyRoad",
+      "People",
+      "People GTi",
+      "People One",
+      "People S",
+      "People S 300",
+      "Quannon",
+      "Skytown",
+      "Super 8",
+      "Venox",
+      "Visar",
+      "X-Town",
+      "X-Town CT",
+      "X-Town ST",
+      "Xciting"
+    ],
+    "totale_moto": 32
+  },
+  {
+    "marca": "Lambretta",
+    "moto": [
+      "LN",
+      "V-Special"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Lem Motor",
+    "moto": [
+      "Coral",
+      "NVH Z11"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "LEMev",
+    "moto": [
+      "Stream"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Leonart",
+    "moto": [
+      "Bobber",
+      "Daytona",
+      "Spyder"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Lifan",
+    "moto": [
+      "E3",
+      "E4"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Linhai",
+    "moto": [
+      "Drive-in",
+      "Eggy",
+      "Mainstreet",
+      "Prince"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "LML",
+    "moto": [
+      "Star"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Lukas",
+    "moto": [
+      "E.Va",
+      "Elis",
+      "GT/Tikey",
+      "Tikey"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Lvneng",
+    "moto": [
+      "S5",
+      "X1"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Magni",
+    "moto": [
+      "FiloRosso"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Maico",
+    "moto": [
+      "Maicore"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Malaguti",
+    "moto": [
+      "Drakon",
+      "Dune",
+      "Madison",
+      "Mission",
+      "Monte",
+      "RST",
+      "Spectre",
+      "XSM/XTM"
+    ],
+    "totale_moto": 8
+  },
+  {
+    "marca": "Mash",
+    "moto": [
+      "Black Seven",
+      "Café Racer",
+      "City",
+      "Dirt Track",
+      "Fifty",
+      "Five Hundred",
+      "Rock",
+      "Scrambler",
+      "Seventy",
+      "Seventy Five",
+      "Sidecar",
+      "Six Hundred",
+      "Two Fifty",
+      "Von Dutch",
+      "X-Ride 125",
+      "X-Ride 650"
+    ],
+    "totale_moto": 16
+  },
+  {
+    "marca": "McDeeb",
+    "moto": [
+      "Clubman",
+      "Six Days",
+      "Thruxton"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Me",
+    "moto": [
+      "Me Scooter",
+      "Start Edition"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Meijs",
+    "moto": [
+      "Motorman"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Millepercento",
+    "moto": [
+      "Alba",
+      "BB1",
+      "Scighera"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Minimoto",
+    "moto": [
+      "E-GTS",
+      "E-Kolibri"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Mo-Toy",
+    "moto": [
+      "Mo-Toy"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Mondial",
+    "moto": [
+      "Flat Track",
+      "Flex",
+      "HPS",
+      "Imola",
+      "Mud",
+      "Piega",
+      "SMX",
+      "Spartan",
+      "Sport Classic"
+    ],
+    "totale_moto": 9
+  },
+  {
+    "marca": "Montesa",
+    "moto": [
+      "4Ride",
+      "Cota"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Morbidelli",
+    "moto": [
+      "C1002V",
+      "F125",
+      "F352",
+      "M502 N",
+      "SC",
+      "SC125LX",
+      "SC125RE",
+      "T1002VX",
+      "T125X",
+      "T352X",
+      "T502X"
+    ],
+    "totale_moto": 11
+  },
+  {
+    "marca": "Morgan",
+    "moto": [
+      "3 Wheeler",
+      "Super 3"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Moto Bellini",
+    "moto": [
+      "B1",
+      "B2",
+      "B3"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Moto Guzzi",
+    "moto": [
+      "Audace",
+      "Bellagio",
+      "Breva",
+      "California",
+      "Eldorado",
+      "Griso",
+      "MGX-21",
+      "Nevada",
+      "Norge",
+      "Sport",
+      "Stelvio",
+      "V100 Mandello",
+      "V7",
+      "V7 II",
+      "V7 III",
+      "V7 Sport",
+      "V85 TT",
+      "V9"
+    ],
+    "totale_moto": 18
+  },
+  {
+    "marca": "Moto Martin",
+    "moto": [
+      "Tir"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Moto Morini",
+    "moto": [
+      "11 ½",
+      "Alltrhike",
+      "Calibro",
+      "Corsaro",
+      "Granpasso",
+      "Milano",
+      "Rebello",
+      "Scrambler",
+      "Seiemmezzo",
+      "Super Scrambler",
+      "X-Cape",
+      "X-Cape 1200"
+    ],
+    "totale_moto": 12
+  },
+  {
+    "marca": "Moto Rumi",
+    "moto": [
+      "Mangusta",
+      "Pantera"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Moto Villa",
+    "moto": [
+      "SMS",
+      "WRE"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Motobi",
+    "moto": [
+      "Imola",
+      "Misano",
+      "Modena",
+      "Pesaro",
+      "Rimini",
+      "Siena"
+    ],
+    "totale_moto": 6
+  },
+  {
+    "marca": "Motom",
+    "moto": [
+      "Dolcevita",
+      "Gypsy",
+      "Rambo 151",
+      "TranCity"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Motor Hispania",
+    "moto": [
+      "Furia Max",
+      "KN1",
+      "MH7",
+      "RX",
+      "RYZ"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Motron Motorcycles",
+    "moto": [
+      "Breezy",
+      "Cubertino",
+      "Ideo",
+      "Nomad",
+      "Revolver",
+      "Ventura",
+      "Vizion",
+      "Voltz",
+      "Warrior",
+      "Whizz",
+      "X-Nord"
+    ],
+    "totale_moto": 11
+  },
+  {
+    "marca": "Mto Motor",
+    "moto": [
+      "Urus",
+      "X-07"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Mutt Motorcycles",
+    "moto": [
+      "Mutt 125",
+      "Mutt 250"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "MV Agusta",
+    "moto": [
+      "Brutale",
+      "Brutale 1000",
+      "Brutale 800",
+      "Brutale 900",
+      "Dragster",
+      "Enduro Veloce",
+      "F3",
+      "F4",
+      "RVS",
+      "Rivale",
+      "Rush",
+      "Stradale",
+      "Superveloce",
+      "Turismo Veloce"
+    ],
+    "totale_moto": 14
+  },
+  {
+    "marca": "Nerva",
+    "moto": [
+      "Cargo",
+      "Exe",
+      "Exe II",
+      "Lift"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Nipponia",
+    "moto": [
+      "Arte",
+      "Vorrei"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Nito",
+    "moto": [
+      "Nes"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Niu",
+    "moto": [
+      "M-Series",
+      "M1",
+      "MQi-Series",
+      "N-Series",
+      "N1S",
+      "NQi-Series",
+      "RQi",
+      "U-Series",
+      "UQi-Series",
+      "XQi3"
+    ],
+    "totale_moto": 10
+  },
+  {
+    "marca": "Norton",
+    "moto": [
+      "Commando",
+      "Dominator",
+      "V4"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "NOX",
+    "moto": [
+      "Duel",
+      "KLE"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Orcal",
+    "moto": [
+      "Astor",
+      "SK01",
+      "Sirio"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Ouroboros",
+    "moto": [
+      "Zaeta"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Overbikes",
+    "moto": [
+      "B-Tre",
+      "B-Uno",
+      "Brera",
+      "Kolà",
+      "Thor",
+      "Tourer"
+    ],
+    "totale_moto": 6
+  },
+  {
+    "marca": "Oxygen",
+    "moto": [
+      "Cargoscooter"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Pagsta",
+    "moto": [
+      "Regal Raptor"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Parvisa",
+    "moto": [
+      "Cargò",
+      "Fox",
+      "My space",
+      "Splinter",
+      "Vittoria"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Paton",
+    "moto": [
+      "S1"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Peda Motor",
+    "moto": [
+      "Air",
+      "Captain",
+      "Fire",
+      "H2O",
+      "Scuola",
+      "Speedfire",
+      "Speedy",
+      "Star",
+      "Via",
+      "Wind"
+    ],
+    "totale_moto": 10
+  },
+  {
+    "marca": "Peugeot",
+    "moto": [
+      "2.0",
+      "Belville",
+      "Blaster",
+      "Citystar",
+      "Django",
+      "Geopolis",
+      "Jet C-Tech",
+      "Kisbee",
+      "Kisbee 125",
+      "LXR",
+      "Ludix",
+      "Metropolis",
+      "NK7",
+      "PM-01",
+      "Pulsion",
+      "Satelis",
+      "Speedfight 3",
+      "Speedfight 4",
+      "Streetzone",
+      "Sum Up",
+      "TKR",
+      "Tweet",
+      "Tweet Evo",
+      "V-Clic",
+      "Vivacity",
+      "Vogue",
+      "XP 400",
+      "XP6/XPS",
+      "XP7",
+      "XR7",
+      "e-Ludix"
+    ],
+    "totale_moto": 31
+  },
+  {
+    "marca": "PGO",
+    "moto": [
+      "G-Max",
+      "Ligero",
+      "PMX"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Phelon & Moore",
+    "moto": [
+      "Capetown",
+      "Panther",
+      "Panthette S",
+      "Panthette X"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Piaggio",
+    "moto": [
+      "1",
+      "Beverly",
+      "Carnaby",
+      "Fly",
+      "Liberty",
+      "Liberty Delivery",
+      "MP3",
+      "Medley",
+      "Mymoover",
+      "NRG",
+      "Typhoon",
+      "X10",
+      "X7",
+      "XEvo",
+      "Zip"
+    ],
+    "totale_moto": 15
+  },
+  {
+    "marca": "Polini",
+    "moto": [
+      "XP4"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "QJ Motor",
+    "moto": [
+      "ATR",
+      "COV 125",
+      "Fort",
+      "MTX",
+      "SQ 16",
+      "SRK",
+      "SRK 125 RS",
+      "SRK 550",
+      "SRK 550 RS",
+      "SRK 600",
+      "SRK 600 RS",
+      "SRK 800",
+      "SRK 800 RR",
+      "SRK 900",
+      "SRK 921 RR",
+      "SRT",
+      "SRT 450 RX",
+      "SRT 550 SX",
+      "SRT 600 SX",
+      "SRT 800 RX",
+      "SRT 900 SX",
+      "SRV",
+      "SRV 125",
+      "SRV 300",
+      "SRV 400 VS",
+      "SRV 600 V",
+      "SVT"
+    ],
+    "totale_moto": 27
+  },
+  {
+    "marca": "Qooder",
+    "moto": [
+      "Nuvion",
+      "Oxygen",
+      "QV3/QVE",
+      "Qooder",
+      "xQooder"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Quadro Vehicles",
+    "moto": [
+      "350D",
+      "Oxygen",
+      "QV3",
+      "Qooder",
+      "Quadro3",
+      "Quadro4",
+      "S"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Quantya",
+    "moto": [
+      "Strada"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Ray Motors",
+    "moto": [
+      "Ray 7.7"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Reset",
+    "moto": [
+      "eco-box",
+      "eco-logic"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Rieju",
+    "moto": [
+      "Aventura",
+      "Aventura 500",
+      "Aventura Rally",
+      "Bye Bike",
+      "Century",
+      "Cityline",
+      "Coaster",
+      "MR",
+      "MR 125",
+      "Marathon/MRT",
+      "Mius",
+      "NKD 125R",
+      "Nuuk",
+      "RS",
+      "RS3",
+      "RS3 Naked",
+      "Strada",
+      "Tango",
+      "X-Over",
+      "Xplora"
+    ],
+    "totale_moto": 20
+  },
+  {
+    "marca": "Roads",
+    "moto": [
+      "Duck",
+      "Laky"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Royal Alloy",
+    "moto": [
+      "Grand Prix",
+      "Grand Tourer"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Royal Enfield",
+    "moto": [
+      "Bear",
+      "Bullet",
+      "Classic",
+      "Classic 650",
+      "Continental",
+      "Goan",
+      "Guerrilla",
+      "HNTR",
+      "Himalayan 411",
+      "Himalayan 450",
+      "Interceptor",
+      "Meteor",
+      "Scram 411",
+      "Shotgun",
+      "Super Meteor"
+    ],
+    "totale_moto": 15
+  },
+  {
+    "marca": "Sachs",
+    "moto": [
+      "Madass"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Scarabeo",
+    "moto": [
+      "Scarabeo 125/200",
+      "Scarabeo 300/500",
+      "Scarabeo 50",
+      "Scarabeo 50/100"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Scorpa",
+    "moto": [
+      "SE/SM",
+      "SR",
+      "T-Ride",
+      "TY",
+      "Twenty"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Seat",
+    "moto": [
+      "Mó"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Senke",
+    "moto": [
+      "SK"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Sherco",
+    "moto": [
+      "SE",
+      "SE-R",
+      "SEF-R",
+      "SM",
+      "SM-R",
+      "TY",
+      "X-Ride",
+      "XY"
+    ],
+    "totale_moto": 8
+  },
+  {
+    "marca": "Silence",
+    "moto": [
+      "S01/S02"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Solex",
+    "moto": [
+      "e-Solex"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Somoto",
+    "moto": [
+      "Café",
+      "Classic",
+      "Desert Racer",
+      "Scrambler"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Soriano Motori",
+    "moto": [
+      "Giaguaro"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Stark Future",
+    "moto": [
+      "Varg Ex"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Sunra",
+    "moto": [
+      "Miku",
+      "Robo",
+      "Swift"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Super motor company",
+    "moto": [
+      "Pin"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Super Soco",
+    "moto": [
+      "CPx",
+      "CUmini",
+      "CUx",
+      "TC",
+      "TC/TS",
+      "TS",
+      "VX"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Sur-Ron",
+    "moto": [
+      "FireFly",
+      "Light Bee",
+      "Ultra Bee"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Suzuki",
+    "moto": [
+      "Address",
+      "Bandit",
+      "Burgman 125/200",
+      "Burgman 200",
+      "Burgman 400",
+      "Burgman 400/650",
+      "Burgman Street",
+      "DR",
+      "DR-Z",
+      "GSR",
+      "GSX 1250 F",
+      "GSX 1300 R",
+      "GSX 250 R",
+      "GSX 650/1250",
+      "GSX-8R",
+      "GSX-8S",
+      "GSX-8T",
+      "GSX-8TT",
+      "GSX-R",
+      "GSX-R1000R",
+      "GSX-R125",
+      "GSX-S",
+      "GSX-S 125",
+      "GSX-S GT",
+      "GSX-S GX",
+      "GZ",
+      "Gladius",
+      "Inazuma",
+      "Intruder",
+      "Katana",
+      "SV",
+      "Sixteen",
+      "V-Strom",
+      "V-Strom 1050",
+      "V-Strom 650",
+      "V-Strom 800",
+      "Van Van"
+    ],
+    "totale_moto": 37
+  },
+  {
+    "marca": "SWM",
+    "moto": [
+      "Ace of Spades",
+      "Gran Milano",
+      "Gran Turismo",
+      "Hoku",
+      "Outlaw",
+      "RS",
+      "SM",
+      "Sidecar",
+      "Silver Vase",
+      "Six",
+      "Six Days",
+      "Stormbreaker",
+      "Superdual T",
+      "Varez"
+    ],
+    "totale_moto": 14
+  },
+  {
+    "marca": "Sym",
+    "moto": [
+      "ADX 125",
+      "ADX 300",
+      "ADX TG 400",
+      "CLBCU",
+      "Citycom 300",
+      "Citycom.300",
+      "Crox",
+      "Cruisym",
+      "DD",
+      "E Symmetry",
+      "E-Woo",
+      "Fiddle",
+      "Fiddle II",
+      "Fiddle III",
+      "Fugue",
+      "HD",
+      "Jet",
+      "Jet 14",
+      "Jet 4RX",
+      "Jet X",
+      "Joymax",
+      "Joyride",
+      "Joyride 300",
+      "MMBCU",
+      "Maxsym",
+      "Maxsym TL",
+      "Mio",
+      "NH",
+      "Symphony",
+      "Symphony SR",
+      "Symply II",
+      "Tonik",
+      "VS",
+      "Wolf",
+      "X-Pro",
+      "XS"
+    ],
+    "totale_moto": 36
+  },
+  {
+    "marca": "Tacita",
+    "moto": [
+      "T-Cruise",
+      "T-Race",
+      "T-Race Rally"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Tauris",
+    "moto": [
+      "Strada"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "TGB",
+    "moto": [
+      "Bullet",
+      "Express",
+      "Tapo",
+      "X-Motion"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Tinbot",
+    "moto": [
+      "CS1",
+      "Esum",
+      "RS1"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "TM Racing",
+    "moto": [
+      "Enduro",
+      "SM",
+      "Supermotard"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "TNT Motor",
+    "moto": [
+      "Boston",
+      "Cancun",
+      "City",
+      "Crazy",
+      "Dixon",
+      "Escape",
+      "Good Vibes",
+      "Grido",
+      "Roma",
+      "ST",
+      "Scooterotto",
+      "Streetmax",
+      "TZX",
+      "XCO",
+      "XCR"
+    ],
+    "totale_moto": 15
+  },
+  {
+    "marca": "Tomos",
+    "moto": [
+      "Classic",
+      "E-Lite",
+      "Nitro",
+      "Racing"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "Traveler",
+    "moto": [
+      "Traveler"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Triumph",
+    "moto": [
+      "America/Speedmaster",
+      "Bonneville",
+      "Bonneville Bobber",
+      "Bonneville Speedmaster",
+      "Daytona",
+      "Rocket 3",
+      "Rocket III",
+      "Scrambler",
+      "Scrambler 400",
+      "Speed 400",
+      "Speed Triple",
+      "Speed Triple RR",
+      "Speed Twin",
+      "Sprint",
+      "Street Cup",
+      "Street Scrambler",
+      "Street Triple",
+      "Street Twin",
+      "Thruxton",
+      "Thunderbird",
+      "Tiger",
+      "Tiger 1200",
+      "Tiger 850",
+      "Tiger 900",
+      "Tiger Sport 660",
+      "Tiger Sport 800",
+      "Trident",
+      "Trident 800",
+      "Trophy"
+    ],
+    "totale_moto": 29
+  },
+  {
+    "marca": "Tromox",
+    "moto": [
+      "MC10",
+      "Ukko"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "TVS Motor",
+    "moto": [
+      "Iqube",
+      "Jupiter",
+      "Ntorq",
+      "RR 310",
+      "RTR 310",
+      "Raider",
+      "Ronin"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "UM Motorcycles",
+    "moto": [
+      "DSR",
+      "DSR Adventure TT",
+      "RS Xtreet",
+      "Renegade",
+      "Renegade Scrambler",
+      "Riverdale",
+      "Rockville",
+      "Wynwood"
+    ],
+    "totale_moto": 8
+  },
+  {
+    "marca": "Ural",
+    "moto": [
+      "UH 750"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Vaimo",
+    "moto": [
+      "Classic",
+      "Sport",
+      "Young"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Valenti Racing",
+    "moto": [
+      "N 01",
+      "RM",
+      "RME",
+      "S 01",
+      "SM"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Vectrix",
+    "moto": [
+      "Vx 1",
+      "Vx 2",
+      "Vx 3"
+    ],
+    "totale_moto": 3
+  },
+  {
+    "marca": "Velocifero",
+    "moto": [
+      "Beachmad",
+      "City X",
+      "Jump",
+      "Mobster",
+      "Oliver",
+      "Race-X",
+      "Tennis",
+      "VLF Mad"
+    ],
+    "totale_moto": 8
+  },
+  {
+    "marca": "Vent",
+    "moto": [
+      "Baja",
+      "Derapage",
+      "Raptor",
+      "Scrambler",
+      "Skate",
+      "Trail",
+      "X-Rude"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Verge Motorcycles",
+    "moto": [
+      "TS"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Vervemoto",
+    "moto": [
+      "Classic",
+      "Tracker"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Vespa",
+    "moto": [
+      "946",
+      "Elettrica",
+      "GTS",
+      "GTS Super",
+      "GTS/GTV",
+      "GTV",
+      "LX/LXV",
+      "PX",
+      "Primavera",
+      "S",
+      "Sei Giorni",
+      "Sprint"
+    ],
+    "totale_moto": 12
+  },
+  {
+    "marca": "Victory",
+    "moto": [
+      "Boardwalk",
+      "Cross Country",
+      "Cross Country/Cross Roads",
+      "Gunner",
+      "Hammer",
+      "High-Ball",
+      "Judge",
+      "Kingpin",
+      "Magnum",
+      "Octane",
+      "Vegas",
+      "Vision"
+    ],
+    "totale_moto": 12
+  },
+  {
+    "marca": "Vmoto",
+    "moto": [
+      "CPx",
+      "CUmini",
+      "CUx",
+      "F01",
+      "On-R/Off-R",
+      "TC",
+      "TS"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Voge",
+    "moto": [
+      "Brivido",
+      "Brivido 125/300",
+      "Brivido 500",
+      "Brivido 625R",
+      "ER10",
+      "Rally",
+      "Sfida",
+      "Sfida SR ADV",
+      "Sfida SR1",
+      "Sfida SR16",
+      "Sfida SR3",
+      "Trofeo",
+      "Valico 300",
+      "Valico 500",
+      "Valico 525",
+      "Valico 625",
+      "Valico 650",
+      "Valico 800",
+      "Valico 900"
+    ],
+    "totale_moto": 19
+  },
+  {
+    "marca": "Volta",
+    "moto": [
+      "BCN"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Vyrus",
+    "moto": [
+      "984/986/987"
+    ],
+    "totale_moto": 1
+  },
+  {
+    "marca": "Wayel",
+    "moto": [
+      "NCE S",
+      "W1",
+      "W2",
+      "W3"
+    ],
+    "totale_moto": 4
+  },
+  {
+    "marca": "WDM",
+    "moto": [
+      "Flyng Stone",
+      "Holiday",
+      "Maple",
+      "Modena",
+      "Pangea 3",
+      "Romantic",
+      "ZW Sprint"
+    ],
+    "totale_moto": 7
+  },
+  {
+    "marca": "Wottan Motor",
+    "moto": [
+      "GP 1",
+      "GP 2",
+      "GT2",
+      "Rebbe",
+      "Sixteen",
+      "Storm",
+      "Storm-R",
+      "Storm-S",
+      "Storm-T",
+      "Storm-V",
+      "Storm-X"
+    ],
+    "totale_moto": 11
+  },
+  {
+    "marca": "WoW!",
+    "moto": [
+      "774/775",
+      "Model"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "WT Motors",
+    "moto": [
+      "Atene",
+      "Bilbao",
+      "Bomber",
+      "Hollywood",
+      "Miami"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Yadea",
+    "moto": [
+      "C1S",
+      "G5",
+      "M6L",
+      "T9",
+      "Y1S"
+    ],
+    "totale_moto": 5
+  },
+  {
+    "marca": "Yamaha",
+    "moto": [
+      "Aerox",
+      "BW's",
+      "Cygnus/Cygnus X",
+      "D'elight",
+      "DT",
+      "EC-03",
+      "FJR",
+      "FZ1",
+      "FZ8/Fazer 8",
+      "Giggle",
+      "Jog R",
+      "MT-01",
+      "MT-03",
+      "MT-07",
+      "MT-09",
+      "MT-10",
+      "MT-125",
+      "Majesty",
+      "Neo's",
+      "Niken",
+      "Nmax",
+      "RayZR",
+      "SCR",
+      "SR",
+      "Super Ténéré",
+      "TDM",
+      "TZR",
+      "Tmax",
+      "Tracer",
+      "Tracer 7",
+      "Tracer 9",
+      "Tricity 125",
+      "Tricity 125/155",
+      "Tricity 300",
+      "Ténéré",
+      "VMax",
+      "Vity",
+      "WR",
+      "Why",
+      "X-City",
+      "XJ6",
+      "XJR",
+      "XSR 125",
+      "XSR 700",
+      "XSR 900",
+      "XSR 900 GP",
+      "XT",
+      "XV",
+      "XVS",
+      "Xenter",
+      "Xmax",
+      "YBR",
+      "YS",
+      "YZF",
+      "YZF-R1",
+      "YZF-R125",
+      "YZF-R3",
+      "YZF-R7",
+      "YZF-R9"
+    ],
+    "totale_moto": 59
+  },
+  {
+    "marca": "Zanini",
+    "moto": [
+      "Icaro",
+      "Penelope"
+    ],
+    "totale_moto": 2
+  },
+  {
+    "marca": "Zero Motorcycles",
+    "moto": [
+      "DS",
+      "DSR",
+      "DSR/X",
+      "FX",
+      "FXE",
+      "FXS",
+      "S",
+      "SR",
+      "SR/F",
+      "SR/S"
+    ],
+    "totale_moto": 10
+  },
+  {
+    "marca": "Zontes",
+    "moto": [
+      "ZT 125-C2",
+      "ZT 125-G",
+      "ZT 125-H",
+      "ZT 125-J",
+      "ZT 125-U",
+      "ZT 125-V",
+      "ZT 250-R",
+      "ZT 703-F",
+      "ZT 703-RR",
+      "ZT-D",
+      "ZT-E",
+      "ZT-G",
+      "ZT-GK",
+      "ZT-R",
+      "ZT-T",
+      "ZT-V",
+      "ZT-X"
+    ],
+    "totale_moto": 17
+  }
+]
