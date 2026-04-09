@@ -52,6 +52,7 @@ if ($sessionId) {
             <?php endif; ?>
         </div>
     </div>
+    <?php include 'includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

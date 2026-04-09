@@ -931,6 +931,7 @@ if ($section === 'panoramica') {
             }());
         </script>
     <?php endif; ?>
+    <?php include 'includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

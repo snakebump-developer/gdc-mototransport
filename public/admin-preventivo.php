@@ -308,6 +308,7 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
     </div>
 
     <script src="/js/modules/nav.js"></script>
+    <?php include 'includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

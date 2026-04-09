@@ -26,6 +26,7 @@ $extraCss = ['css/modules/auth.css'];
             </div>
         </div>
     </div>
+    <?php include 'includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

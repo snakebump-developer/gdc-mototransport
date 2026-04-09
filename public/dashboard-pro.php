@@ -537,6 +537,7 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
             });
         }
     </script>
+    <?php include 'includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

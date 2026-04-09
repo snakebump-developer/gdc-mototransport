@@ -413,6 +413,7 @@ if ($section === 'orders') {
             });
         }
     </script>
+    <?php include 'includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

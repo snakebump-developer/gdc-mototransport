@@ -428,6 +428,7 @@ if ($user) {
     <?php if ($gmapsKey): ?>
         <script src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapsKey ?>&libraries=places,geometry&callback=initGoogleMaps" async defer></script>
     <?php endif; ?>
+    <?php include 'includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

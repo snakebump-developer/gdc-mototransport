@@ -102,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_payment'])) {
             </div>
         </div>
     </div>
+    <?php include 'includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

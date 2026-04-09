@@ -78,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
+    <?php include 'includes/whatsapp-button.php'; ?>
 </body>
 
 </html>
