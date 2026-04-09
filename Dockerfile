@@ -1,7 +1,7 @@
 FROM php:8.2-apache
 
-# Rimuove TUTTI i moduli MPM, poi abilita solo prefork + rewrite
-RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf && \
+# Fix MPM conflict: rimuovi tutti gli MPM abilitati, poi abilita solo mpm_prefork + rewrite
+RUN rm -f /etc/apache2/mods-enabled/mpm_*.conf /etc/apache2/mods-enabled/mpm_*.load && \
     a2enmod mpm_prefork rewrite
 
 # Estensioni PHP necessarie
