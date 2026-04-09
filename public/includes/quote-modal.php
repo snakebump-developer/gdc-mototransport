@@ -20,10 +20,11 @@
             <div class="quote-stepper__step active" data-step="1">
                 <div class="quote-stepper__circle">
                     <svg class="quote-stepper__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"></path>
-                        <rect x="9" y="11" width="14" height="10" rx="2"></rect>
-                        <circle cx="12" cy="20" r="1"></circle>
-                        <circle cx="20" cy="20" r="1"></circle>
+                        <circle cx="5.5" cy="17" r="2.5"></circle>
+                        <circle cx="18.5" cy="17" r="2.5"></circle>
+                        <path d="M8 17h5l2.5-5h-5L9 8H7"></path>
+                        <path d="M15.5 12l3 2"></path>
+                        <path d="M15.5 12l1-3h2.5"></path>
                     </svg>
                     <svg class="quote-stepper__check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                         <polyline points="20 6 9 17 4 12"></polyline>

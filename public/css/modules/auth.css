@@ -14,6 +14,15 @@
     box-shadow: var(--shadow-lg);
     width: 100%;
     max-width: 450px;
+    transition: max-width 0.3s ease;
+}
+
+.auth-box--register {
+    max-width: 520px;
+}
+
+.auth-box--wide {
+    max-width: 680px;
 }
 
 .auth-header {
@@ -47,5 +56,114 @@
 }
 
 .auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ===== ACCOUNT TYPE SELECTOR ===== */
+.account-type-selector {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+}
+
+.account-type-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.875rem 0.5rem;
+    border: 2px solid var(--border-color, #e2e8f0);
+    border-radius: 0.75rem;
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    color: var(--text-secondary);
+}
+
+.account-type-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+}
+
+.account-type-btn.active {
+    border-color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    color: var(--text-primary);
+}
+
+.account-type-icon {
+    font-size: 1.5rem;
+}
+
+.account-type-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.account-type-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* ===== FORM SECTIONS / FIELDSETS ===== */
+.form-section {
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 0.625rem;
+    padding: 1.25rem 1.25rem 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-section legend {
+    padding: 0 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+/* ===== FORM ROW (due colonne affiancate) ===== */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1rem;
+}
+
+@media (max-width: 480px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== REQUIRED STAR ===== */
+.required {
+    color: var(--danger-color, #e53e3e);
+    margin-left: 0.1rem;
+}
+
+/* ===== CHECKBOX LABELS ===== */
+.form-check {
+    margin-bottom: 0.75rem;
+}
+
+.check-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.check-label input[type="checkbox"] {
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+    accent-color: var(--primary-color);
+}
+
+.check-label a {
+    color: var(--primary-color);
     text-decoration: underline;
 }

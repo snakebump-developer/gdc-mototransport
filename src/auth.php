@@ -21,11 +21,30 @@ function validatePassword($password)
         preg_match('/[0-9]/', $password);
 }
 
-function registerUser($username, $email, $password)
+// Validazione Partita IVA italiana (11 cifre con check digit Luhn)
+function validatePartitaIVA(string $piva): bool
+{
+    $piva = preg_replace('/[\s\-]/', '', $piva);
+    if (!preg_match('/^\d{11}$/', $piva)) return false;
+    $sum = 0;
+    for ($i = 0; $i < 10; $i++) {
+        $d = (int)$piva[$i];
+        if ($i % 2 === 0) {
+            $sum += $d;
+        } else {
+            $d *= 2;
+            $sum += ($d > 9) ? $d - 9 : $d;
+        }
+    }
+    $check = (10 - ($sum % 10)) % 10;
+    return $check === (int)$piva[10];
+}
+
+function registerUser($username, $email, $password, string $tipo = 'privato', array $extra = [])
 {
     global $pdo;
 
-    // Validazioni
+    // Validazioni base
     if (!validateUsername($username)) {
         throw new Exception("Username non valido. Usa 3-20 caratteri alfanumerici.");
     }
@@ -36,13 +55,73 @@ function registerUser($username, $email, $password)
         throw new Exception("Password deve avere almeno 8 caratteri, una lettera e un numero.");
     }
 
-    $hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("INSERT INTO utenti (username, email, password) VALUES (?, ?, ?)");
+    // GDPR obbligatorio
+    if (empty($extra['gdpr_accettato'])) {
+        throw new Exception("Devi accettare la Privacy Policy per registrarti.");
+    }
+
+    $ruolo = ($tipo === 'professional') ? 'professional' : 'user';
+
+    // Validazioni aggiuntive per professionisti
+    if ($ruolo === 'professional') {
+        if (empty(trim($extra['ragione_sociale'] ?? ''))) {
+            throw new Exception("La ragione sociale è obbligatoria.");
+        }
+        if (empty(trim($extra['partita_iva'] ?? ''))) {
+            throw new Exception("La Partita IVA è obbligatoria.");
+        }
+        if (!validatePartitaIVA($extra['partita_iva'])) {
+            throw new Exception("Partita IVA non valida (deve essere un numero italiano a 11 cifre valido).");
+        }
+        if (!empty($extra['pec']) && !validateEmail($extra['pec'])) {
+            throw new Exception("Indirizzo PEC non valido.");
+        }
+    }
+
+    $hash    = password_hash($password, PASSWORD_DEFAULT);
+    $gdprAt  = !empty($extra['gdpr_accettato']) ? date('Y-m-d H:i:s') : null;
+    $pivaVal = ($ruolo === 'professional') ? preg_replace('/[\s\-]/', '', $extra['partita_iva'] ?? '') : null;
+
+    $stmt = $pdo->prepare("
+        INSERT INTO utenti (
+            username, email, password, ruolo,
+            nome, cognome, telefono,
+            ragione_sociale, partita_iva, codice_fiscale_azienda,
+            pec, codice_sdi, tipo_attivita,
+            gdpr_accettato, gdpr_accettato_il, marketing_accettato
+        ) VALUES (
+            ?, ?, ?, ?,
+            ?, ?, ?,
+            ?, ?, ?,
+            ?, ?, ?,
+            ?, ?, ?
+        )
+    ");
 
     try {
-        return $stmt->execute([$username, $email, $hash]);
+        return $stmt->execute([
+            $username,
+            $email,
+            $hash,
+            $ruolo,
+            $extra['nome']    ?? null,
+            $extra['cognome'] ?? null,
+            $extra['telefono'] ?? null,
+            ($ruolo === 'professional') ? trim($extra['ragione_sociale'] ?? '') : null,
+            $pivaVal,
+            !empty($extra['codice_fiscale_azienda']) ? strtoupper(trim($extra['codice_fiscale_azienda'])) : null,
+            !empty($extra['pec'])        ? trim($extra['pec'])        : null,
+            !empty($extra['codice_sdi']) ? strtoupper(trim($extra['codice_sdi'])) : null,
+            !empty($extra['tipo_attivita']) ? $extra['tipo_attivita'] : null,
+            $extra['gdpr_accettato'] ? 1 : 0,
+            $gdprAt,
+            $extra['marketing_accettato'] ? 1 : 0,
+        ]);
     } catch (PDOException $e) {
         if (strpos($e->getMessage(), 'UNIQUE constraint') !== false) {
+            if (strpos($e->getMessage(), 'partita_iva') !== false) {
+                throw new Exception("Partita IVA già registrata nel sistema.");
+            }
             throw new Exception("Username o Email già esistenti.");
         }
         throw $e;
