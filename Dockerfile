@@ -1,8 +1,16 @@
 FROM php:8.2-apache
 
-# Rimuove TUTTI i moduli MPM, poi abilita solo prefork + rewrite
-RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf && \
-    a2enmod mpm_prefork rewrite
+# Create a configuration to disable conflicting MPMs
+RUN echo "# Disable conflicting MPMs\n\
+<IfModule mpm_event_module>\n\
+  # mpm_event disabled\n\
+</IfModule>\n\
+<IfModule mpm_worker_module>\n\
+  # mpm_worker disabled\n\
+</IfModule>" > /etc/apache2/conf-available/disable-mpm.conf && \
+a2enconf disable-mpm && \
+a2dismod mpm_event mpm_worker || true && \
+a2enmod mpm_prefork rewrite
 
 # Estensioni PHP necessarie
 RUN docker-php-ext-install pdo pdo_mysql
