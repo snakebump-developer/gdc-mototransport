@@ -375,8 +375,8 @@ try {
     _selectedModelConfirmed = false;
     const brandInp = document.getElementById('motoBrandInput');
     const modelInp = document.getElementById('motoModelInput');
-    if (brandInp) { brandInp.value = ''; brandInp.classList.remove('is-error'); }
-    if (modelInp) { modelInp.value = ''; modelInp.classList.remove('is-error'); }
+    if (brandInp) { brandInp.value = ''; brandInp.classList.remove('is-error'); var e1 = document.getElementById('motoBrandInput-error'); if (e1) e1.textContent = ''; }
+    if (modelInp) { modelInp.value = ''; modelInp.classList.remove('is-error'); var e2 = document.getElementById('motoModelInput-error'); if (e2) e2.textContent = ''; }
     const modelGrp = document.getElementById('motoModelGroup');
     if (modelGrp) modelGrp.style.display = 'none';
     const altroSec = document.getElementById('motoAltroSection');
@@ -391,9 +391,13 @@ try {
       'pickupDate', 'clientName', 'clientEmail', 'clientPhone', 'clientFiscal'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) { el.value = ''; el.classList.remove('is-error'); }
+      const errEl = document.getElementById(id + '-error');
+      if (errEl) errEl.textContent = '';
     });
     const priv = document.getElementById('privacyAccept');
     if (priv) priv.checked = false;
+    const privErr = document.getElementById('privacyAccept-error');
+    if (privErr) privErr.textContent = '';
     const standardOpt = document.querySelector('input[name="deliveryType"][value="Standard"]');
     if (standardOpt) standardOpt.checked = true;
     updateDeliverySelection();
@@ -519,68 +523,187 @@ try {
     setText('summaryPrice', '€' + total.toFixed(0));
   }
 
+  /* ---------- Helper di validazione ---------- */
+  function showFieldError(inputId, message) {
+    const el    = document.getElementById(inputId);
+    const errEl = document.getElementById(inputId + '-error');
+    if (el)    el.classList.add('is-error');
+    if (errEl) errEl.textContent = message;
+  }
+
+  function clearFieldError(inputId) {
+    const el    = document.getElementById(inputId);
+    const errEl = document.getElementById(inputId + '-error');
+    if (el)    el.classList.remove('is-error');
+    if (errEl) errEl.textContent = '';
+  }
+
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+  }
+
+  function validatePhone(phone) {
+    const c = phone.replace(/[\s\-\.]/g, '');
+    return /^(\+39|0039)?3\d{9}$/.test(c) || /^(\+39|0039)?0\d{6,10}$/.test(c);
+  }
+
+  function validateCodiceFiscale(cf) {
+    return /^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/i.test(cf);
+  }
+
+  function validateCilindrata(cc) {
+    var m = cc.match(/^(\d+)\s*(cc|cm3)?$/i);
+    if (!m) return false;
+    var n = parseInt(m[1], 10);
+    return n >= 50 && n <= 2999;
+  }
+
   /* ---------- Validazione per step ---------- */
   function validateStep(step) {
-    let valid = true;
-
-    const requireField = (id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      if (!el.value.trim()) { el.classList.add('is-error'); valid = false; }
-      else el.classList.remove('is-error');
-    };
+    var valid = true;
 
     if (step === 1) {
-      const brandInp = document.getElementById('motoBrandInput');
-      const modelInp = document.getElementById('motoModelInput');
-      const modelGrp = document.getElementById('motoModelGroup');
+      var brandInp = document.getElementById('motoBrandInput');
+      var modelInp = document.getElementById('motoModelInput');
+      var modelGrp = document.getElementById('motoModelGroup');
+      var ccEl     = document.getElementById('motoCc');
 
-      // Marca obbligatoria
+      // Marca
       if (!brandInp || !brandInp.value.trim()) {
-        if (brandInp) brandInp.classList.add('is-error');
+        showFieldError('motoBrandInput', 'Inserisci la marca della moto');
         valid = false;
+      } else {
+        clearFieldError('motoBrandInput');
       }
 
-      // Modello obbligatorio (solo se il campo è visibile)
-      if (modelGrp && modelGrp.style.display !== 'none') {
+      // Modello (richiede che la marca sia compilata per mostrare il campo)
+      if (brandInp && brandInp.value.trim()) {
+        if (modelGrp && modelGrp.style.display === 'none') modelGrp.style.display = '';
         if (!modelInp || !modelInp.value.trim()) {
-          if (modelInp) modelInp.classList.add('is-error');
+          showFieldError('motoModelInput', 'Inserisci il modello della moto');
           valid = false;
-        }
-      } else if (!modelInp || !modelInp.value.trim()) {
-        // Il gruppo modello potrebbe essere nascosto se la marca è ancora in digitazione
-        if (brandInp && brandInp.value.trim()) {
-          // Marca inserita ma modello non ancora mostrato: forza visibilità
-          if (modelGrp) modelGrp.style.display = '';
-          if (modelInp) modelInp.classList.add('is-error');
-          valid = false;
+        } else {
+          clearFieldError('motoModelInput');
         }
       }
 
-      requireField('motoCc');
-    } else if (step === 2) {
-      requireField('addressPickup'); requireField('addressDelivery');
-    } else if (step === 3) {
-      requireField('pickupDate');
-      const dateEl = document.getElementById('pickupDate');
-      if (dateEl && dateEl.value) {
-        const chosen = new Date(dateEl.value + 'T00:00:00');
-        const today  = new Date(); today.setHours(0, 0, 0, 0);
-        if (chosen <= today) { dateEl.classList.add('is-error'); valid = false; }
-      }
-    } else if (step === 4) {
-      requireField('clientName'); requireField('clientEmail');
-      requireField('clientPhone'); requireField('clientFiscal');
-      const priv = document.getElementById('privacyAccept');
-      if (priv && !priv.checked) {
-        priv.closest('.quote-form__checkbox').style.color = 'var(--danger-color)';
+      // Cilindrata
+      if (!ccEl || !ccEl.value.trim()) {
+        showFieldError('motoCc', 'Inserisci la cilindrata della moto');
         valid = false;
-      } else if (priv) {
-        priv.closest('.quote-form__checkbox').style.color = '';
+      } else if (!validateCilindrata(ccEl.value.trim())) {
+        showFieldError('motoCc', 'Formato non valido — inserisci un numero tra 50 e 2999 (es. 1000 o 1000cc)');
+        valid = false;
+      } else {
+        clearFieldError('motoCc');
       }
-      const emailEl = document.getElementById('clientEmail');
-      if (emailEl && emailEl.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
-        emailEl.classList.add('is-error'); valid = false;
+
+    } else if (step === 2) {
+      var pickupEl   = document.getElementById('addressPickup');
+      var deliveryEl = document.getElementById('addressDelivery');
+
+      if (!pickupEl || !pickupEl.value.trim()) {
+        showFieldError('addressPickup', "Inserisci l'indirizzo di ritiro");
+        valid = false;
+      } else if (pickupEl.value.trim().length < 10) {
+        showFieldError('addressPickup', 'Indirizzo troppo breve — includi via, numero civico e città');
+        valid = false;
+      } else {
+        clearFieldError('addressPickup');
+      }
+
+      if (!deliveryEl || !deliveryEl.value.trim()) {
+        showFieldError('addressDelivery', "Inserisci l'indirizzo di consegna");
+        valid = false;
+      } else if (deliveryEl.value.trim().length < 10) {
+        showFieldError('addressDelivery', 'Indirizzo troppo breve — includi via, numero civico e città');
+        valid = false;
+      } else if (pickupEl && pickupEl.value.trim() === deliveryEl.value.trim()) {
+        showFieldError('addressDelivery', "L'indirizzo di consegna deve essere diverso da quello di ritiro");
+        valid = false;
+      } else {
+        clearFieldError('addressDelivery');
+      }
+
+    } else if (step === 3) {
+      var dateEl = document.getElementById('pickupDate');
+      if (!dateEl || !dateEl.value) {
+        showFieldError('pickupDate', 'Seleziona una data di ritiro');
+        valid = false;
+      } else {
+        var chosen  = new Date(dateEl.value + 'T00:00:00');
+        var today   = new Date(); today.setHours(0, 0, 0, 0);
+        var maxDate = new Date(); maxDate.setMonth(maxDate.getMonth() + 6);
+        if (chosen <= today) {
+          showFieldError('pickupDate', 'La data deve essere almeno domani');
+          valid = false;
+        } else if (chosen > maxDate) {
+          showFieldError('pickupDate', 'La data non può superare i 6 mesi da oggi');
+          valid = false;
+        } else {
+          clearFieldError('pickupDate');
+        }
+      }
+
+    } else if (step === 4) {
+      var nameEl   = document.getElementById('clientName');
+      var emailEl  = document.getElementById('clientEmail');
+      var phoneEl  = document.getElementById('clientPhone');
+      var fiscalEl = document.getElementById('clientFiscal');
+      var privEl   = document.getElementById('privacyAccept');
+
+      // Nome e cognome
+      if (!nameEl || !nameEl.value.trim()) {
+        showFieldError('clientName', 'Inserisci il tuo nome e cognome');
+        valid = false;
+      } else if (nameEl.value.trim().split(/\s+/).length < 2) {
+        showFieldError('clientName', 'Inserisci sia il nome che il cognome');
+        valid = false;
+      } else {
+        clearFieldError('clientName');
+      }
+
+      // Email
+      if (!emailEl || !emailEl.value.trim()) {
+        showFieldError('clientEmail', 'Inserisci la tua email');
+        valid = false;
+      } else if (!validateEmail(emailEl.value.trim())) {
+        showFieldError('clientEmail', 'Email non valida — es. nome@dominio.it');
+        valid = false;
+      } else {
+        clearFieldError('clientEmail');
+      }
+
+      // Telefono
+      if (!phoneEl || !phoneEl.value.trim()) {
+        showFieldError('clientPhone', 'Inserisci il numero di telefono');
+        valid = false;
+      } else if (!validatePhone(phoneEl.value.trim())) {
+        showFieldError('clientPhone', 'Numero non valido — es. 3285449887 oppure +393285449887');
+        valid = false;
+      } else {
+        clearFieldError('clientPhone');
+      }
+
+      // Codice fiscale
+      if (!fiscalEl || !fiscalEl.value.trim()) {
+        showFieldError('clientFiscal', 'Inserisci il codice fiscale');
+        valid = false;
+      } else if (!validateCodiceFiscale(fiscalEl.value.trim())) {
+        showFieldError('clientFiscal', 'Codice fiscale non valido — deve essere di 16 caratteri (es. RSSMRA85M01H501Z)');
+        valid = false;
+      } else {
+        clearFieldError('clientFiscal');
+      }
+
+      // Privacy
+      if (privEl && !privEl.checked) {
+        var privErrEl = document.getElementById('privacyAccept-error');
+        if (privErrEl) privErrEl.textContent = 'Devi accettare i Termini e la Privacy Policy per continuare';
+        valid = false;
+      } else if (privEl) {
+        var privErrEl2 = document.getElementById('privacyAccept-error');
+        if (privErrEl2) privErrEl2.textContent = '';
       }
     }
 
@@ -859,8 +982,109 @@ try {
   if (successCloseBtn) successCloseBtn.addEventListener('click', closeModal);
 
   document.querySelectorAll('.quote-form__input, .quote-form__select').forEach((el) => {
-    el.addEventListener('input', function () { this.classList.remove('is-error'); });
+    el.addEventListener('input', function () {
+      this.classList.remove('is-error');
+      var errEl = document.getElementById(this.id + '-error');
+      if (errEl) errEl.textContent = '';
+    });
   });
+
+  /* Validazione in tempo reale all'uscita dal campo (blur) */
+  (function addBlurValidators() {
+    // Cilindrata
+    var ccEl = document.getElementById('motoCc');
+    if (ccEl) ccEl.addEventListener('blur', function () {
+      if (!this.value.trim()) return;
+      if (!validateCilindrata(this.value.trim())) {
+        showFieldError('motoCc', 'Formato non valido — inserisci un numero tra 50 e 2999 (es. 1000 o 1000cc)');
+      } else {
+        clearFieldError('motoCc');
+      }
+    });
+
+    // Indirizzi
+    ['addressPickup', 'addressDelivery'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('blur', function () {
+        if (!this.value.trim()) return;
+        if (this.value.trim().length < 10) {
+          showFieldError(id, 'Indirizzo troppo breve — includi via, numero civico e città');
+        } else {
+          clearFieldError(id);
+        }
+      });
+    });
+
+    // Data di ritiro
+    var dateEl = document.getElementById('pickupDate');
+    if (dateEl) dateEl.addEventListener('change', function () {
+      if (!this.value) return;
+      var chosen  = new Date(this.value + 'T00:00:00');
+      var today   = new Date(); today.setHours(0, 0, 0, 0);
+      var maxDate = new Date(); maxDate.setMonth(maxDate.getMonth() + 6);
+      if (chosen <= today) {
+        showFieldError('pickupDate', 'La data deve essere almeno domani');
+      } else if (chosen > maxDate) {
+        showFieldError('pickupDate', 'La data non può superare i 6 mesi da oggi');
+      } else {
+        clearFieldError('pickupDate');
+      }
+    });
+
+    // Nome (almeno 2 parole)
+    var nameEl = document.getElementById('clientName');
+    if (nameEl) nameEl.addEventListener('blur', function () {
+      if (!this.value.trim()) return;
+      if (this.value.trim().split(/\s+/).length < 2) {
+        showFieldError('clientName', 'Inserisci sia il nome che il cognome');
+      } else {
+        clearFieldError('clientName');
+      }
+    });
+
+    // Email
+    var emailEl = document.getElementById('clientEmail');
+    if (emailEl) emailEl.addEventListener('blur', function () {
+      if (!this.value.trim()) return;
+      if (!validateEmail(this.value.trim())) {
+        showFieldError('clientEmail', 'Email non valida — es. nome@dominio.it');
+      } else {
+        clearFieldError('clientEmail');
+      }
+    });
+
+    // Telefono
+    var phoneEl = document.getElementById('clientPhone');
+    if (phoneEl) phoneEl.addEventListener('blur', function () {
+      if (!this.value.trim()) return;
+      if (!validatePhone(this.value.trim())) {
+        showFieldError('clientPhone', 'Numero non valido — es. 3285449887 oppure +393285449887');
+      } else {
+        clearFieldError('clientPhone');
+      }
+    });
+
+    // Codice fiscale
+    var fiscalEl = document.getElementById('clientFiscal');
+    if (fiscalEl) fiscalEl.addEventListener('blur', function () {
+      if (!this.value.trim()) return;
+      if (!validateCodiceFiscale(this.value.trim())) {
+        showFieldError('clientFiscal', 'Codice fiscale non valido — deve essere di 16 caratteri (es. RSSMRA85M01H501Z)');
+      } else {
+        clearFieldError('clientFiscal');
+      }
+    });
+
+    // Privacy checkbox
+    var privEl = document.getElementById('privacyAccept');
+    if (privEl) privEl.addEventListener('change', function () {
+      if (this.checked) {
+        var privErrEl = document.getElementById('privacyAccept-error');
+        if (privErrEl) privErrEl.textContent = '';
+      }
+    });
+  })();
 
   /* Gestisce la ripresa di una bozza avviata da window.resumeDraft() */
   document.addEventListener('quote:resumePayment', function (e) {

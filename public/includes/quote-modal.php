@@ -125,6 +125,7 @@
                                 aria-controls="motoBrandList">
                             <ul class="moto-combobox__list" id="motoBrandList" role="listbox" hidden></ul>
                         </div>
+                        <span class="quote-form__error" id="motoBrandInput-error" role="alert"></span>
                     </div>
 
                     <!-- Combobox modello (visibile dopo aver scelto la marca) -->
@@ -142,6 +143,7 @@
                                 aria-controls="motoModelList">
                             <ul class="moto-combobox__list" id="motoModelList" role="listbox" hidden></ul>
                         </div>
+                        <span class="quote-form__error" id="motoModelInput-error" role="alert"></span>
                     </div>
 
                     <!-- Sezione "Altro": mostrata quando l'utente scrive una marca/modello non in lista e conferma -->
@@ -163,6 +165,7 @@
                     <div class="quote-form__group">
                         <label class="quote-form__label" for="motoCc">Cilindrata <span class="quote-form__required">*</span></label>
                         <input class="quote-form__input" type="text" id="motoCc" name="motoCc" placeholder="Es. 1103cc">
+                        <span class="quote-form__error" id="motoCc-error" role="alert"></span>
                     </div>
 
                     <div class="quote-form__separator"></div>
@@ -204,6 +207,7 @@
                                 </svg>
                             </button>
                         </div>
+                        <span class="quote-form__error" id="addressPickup-error" role="alert"></span>
                     </div>
                     <!-- Indirizzo di consegna -->
                     <div class="quote-form__group">
@@ -221,6 +225,7 @@
                                 </svg>
                             </button>
                         </div>
+                        <span class="quote-form__error" id="addressDelivery-error" role="alert"></span>
                     </div>
 
                     <!-- Contenitore mappa per selezione indirizzo -->
@@ -308,6 +313,7 @@
                         <input class="quote-form__input" type="date" id="pickupDate" name="pickupDate"
                             min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
                         <small class="quote-form__hint">Seleziona il giorno in cui vogliamo ritirare la moto</small>
+                        <span class="quote-form__error" id="pickupDate-error" role="alert"></span>
                     </div>
 
                     <div class="quote-form__separator"></div>
@@ -362,20 +368,24 @@
                         <div class="quote-form__group">
                             <label class="quote-form__label" for="clientName">Nome e Cognome <span class="quote-form__required">*</span></label>
                             <input class="quote-form__input" type="text" id="clientName" name="clientName" placeholder="Es. Mario Rossi">
+                            <span class="quote-form__error" id="clientName-error" role="alert"></span>
                         </div>
                         <div class="quote-form__group">
                             <label class="quote-form__label" for="clientEmail">Email <span class="quote-form__required">*</span></label>
                             <input class="quote-form__input" type="email" id="clientEmail" name="clientEmail" placeholder="Es. email@gmail.com">
+                            <span class="quote-form__error" id="clientEmail-error" role="alert"></span>
                         </div>
                     </div>
                     <div class="quote-form__row">
                         <div class="quote-form__group">
                             <label class="quote-form__label" for="clientPhone">Numero di telefono <span class="quote-form__required">*</span></label>
                             <input class="quote-form__input" type="tel" id="clientPhone" name="clientPhone" placeholder="Es. 3285449887">
+                            <span class="quote-form__error" id="clientPhone-error" role="alert"></span>
                         </div>
                         <div class="quote-form__group">
                             <label class="quote-form__label" for="clientFiscal">Codice Fiscale <span class="quote-form__required">*</span></label>
                             <input class="quote-form__input" type="text" id="clientFiscal" name="clientFiscal" placeholder="Es. YEGDTRSGUQEGP96Z" style="text-transform:uppercase;">
+                            <span class="quote-form__error" id="clientFiscal-error" role="alert"></span>
                         </div>
                     </div>
                     <div class="quote-form__group">
@@ -384,6 +394,7 @@
                             <span class="quote-form__checkbox-box"></span>
                             <span class="quote-form__checkbox-label">Accetto i <a href="#" class="quote-form__link">Termini e Condizioni</a> e la <a href="#" class="quote-form__link">Privacy Policy</a> <span class="quote-form__required">*</span></span>
                         </label>
+                        <span class="quote-form__error" id="privacyAccept-error" role="alert"></span>
                     </div>
                 </div>
             </div>

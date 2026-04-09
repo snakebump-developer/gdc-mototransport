@@ -34,13 +34,26 @@ $required = [
     'nome_cliente',
     'email_cliente',
     'telefono_cliente',
+    'codice_fiscale_cliente',
     'data_ritiro'
 ];
 
 foreach ($required as $field) {
     if (empty($data[$field])) {
         http_response_code(422);
-        echo json_encode(['error' => "Campo obbligatorio mancante: $field"]);
+        $labels = [
+            'marca_moto'              => 'La marca della moto è obbligatoria',
+            'modello_moto'            => 'Il modello della moto è obbligatorio',
+            'cilindrata'              => 'La cilindrata è obbligatoria',
+            'indirizzo_ritiro'        => "L'indirizzo di ritiro è obbligatorio",
+            'indirizzo_consegna'      => "L'indirizzo di consegna è obbligatorio",
+            'nome_cliente'            => 'Il nome del cliente è obbligatorio',
+            'email_cliente'           => "L'email è obbligatoria",
+            'telefono_cliente'        => 'Il numero di telefono è obbligatorio',
+            'codice_fiscale_cliente'  => 'Il codice fiscale è obbligatorio',
+            'data_ritiro'             => 'La data di ritiro è obbligatoria',
+        ];
+        echo json_encode(['error' => $labels[$field] ?? "Campo obbligatorio mancante: $field"]);
         exit;
     }
 }
@@ -48,7 +61,49 @@ foreach ($required as $field) {
 // Validazione email
 if (!filter_var($data['email_cliente'], FILTER_VALIDATE_EMAIL)) {
     http_response_code(422);
-    echo json_encode(['error' => 'Email non valida']);
+    echo json_encode(['error' => 'Email non valida (es. nome@dominio.it)']);
+    exit;
+}
+
+// Validazione telefono italiano (mobile 3xx o fisso 0xx)
+$telefono = preg_replace('/[\s\-\.]/', '', $data['telefono_cliente']);
+if (!preg_match('/^(\+39|0039)?(3\d{9}|0\d{6,10})$/', $telefono)) {
+    http_response_code(422);
+    echo json_encode(['error' => 'Numero di telefono non valido (es. 3285449887 o +393285449887)']);
+    exit;
+}
+
+// Validazione codice fiscale (16 caratteri alfanumerici nel formato standard)
+$cf = strtoupper(trim($data['codice_fiscale_cliente']));
+if (!preg_match('/^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/', $cf)) {
+    http_response_code(422);
+    echo json_encode(['error' => 'Codice fiscale non valido — deve essere di 16 caratteri (es. RSSMRA85M01H501Z)']);
+    exit;
+}
+
+// Validazione cilindrata (numero tra 50 e 2999, con o senza "cc")
+preg_match('/^(\d+)\s*(cc|cm3)?$/i', trim($data['cilindrata']), $ccMatches);
+$ccNum = isset($ccMatches[1]) ? (int)$ccMatches[1] : 0;
+if ($ccNum < 50 || $ccNum > 2999) {
+    http_response_code(422);
+    echo json_encode(['error' => 'Cilindrata non valida — inserisci un valore tra 50 e 2999 (es. 1000 o 1000cc)']);
+    exit;
+}
+
+// Validazione indirizzi (lunghezza minima e diversità)
+if (mb_strlen(trim($data['indirizzo_ritiro']), 'UTF-8') < 10) {
+    http_response_code(422);
+    echo json_encode(['error' => 'Indirizzo di ritiro troppo breve — includi via, numero civico e città']);
+    exit;
+}
+if (mb_strlen(trim($data['indirizzo_consegna']), 'UTF-8') < 10) {
+    http_response_code(422);
+    echo json_encode(['error' => 'Indirizzo di consegna troppo breve — includi via, numero civico e città']);
+    exit;
+}
+if (trim($data['indirizzo_ritiro']) === trim($data['indirizzo_consegna'])) {
+    http_response_code(422);
+    echo json_encode(['error' => "L'indirizzo di consegna deve essere diverso da quello di ritiro"]);
     exit;
 }
 
