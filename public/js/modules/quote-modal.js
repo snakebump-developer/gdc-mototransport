@@ -507,6 +507,8 @@ try {
     setText('summaryMoto', motoDesc || '—');
     setText('summaryMotoType', BAGS_LABELS[bags] || '—');
     setText('summaryRoute', pickup && delivery ? pickup + ' → ' + delivery : '—');
+    setText('summaryPickup', pickup || '—');
+    setText('summaryDeliveryAddr', delivery || '—');
     setText('summaryDelivery', DELIVERY_LABELS[deliveryType] || deliveryType);
     setText('summaryDeliveryDesc', DELIVERY_DESC[deliveryType] || '');
     if (pickupDate) {
@@ -518,6 +520,9 @@ try {
     setText('summaryName', name || '—');
     const contactLines = [email, phone, fiscal].filter(Boolean).join('\n');
     setText('summaryContact', contactLines || '—');
+    setText('summaryEmail', email || '—');
+    setText('summaryPhone', phone || '—');
+    setText('summaryFiscal', fiscal || '—');
 
     const total = calcTotal();
     setText('summaryPrice', '€' + total.toFixed(0));

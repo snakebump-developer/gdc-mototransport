@@ -118,7 +118,7 @@ function registerUser($username, $email, $password, string $tipo = 'privato', ar
             $extra['marketing_accettato'] ? 1 : 0,
         ]);
     } catch (PDOException $e) {
-        if (strpos($e->getMessage(), 'UNIQUE constraint') !== false) {
+        if ($e->getCode() == 23000) {
             if (strpos($e->getMessage(), 'partita_iva') !== false) {
                 throw new Exception("Partita IVA già registrata nel sistema.");
             }

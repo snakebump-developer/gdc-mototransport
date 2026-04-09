@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $bId = (int)$_POST['bozza_id'];
             $bozza = $pdo->prepare("SELECT * FROM moto_bozze WHERE id=? AND stato='in_attesa'")->execute([$bId]) ? $pdo->query("SELECT * FROM moto_bozze WHERE id=$bId AND stato='in_attesa'")->fetch() : null;
             if ($bozza) {
-                $pdo->prepare("INSERT OR IGNORE INTO catalogo_moto (marca, modello) VALUES (?,?)")->execute([$bozza['marca'], $bozza['modello']]);
+                $pdo->prepare("INSERT IGNORE INTO catalogo_moto (marca, modello) VALUES (?,?)")->execute([$bozza['marca'], $bozza['modello']]);
                 $pdo->prepare("UPDATE moto_bozze SET stato='approvata' WHERE id=?")->execute([$bId]);
                 $success = "Moto approvata e aggiunta al catalogo!";
             }

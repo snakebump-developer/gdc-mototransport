@@ -316,7 +316,7 @@ try {
     $chkCatalogo->execute([$marcaBozza, $modelloBozza]);
     if (!$chkCatalogo->fetch()) {
         // Non è nel catalogo → inserisce come bozza (ignora duplicati)
-        $pdo->prepare("INSERT OR IGNORE INTO moto_bozze (marca, modello) VALUES (?, ?)")
+        $pdo->prepare("INSERT IGNORE INTO moto_bozze (marca, modello) VALUES (?, ?)")
             ->execute([$marcaBozza, $modelloBozza]);
     }
 

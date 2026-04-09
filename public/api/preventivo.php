@@ -177,7 +177,7 @@ try {
     $chkCat = $pdo->prepare("SELECT id FROM catalogo_moto WHERE marca=? AND modello=? LIMIT 1");
     $chkCat->execute([$marcaBozza, $modelloBozza]);
     if (!$chkCat->fetch()) {
-        $pdo->prepare("INSERT OR IGNORE INTO moto_bozze (marca, modello) VALUES (?, ?)")
+        $pdo->prepare("INSERT IGNORE INTO moto_bozze (marca, modello) VALUES (?, ?)")
             ->execute([$marcaBozza, $modelloBozza]);
     }
 

@@ -5,7 +5,7 @@
     "require": {
         "php": ">=7.4",
         "ext-pdo": "*",
-        "ext-pdo_sqlite": "*",
+        "ext-pdo_mysql": "*",
         "stripe/stripe-php": "^20.0"
     },
     "suggest": {

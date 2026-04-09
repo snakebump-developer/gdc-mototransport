@@ -138,7 +138,7 @@ function getUserStats()
             COUNT(CASE WHEN ruolo = 'user' THEN 1 END) as totale_clienti,
             COUNT(CASE WHEN ruolo = 'professional' THEN 1 END) as totale_professionisti,
             COUNT(CASE WHEN ruolo = 'admin' THEN 1 END) as totale_admin,
-            COUNT(CASE WHEN DATE(creato_il) = DATE('now') THEN 1 END) as nuovi_oggi
+            COUNT(CASE WHEN DATE(creato_il) = CURDATE() THEN 1 END) as nuovi_oggi
         FROM utenti
     ");
     return $stmt->fetch();

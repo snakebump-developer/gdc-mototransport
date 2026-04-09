@@ -153,7 +153,7 @@ function getPreventiviStats(): array
             COUNT(CASE WHEN stato = 'in_lavorazione' THEN 1 END)                                  as preventivi_in_lavorazione,
             COUNT(CASE WHEN stato = 'completato'   THEN 1 END)                                    as preventivi_completati,
             COUNT(CASE WHEN stato = 'annullato'    THEN 1 END)                                    as preventivi_annullati,
-            COUNT(CASE WHEN DATE(creato_il) = DATE('now') THEN 1 END)                             as nuovi_oggi
+            COUNT(CASE WHEN DATE(creato_il) = CURDATE() THEN 1 END)                               as nuovi_oggi
         FROM preventivi
     ");
 
@@ -202,7 +202,7 @@ function getPreventiviCountByDate(): array
     $stmt = $pdo->query("
         SELECT data_ritiro, COUNT(*) AS cnt
         FROM preventivi
-        WHERE data_ritiro IS NOT NULL AND data_ritiro != ''
+        WHERE data_ritiro IS NOT NULL
         GROUP BY data_ritiro
     ");
     $result = [];
@@ -266,7 +266,7 @@ function getDraftPreventivi($userId)
         WHERE user_id = ?
           AND stato = 'bozza'
           AND (scadenza_il IS NULL OR scadenza_il > CURRENT_TIMESTAMP)
-          AND (data_ritiro IS NULL OR data_ritiro > DATE('now'))
+          AND (data_ritiro IS NULL OR data_ritiro > CURDATE())
         ORDER BY creato_il DESC
     ");
     $stmt->execute([$userId]);

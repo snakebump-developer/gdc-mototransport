@@ -22,12 +22,19 @@ if (file_exists($envFile)) {
 }
 
 return [
-    'db_name' => 'app_professionale.db',
-    'db_dir'  => __DIR__ . '/../database',
+    // Configurazione MySQL (MAMP)
+    'db' => [
+        'host'     => getenv('DB_HOST')     ?: '127.0.0.1',
+        'port'     => getenv('DB_PORT')     ?: '8889',
+        'name'     => getenv('DB_NAME')     ?: 'gdctrasporti_db',
+        'user'     => getenv('DB_USER')     ?: 'root',
+        'password' => getenv('DB_PASSWORD') ?: 'root',
+        'charset'  => 'utf8mb4',
+    ],
 
     // Configurazione app
-    'app_name' => 'StarterKit',
-    'app_url' => 'http://localhost:8000',
+    'app_name' => 'GDC MotoTransport',
+    'app_url' => 'http://localhost:8888',
 
     // Impostazioni sicurezza
     'session_timeout' => 3600, // 1 ora in secondi

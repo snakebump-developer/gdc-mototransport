@@ -2,13 +2,13 @@
 
 /**
  * Seed del catalogo moto da database/catalogo-moto.json
- * Eseguire una sola volta (è idempotente grazie a INSERT OR IGNORE).
+ * Eseguire una sola volta (è idempotente grazie a INSERT IGNORE).
  *
  * Uso: php src/seed-moto.php
  */
 
-$config  = require __DIR__ . '/config.php';
-$dbPath  = $config['db_dir'] . '/' . $config['db_name'];
+$config   = require __DIR__ . '/config.php';
+$dbConf   = $config['db'];
 $jsonPath = __DIR__ . '/../database/catalogo-moto.json';
 
 if (!file_exists($jsonPath)) {
@@ -21,11 +21,11 @@ if (!is_array($json)) {
 }
 
 try {
-    $pdo = new PDO("sqlite:$dbPath");
+    $dsn = "mysql:host={$dbConf['host']};port={$dbConf['port']};dbname={$dbConf['name']};charset={$dbConf['charset']}";
+    $pdo = new PDO($dsn, $dbConf['user'], $dbConf['password']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->exec("PRAGMA journal_mode = WAL");
 
-    $stmt = $pdo->prepare("INSERT OR IGNORE INTO catalogo_moto (marca, modello) VALUES (?, ?)");
+    $stmt = $pdo->prepare("INSERT IGNORE INTO catalogo_moto (marca, modello) VALUES (?, ?)");
 
     $totalInserted = 0;
     $pdo->beginTransaction();

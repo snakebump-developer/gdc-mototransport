@@ -8,15 +8,16 @@
  */
 
 $config = require __DIR__ . '/config.php';
-$dbPath = $config['db_dir'] . '/' . $config['db_name'];
+$dbConf = $config['db'];
 
-if (!file_exists($dbPath)) {
-    die("❌ Database non trovato. Esegui prima: php src/setup.php\n");
+try {
+    $dsn = "mysql:host={$dbConf['host']};port={$dbConf['port']};dbname={$dbConf['name']};charset={$dbConf['charset']}";
+    $pdo = new PDO($dsn, $dbConf['user'], $dbConf['password']);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("❌ Connessione MySQL fallita: " . $e->getMessage() . "\n");
 }
-
-$pdo = new PDO("sqlite:$dbPath");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 // =========================================================
 // UTENTI NORMALI (ruolo = 'user')
@@ -228,7 +229,7 @@ $utentiProfessionisti = [
 // INSERIMENTO UTENTI NORMALI
 // =========================================================
 $stmtUser = $pdo->prepare("
-    INSERT OR IGNORE INTO utenti
+    INSERT IGNORE INTO utenti
         (username, email, password, nome, cognome, telefono,
          indirizzo, citta, cap, paese, ruolo,
          gdpr_accettato, gdpr_accettato_il, marketing_accettato)
@@ -250,7 +251,7 @@ foreach ($utentiNormali as $u) {
 // INSERIMENTO PROFESSIONISTI
 // =========================================================
 $stmtPro = $pdo->prepare("
-    INSERT OR IGNORE INTO utenti
+    INSERT IGNORE INTO utenti
         (username, email, password, nome, cognome, telefono,
          indirizzo, citta, cap, paese, ruolo,
          ragione_sociale, partita_iva, codice_fiscale_azienda, pec,

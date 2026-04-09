@@ -1,21 +1,13 @@
 <?php
 $config = require __DIR__ . '/config.php';
-$dbPath = $config['db_dir'] . '/' . $config['db_name'];
+$dbConf = $config['db'];
 
 try {
-    // Verifica che la directory del database esista
-    if (!is_dir($config['db_dir'])) {
-        die("Errore: Directory database non trovata. Esegui 'php src/setup.php' per inizializzare il database.");
-    }
-    
-    // Verifica che il file del database esista
-    if (!file_exists($dbPath)) {
-        die("Errore: Database non trovato. Esegui 'php src/setup.php' per inizializzare il database.");
-    }
-    
-    $pdo = new PDO("sqlite:$dbPath");
+    $dsn = "mysql:host={$dbConf['host']};port={$dbConf['port']};dbname={$dbConf['name']};charset={$dbConf['charset']}";
+    $pdo = new PDO($dsn, $dbConf['user'], $dbConf['password']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 } catch (PDOException $e) {
     die("Errore critico del database: " . htmlspecialchars($e->getMessage()));
 }

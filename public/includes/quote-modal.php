@@ -405,78 +405,130 @@
                 <h3 class="quote-step__title">Riepilogo Preventivo</h3>
                 <div class="quote-summary">
                     <div class="quote-summary__card">
+
+                        <!-- MOTO -->
                         <div class="quote-summary__row">
+                            <div class="quote-summary__icon-wrap">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="5.5" cy="17" r="2.5"></circle>
+                                    <circle cx="18.5" cy="17" r="2.5"></circle>
+                                    <path d="M8 17h5l2.5-5h-5L9 8H7"></path>
+                                    <path d="M15.5 12l3 2"></path>
+                                    <path d="M15.5 12l1-3h2.5"></path>
+                                </svg>
+                            </div>
                             <div class="quote-summary__info">
                                 <span class="quote-summary__sublabel">Moto</span>
                                 <strong class="quote-summary__value" id="summaryMoto">&mdash;</strong>
                                 <span class="quote-summary__desc" id="summaryMotoType">&mdash;</span>
                             </div>
-                            <svg class="quote-summary__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"></path>
-                                <rect x="9" y="11" width="14" height="10" rx="2"></rect>
-                                <circle cx="12" cy="20" r="1"></circle>
-                                <circle cx="20" cy="20" r="1"></circle>
-                            </svg>
                         </div>
+
                         <div class="quote-summary__divider"></div>
+
+                        <!-- TRAGITTO -->
                         <div class="quote-summary__row">
+                            <div class="quote-summary__icon-wrap">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </div>
                             <div class="quote-summary__info">
                                 <span class="quote-summary__sublabel">Tragitto</span>
-                                <strong class="quote-summary__value" id="summaryRoute">&mdash;</strong>
+                                <div class="quote-summary__route">
+                                    <div class="quote-summary__route-item">
+                                        <span class="quote-summary__route-dot quote-summary__route-dot--from"></span>
+                                        <strong class="quote-summary__value" id="summaryPickup">&mdash;</strong>
+                                    </div>
+                                    <div class="quote-summary__route-line-v"></div>
+                                    <div class="quote-summary__route-item">
+                                        <span class="quote-summary__route-dot quote-summary__route-dot--to"></span>
+                                        <strong class="quote-summary__value" id="summaryDeliveryAddr">&mdash;</strong>
+                                    </div>
+                                </div>
+                                <span id="summaryRoute" style="display:none"></span>
                             </div>
-                            <svg class="quote-summary__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
                         </div>
+
                         <div class="quote-summary__divider"></div>
+
+                        <!-- TIPO DI CONSEGNA -->
                         <div class="quote-summary__row">
+                            <div class="quote-summary__icon-wrap">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="3" width="15" height="13" rx="1"></rect>
+                                    <path d="M16 8h4l3 5v3h-7V8z"></path>
+                                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                </svg>
+                            </div>
                             <div class="quote-summary__info">
-                                <span class="quote-summary__sublabel">Tipo di Ritiro</span>
+                                <span class="quote-summary__sublabel">Tipo di consegna</span>
                                 <strong class="quote-summary__value" id="summaryDelivery">&mdash;</strong>
                                 <span class="quote-summary__desc" id="summaryDeliveryDesc">&mdash;</span>
                             </div>
-                            <svg class="quote-summary__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
                         </div>
+
                         <div class="quote-summary__divider"></div>
+
+                        <!-- DATA DI RITIRO -->
                         <div class="quote-summary__row">
+                            <div class="quote-summary__icon-wrap">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
                             <div class="quote-summary__info">
                                 <span class="quote-summary__sublabel">Data di ritiro</span>
                                 <strong class="quote-summary__value" id="summaryDate">&mdash;</strong>
                             </div>
-                            <svg class="quote-summary__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
                         </div>
+
                         <div class="quote-summary__divider"></div>
+
+                        <!-- CLIENTE -->
                         <div class="quote-summary__row">
+                            <div class="quote-summary__icon-wrap">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
                             <div class="quote-summary__info">
                                 <span class="quote-summary__sublabel">Cliente</span>
                                 <strong class="quote-summary__value" id="summaryName">&mdash;</strong>
-                                <span class="quote-summary__desc" id="summaryContact">&mdash;</span>
+                                <span class="quote-summary__desc" id="summaryEmail">&mdash;</span>
+                                <span class="quote-summary__desc" id="summaryPhone">&mdash;</span>
+                                <span class="quote-summary__desc" id="summaryFiscal">&mdash;</span>
+                                <span id="summaryContact" style="display:none"></span>
                             </div>
-                            <svg class="quote-summary__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
+                        </div>
+
+                    </div>
+
+                    <!-- Prezzo Totale -->
+                    <div class="quote-summary__price-card">
+                        <div class="quote-summary__price-main">
+                            <span class="quote-summary__price-label">Prezzo Totale</span>
+                            <strong class="quote-summary__price-value" id="summaryPrice">&mdash;</strong>
+                        </div>
+                        <div class="quote-summary__price-aside">
+                            <span class="quote-summary__price-note">IVA inclusa</span>
+                            <div class="quote-summary__price-secure">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                Pagamento sicuro
+                            </div>
                         </div>
                     </div>
 
-                    <div class="quote-summary__price-card">
-                        <span class="quote-summary__price-label">Prezzo Totale</span>
-                        <strong class="quote-summary__price-value" id="summaryPrice">&mdash;</strong>
-                        <span class="quote-summary__price-note">IVA inclusa</span>
-                    </div>
-
-                    <p class="quote-summary__disclaimer">Cliccando "Conferma e Paga" verrai portato al pagamento sicuro integrato.</p>
+                    <p class="quote-summary__disclaimer">Clicca &ldquo;Vai al pagamento&rdquo; per procedere con il pagamento sicuro integrato.</p>
                 </div>
 
                 <!-- Pannello successo salvataggio bozza (nascosto di default) -->
@@ -560,39 +612,41 @@
                 </svg>
                 Indietro
             </button>
-            <button class="quote-btn quote-btn--next" id="quoteNextBtn">
-                Continua
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </button>
-            <?php if (!empty($user)): ?>
-                <button class="quote-btn quote-btn--save-draft" id="quoteSaveDraftBtn" style="display:none;" title="Salva il preventivo per completare il pagamento in seguito">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                        <polyline points="7 3 7 8 15 8"></polyline>
+            <div class="quote-footer__actions">
+                <?php if (!empty($user)): ?>
+                    <button class="quote-btn quote-btn--save-draft" id="quoteSaveDraftBtn" style="display:none;" title="Salva il preventivo per completare il pagamento in seguito">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Salva per dopo
+                    </button>
+                <?php endif; ?>
+                <button class="quote-btn quote-btn--next" id="quoteNextBtn">
+                    Continua
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
-                    Salva per dopo
                 </button>
-            <?php endif; ?>
-            <button class="quote-btn quote-btn--confirm" id="quoteConfirmBtn" style="display:none;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="1" y="4" width="22" height="16" rx="2"></rect>
-                    <line x1="1" y1="10" x2="23" y2="10"></line>
-                </svg>
-                Vai al pagamento
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </button>
-            <button class="quote-btn quote-btn--pay" id="quotePayBtn" style="display:none;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-                Paga ora
-            </button>
+                <button class="quote-btn quote-btn--confirm" id="quoteConfirmBtn" style="display:none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                    Vai al pagamento
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <button class="quote-btn quote-btn--pay" id="quotePayBtn" style="display:none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Paga ora
+                </button>
+            </div>
         </div>
 
     </div>

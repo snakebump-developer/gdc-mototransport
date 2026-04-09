@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../src/db.php';
 
 if ($action === 'marche') {
     $rows = $pdo->query(
-        "SELECT DISTINCT marca FROM catalogo_moto ORDER BY marca COLLATE NOCASE"
+        "SELECT DISTINCT marca FROM catalogo_moto ORDER BY marca"
     )->fetchAll(PDO::FETCH_COLUMN);
 
     echo json_encode(['success' => true, 'marche' => $rows]);
@@ -37,7 +37,7 @@ if ($action === 'marche') {
     }
 
     $stmt = $pdo->prepare(
-        "SELECT modello FROM catalogo_moto WHERE marca = ? ORDER BY modello COLLATE NOCASE"
+        "SELECT modello FROM catalogo_moto WHERE marca = ? ORDER BY modello"
     );
     $stmt->execute([$marca]);
     $modelli = $stmt->fetchAll(PDO::FETCH_COLUMN);
