@@ -1,0 +1,10 @@
+Options -Indexes
+RewriteEngine On
+
+# Serve file e cartelle statiche direttamente (CSS, JS, immagini, ecc.)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Tutto il resto passa per il router PHP
+RewriteRule ^ router.php [QSA,L]
