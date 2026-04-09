@@ -19,6 +19,9 @@ RUN echo '<Directory /var/www/html/public>\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/apache2.conf
 
+# Installa git e unzip (richiesti da Composer per scaricare le dipendenze)
+RUN apt-get update && apt-get install -y git unzip && rm -rf /var/lib/apt/lists/*
+
 # Installa Composer e le dipendenze PHP
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader --working-dir=/var/www/html
