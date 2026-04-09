@@ -3,8 +3,9 @@ FROM php:8.2-apache
 # Estensioni PHP necessarie
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Abilita mod_rewrite di Apache
-RUN a2enmod rewrite
+# Abilita mod_rewrite di Apache (disabilita MPM conflittuali prima)
+RUN a2dismod mpm_event mpm_worker || true && \
+    a2enmod mpm_prefork rewrite
 
 # Copia tutto il progetto
 COPY . /var/www/html/
