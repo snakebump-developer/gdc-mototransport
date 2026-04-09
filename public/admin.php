@@ -62,21 +62,9 @@ if ($section === 'panoramica') {
     $preventivi = getAllPreventivi();
     $calendarData = getPreventiviCountByDate();
 } elseif ($section === 'utenti') {
-    $searchQuery = trim($_GET['q'] ?? '');
-    $currentPage = max(1, (int)($_GET['page'] ?? 1));
-    $totalItems  = countAllUsers($searchQuery);
-    $totalPages  = max(1, (int)ceil($totalItems / $ITEMS_PER_PAGE));
-    $currentPage = min($currentPage, $totalPages);
-    $offset      = ($currentPage - 1) * $ITEMS_PER_PAGE;
-    $utenti      = getAllUsers($ITEMS_PER_PAGE, $offset, $searchQuery);
+    $utenti = getAllUsers(PHP_INT_MAX, 0);
 } elseif ($section === 'professionisti') {
-    $searchQuery    = trim($_GET['q'] ?? '');
-    $currentPage    = max(1, (int)($_GET['page'] ?? 1));
-    $totalItems     = countAllProfessionals($searchQuery);
-    $totalPages     = max(1, (int)ceil($totalItems / $ITEMS_PER_PAGE));
-    $currentPage    = min($currentPage, $totalPages);
-    $offset         = ($currentPage - 1) * $ITEMS_PER_PAGE;
-    $professionisti = getAllProfessionals($ITEMS_PER_PAGE, $offset, $searchQuery);
+    $professionisti = getAllProfessionals(PHP_INT_MAX, 0);
 }
 ?>
 <!DOCTYPE html>
@@ -239,17 +227,82 @@ if ($section === 'panoramica') {
                     <h1>Tutti i Preventivi</h1>
                     <p class="section-description">Gestisci tutti i preventivi di trasporto</p>
 
-                    <!-- ===== CALENDARIO RITIRI ===== -->
-                    <div class="cal-wrapper">
-                        <div class="cal-header">
-                            <button class="cal-nav" id="calPrev" aria-label="Mese precedente">&#8249;</button>
-                            <span class="cal-month-label" id="calMonthLabel"></span>
-                            <button class="cal-nav" id="calNext" aria-label="Mese successivo">&#8250;</button>
-                            <button class="cal-reset btn btn-ghost btn-sm" id="calReset" style="display:none">
-                                Mostra tutti
+                    <!-- ===== BARRA CONTROLLI (ricerca + filtri) ===== -->
+                    <div class="table-controls">
+                        <!-- Sinistra: ricerca -->
+                        <div class="search-toolbar__input-wrap" style="flex:1;max-width:480px;">
+                            <svg class="search-toolbar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input type="text" id="preventiviSearch" class="search-toolbar__input" placeholder="Cerca cliente, moto, indirizzo…" autocomplete="off">
+                            <button type="button" class="search-toolbar__clear" id="preventiviSearchClear" style="display:none;background:none;border:none;cursor:pointer;" aria-label="Cancella ricerca">&#x2715;</button>
+                        </div>
+
+                        <!-- Destra: filtri -->
+                        <div style="display:flex;align-items:center;gap:.5rem;margin-left:auto;">
+                            <button class="cal-reset btn btn-ghost btn-sm" id="calReset" style="display:none">Mostra tutti</button>
+
+                            <!-- Col-picker -->
+                            <div class="col-picker" id="colPicker-preventivi">
+                                <button type="button" class="btn btn-ghost btn-sm col-picker__toggle" id="colPickerBtn-preventivi" aria-expanded="false" aria-haspopup="true">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="7" height="18" rx="1" />
+                                        <rect x="14" y="3" width="7" height="18" rx="1" />
+                                    </svg>
+                                    Colonne
+                                </button>
+                                <div class="col-picker__dropdown" id="colPickerDropdown-preventivi" hidden>
+                                    <p class="col-picker__label">Mostra / nascondi colonne</p>
+                                    <div class="col-picker__items">
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="id"> ID</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="data-ritiro"> Data ritiro</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="cliente"> Cliente</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="telefono"> Telefono</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="moto"> Moto</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="cilindrata"> Cilindrata</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="borse"> Borse</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="ritiro"> Ritiro</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="consegna"> Consegna</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="km"> Km</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="tipo"> Tipo</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="prezzo"> Prezzo</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="stato"> Stato</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="pagamento"> Pagamento</label>
+                                        <label class="col-picker__item"><input type="checkbox" data-table="tbl-preventivi" data-col="ricevuto"> Ricevuto</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bottone calendario -->
+                            <button class="btn btn-ghost btn-sm cal-open-btn" id="calOpenBtn" type="button">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                Filtra per data
                             </button>
                         </div>
-                        <div class="cal-grid" id="calGrid"></div>
+                    </div>
+
+                    <!-- Modale calendario -->
+                    <div class="cal-modal-overlay" id="calModalOverlay" hidden>
+                        <div class="cal-modal" id="calModal" role="dialog" aria-modal="true" aria-labelledby="calModalTitleEl">
+                            <div class="cal-modal__header">
+                                <span class="cal-modal__title" id="calModalTitleEl">Seleziona una data di ritiro</span>
+                                <button class="cal-modal__close" id="calModalClose" type="button" aria-label="Chiudi">&#x2715;</button>
+                            </div>
+                            <div class="cal-wrapper cal-wrapper--modal">
+                                <div class="cal-header">
+                                    <button class="cal-nav" id="calPrev" aria-label="Mese precedente">&#8249;</button>
+                                    <span class="cal-month-label" id="calMonthLabel"></span>
+                                    <button class="cal-nav" id="calNext" aria-label="Mese successivo">&#8250;</button>
+                                </div>
+                                <div class="cal-grid" id="calGrid"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <?php if (empty($preventivi)): ?>
@@ -259,31 +312,31 @@ if ($section === 'panoramica') {
                         </div>
                     <?php else: ?>
                         <div class="orders-table" id="preventiviTable">
-                            <table>
+                            <table id="tbl-preventivi">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Data ritiro</th>
-                                        <th>Cliente</th>
-                                        <th>Telefono</th>
-                                        <th>Moto</th>
-                                        <th>Cilindrata</th>
-                                        <th>Borse</th>
-                                        <th>Ritiro</th>
-                                        <th>Consegna</th>
-                                        <th>Km</th>
-                                        <th>Tipo</th>
-                                        <th>Prezzo</th>
-                                        <th>Stato</th>
-                                        <th>Pagamento</th>
-                                        <th>Ricevuto</th>
+                                        <th data-col="id">ID</th>
+                                        <th data-col="data-ritiro">Data ritiro</th>
+                                        <th data-col="cliente">Cliente</th>
+                                        <th data-col="telefono">Telefono</th>
+                                        <th data-col="moto">Moto</th>
+                                        <th data-col="cilindrata">Cilindrata</th>
+                                        <th data-col="borse">Borse</th>
+                                        <th data-col="ritiro">Ritiro</th>
+                                        <th data-col="consegna">Consegna</th>
+                                        <th data-col="km">Km</th>
+                                        <th data-col="tipo">Tipo</th>
+                                        <th data-col="prezzo">Prezzo</th>
+                                        <th data-col="stato">Stato</th>
+                                        <th data-col="pagamento">Pagamento</th>
+                                        <th data-col="ricevuto">Ricevuto</th>
                                     </tr>
                                 </thead>
                                 <tbody id="preventiviTbody">
                                     <?php foreach ($preventivi as $p): ?>
                                         <tr data-date="<?= htmlspecialchars($p['data_ritiro'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
-                                            <td><a href="/admin/preventivo/<?= $p['id'] ?>" class="table-link table-link--id">#<?= $p['id'] ?></a></td>
-                                            <td class="td-date">
+                                            <td data-col="id"><a href="/admin/preventivo/<?= $p['id'] ?>" class="table-link table-link--id">#<?= $p['id'] ?></a></td>
+                                            <td data-col="data-ritiro" class="td-date">
                                                 <?php if (!empty($p['data_ritiro'])): ?>
                                                     <strong><?= date('d/m/Y', strtotime($p['data_ritiro'])) ?></strong>
                                                     <span class="td-date__day"><?= (new IntlDateFormatter('it_IT', IntlDateFormatter::FULL, IntlDateFormatter::NONE, null, null, 'EEEE'))->format(strtotime($p['data_ritiro'])) ?></span>
@@ -291,7 +344,7 @@ if ($section === 'panoramica') {
                                                     <span class="text-muted">—</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td>
+                                            <td data-col="cliente">
                                                 <?php if (!empty($p['user_id'])): ?>
                                                     <a href="/admin/utente/<?= $p['user_id'] ?>" class="table-link"><?= htmlspecialchars($p['nome_cliente'] ?? ($p['username'] ?? 'Anonimo')) ?></a>
                                                 <?php else: ?>
@@ -304,10 +357,10 @@ if ($section === 'panoramica') {
                                                     <br><small class="text-muted"><?= htmlspecialchars($p['codice_fiscale_cliente']) ?></small>
                                                 <?php endif; ?>
                                             </td>
-                                            <td><?= htmlspecialchars($p['telefono_cliente'] ?? '—') ?></td>
-                                            <td><?= htmlspecialchars(trim(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? ''))) ?></td>
-                                            <td><?= htmlspecialchars($p['cilindrata'] ?? '—') ?></td>
-                                            <td>
+                                            <td data-col="telefono"><?= htmlspecialchars($p['telefono_cliente'] ?? '—') ?></td>
+                                            <td data-col="moto"><?= htmlspecialchars(trim(($p['marca_moto'] ?? '') . ' ' . ($p['modello_moto'] ?? ''))) ?></td>
+                                            <td data-col="cilindrata"><?= htmlspecialchars($p['cilindrata'] ?? '—') ?></td>
+                                            <td data-col="borse">
                                                 <?php
                                                 $borseVal = (float)($p['borse_laterali'] ?? 0);
                                                 if ($borseVal > 0) {
@@ -317,18 +370,18 @@ if ($section === 'panoramica') {
                                                 }
                                                 ?>
                                             </td>
-                                            <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_ritiro']) ?></td>
-                                            <td class="td-wrap"><?= htmlspecialchars($p['indirizzo_consegna']) ?></td>
-                                            <td><?= $p['distanza_km'] ? number_format((float)$p['distanza_km'], 0, ',', '.') . ' km' : '—' ?></td>
-                                            <td>
+                                            <td data-col="ritiro" class="td-wrap"><?= htmlspecialchars($p['indirizzo_ritiro']) ?></td>
+                                            <td data-col="consegna" class="td-wrap"><?= htmlspecialchars($p['indirizzo_consegna']) ?></td>
+                                            <td data-col="km"><?= $p['distanza_km'] ? number_format((float)$p['distanza_km'], 0, ',', '.') . ' km' : '—' ?></td>
+                                            <td data-col="tipo">
                                                 <?php
                                                 $tipoClass = ['Standard' => 'badge-standard', 'Express' => 'badge-express', 'Urgente' => 'badge-urgente'];
                                                 $tipo = $p['tipo_consegna'] ?? 'Standard';
                                                 ?>
                                                 <span class="badge <?= $tipoClass[$tipo] ?? '' ?>"><?= htmlspecialchars($tipo) ?></span>
                                             </td>
-                                            <td>&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></td>
-                                            <td>
+                                            <td data-col="prezzo">&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></td>
+                                            <td data-col="stato">
                                                 <form method="POST" class="inline-form">
                                                     <input type="hidden" name="action" value="update_preventivo_stato">
                                                     <input type="hidden" name="preventivo_id" value="<?= $p['id'] ?>">
@@ -339,8 +392,8 @@ if ($section === 'panoramica') {
                                                     </select>
                                                 </form>
                                             </td>
-                                            <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
-                                            <td>
+                                            <td data-col="ricevuto"><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                            <td data-col="pagamento">
                                                 <?php
                                                 $pgStato = $p['pagamento_stato'] ?? 'non_pagato';
                                                 $pgClass = [
@@ -360,13 +413,14 @@ if ($section === 'panoramica') {
                                                     <?= $pgLabel[$pgStato] ?? htmlspecialchars($pgStato) ?>
                                                 </span>
                                             </td>
-                                            <td><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                            <td data-col="ricevuto"><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
                         <p class="cal-table-info" id="calTableInfo" style="display:none"></p>
+                        <nav class="pagination" id="preventiviPagination" aria-label="Paginazione preventivi"></nav>
                     <?php endif; ?>
                 </div>
 
@@ -376,24 +430,16 @@ if ($section === 'panoramica') {
                     <h1>Gestione Utenti</h1>
                     <p class="section-description">Visualizza e gestisci tutti gli utenti</p>
 
-                    <!-- Search toolbar + col picker -->
                     <div class="table-controls">
-                        <form method="GET" action="/admin/utenti" class="search-toolbar">
-                            <div class="search-toolbar__input-wrap">
-                                <svg class="search-toolbar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="11" cy="11" r="8" />
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                </svg>
-                                <input type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" placeholder="Cerca per username, email, nome…" class="search-toolbar__input" autocomplete="off">
-                                <?php if ($searchQuery !== ''): ?>
-                                    <a href="/admin/utenti" class="search-toolbar__clear" title="Cancella ricerca">&#x2715;</a>
-                                <?php endif; ?>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">Cerca</button>
-                        </form>
-
-                        <!-- Column picker -->
-                        <div class="col-picker" id="colPicker-utenti">
+                        <div class="search-toolbar__input-wrap" style="flex:1;max-width:480px;">
+                            <svg class="search-toolbar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input type="text" id="utentiSearch" class="search-toolbar__input" placeholder="Cerca per username, email, nome…" autocomplete="off">
+                            <button type="button" class="search-toolbar__clear" id="utentiSearchClear" style="display:none;background:none;border:none;cursor:pointer;" aria-label="Cancella ricerca">&#x2715;</button>
+                        </div>
+                        <div class="col-picker" id="colPicker-utenti" style="margin-left:auto;">
                             <button type="button" class="btn btn-ghost btn-sm col-picker__toggle" id="colPickerBtn-utenti" aria-expanded="false" aria-haspopup="true">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="7" height="18" rx="1" />
@@ -403,27 +449,22 @@ if ($section === 'panoramica') {
                             </button>
                             <div class="col-picker__dropdown" id="colPickerDropdown-utenti" hidden>
                                 <p class="col-picker__label">Mostra / nascondi colonne</p>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="id"> ID</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="email"> Email</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="nome"> Nome</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="cognome"> Cognome</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="ruolo"> Ruolo</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="registrato"> Registrato</label>
+                                <div class="col-picker__items">
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="id"> ID</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="email"> Email</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="nome"> Nome</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="cognome"> Cognome</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="ruolo"> Ruolo</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-utenti" data-col="registrato"> Registrato</label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <?php if ($totalItems > 0): ?>
-                        <p class="search-result-count">
-                            <?= $totalItems ?> <?= $totalItems === 1 ? 'utente trovato' : 'utenti trovati' ?>
-                            <?= $searchQuery !== '' ? ' per <strong>' . htmlspecialchars($searchQuery) . '</strong>' : '' ?>
-                        </p>
-                    <?php endif; ?>
-
                     <?php if (empty($utenti)): ?>
                         <div class="empty-state">
                             <div class="empty-icon">👥</div>
-                            <h3><?= $searchQuery !== '' ? 'Nessun utente trovato per "' . htmlspecialchars($searchQuery) . '"' : 'Nessun utente presente' ?></h3>
+                            <h3>Nessun utente presente</h3>
                         </div>
                     <?php else: ?>
                         <div class="orders-table">
@@ -470,49 +511,7 @@ if ($section === 'panoramica') {
                                 </tbody>
                             </table>
                         </div>
-
-                        <!-- Paginazione -->
-                        <?php if ($totalPages > 1): ?>
-                            <nav class="pagination" aria-label="Paginazione utenti">
-                                <?php
-                                $baseUrl = '/admin/utenti' . ($searchQuery !== '' ? '?q=' . urlencode($searchQuery) . '&' : '?');
-                                ?>
-                                <?php if ($currentPage > 1): ?>
-                                    <a href="<?= $baseUrl ?>page=<?= $currentPage - 1 ?>" class="pagination__btn" aria-label="Pagina precedente">&#8249;</a>
-                                <?php else: ?>
-                                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8249;</span>
-                                <?php endif; ?>
-
-                                <?php
-                                $start = max(1, $currentPage - 2);
-                                $end   = min($totalPages, $currentPage + 2);
-                                if ($start > 1): ?>
-                                    <a href="<?= $baseUrl ?>page=1" class="pagination__btn">1</a>
-                                    <?php if ($start > 2): ?><span class="pagination__ellipsis">…</span><?php endif; ?>
-                                <?php endif; ?>
-
-                                <?php for ($p = $start; $p <= $end; $p++): ?>
-                                    <?php if ($p === $currentPage): ?>
-                                        <span class="pagination__btn pagination__btn--active" aria-current="page"><?= $p ?></span>
-                                    <?php else: ?>
-                                        <a href="<?= $baseUrl ?>page=<?= $p ?>" class="pagination__btn"><?= $p ?></a>
-                                    <?php endif; ?>
-                                <?php endfor; ?>
-
-                                <?php if ($end < $totalPages): ?>
-                                    <?php if ($end < $totalPages - 1): ?><span class="pagination__ellipsis">…</span><?php endif; ?>
-                                    <a href="<?= $baseUrl ?>page=<?= $totalPages ?>" class="pagination__btn"><?= $totalPages ?></a>
-                                <?php endif; ?>
-
-                                <?php if ($currentPage < $totalPages): ?>
-                                    <a href="<?= $baseUrl ?>page=<?= $currentPage + 1 ?>" class="pagination__btn" aria-label="Pagina successiva">&#8250;</a>
-                                <?php else: ?>
-                                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8250;</span>
-                                <?php endif; ?>
-
-                                <span class="pagination__info">Pagina <?= $currentPage ?> di <?= $totalPages ?></span>
-                            </nav>
-                        <?php endif; ?>
+                        <nav class="pagination" id="utentiPagination" aria-label="Paginazione utenti"></nav>
                     <?php endif; ?>
                 </div>
             <?php elseif ($section === 'professionisti'): ?>
@@ -521,24 +520,16 @@ if ($section === 'panoramica') {
                     <h1>Professionisti</h1>
                     <p class="section-description">Aziende e professionisti registrati</p>
 
-                    <!-- Search toolbar + col picker -->
                     <div class="table-controls">
-                        <form method="GET" action="/admin/professionisti" class="search-toolbar">
-                            <div class="search-toolbar__input-wrap">
-                                <svg class="search-toolbar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="11" cy="11" r="8" />
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                </svg>
-                                <input type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" placeholder="Cerca per ragione sociale, email, P.IVA, città…" class="search-toolbar__input" autocomplete="off">
-                                <?php if ($searchQuery !== ''): ?>
-                                    <a href="/admin/professionisti" class="search-toolbar__clear" title="Cancella ricerca">&#x2715;</a>
-                                <?php endif; ?>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">Cerca</button>
-                        </form>
-
-                        <!-- Column picker -->
-                        <div class="col-picker" id="colPicker-professionisti">
+                        <div class="search-toolbar__input-wrap" style="flex:1;max-width:480px;">
+                            <svg class="search-toolbar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input type="text" id="professionistiSearch" class="search-toolbar__input" placeholder="Cerca per ragione sociale, email, P.IVA, città…" autocomplete="off">
+                            <button type="button" class="search-toolbar__clear" id="professionistiSearchClear" style="display:none;background:none;border:none;cursor:pointer;" aria-label="Cancella ricerca">&#x2715;</button>
+                        </div>
+                        <div class="col-picker" id="colPicker-professionisti" style="margin-left:auto;">
                             <button type="button" class="btn btn-ghost btn-sm col-picker__toggle" id="colPickerBtn-professionisti" aria-expanded="false" aria-haspopup="true">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="7" height="18" rx="1" />
@@ -548,29 +539,24 @@ if ($section === 'panoramica') {
                             </button>
                             <div class="col-picker__dropdown" id="colPickerDropdown-professionisti" hidden>
                                 <p class="col-picker__label">Mostra / nascondi colonne</p>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="id"> ID</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="referente"> Referente</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="email"> Email</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="piva"> P.IVA</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="attivita"> Attività</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="citta"> Città</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="sconto"> Sconto</label>
-                                <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="registrato"> Registrato</label>
+                                <div class="col-picker__items">
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="id"> ID</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="referente"> Referente</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="email"> Email</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="piva"> P.IVA</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="attivita"> Attività</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="citta"> Città</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="sconto"> Sconto</label>
+                                    <label class="col-picker__item"><input type="checkbox" data-table="tbl-professionisti" data-col="registrato"> Registrato</label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <?php if ($totalItems > 0): ?>
-                        <p class="search-result-count">
-                            <?= $totalItems ?> <?= $totalItems === 1 ? 'professionista trovato' : 'professionisti trovati' ?>
-                            <?= $searchQuery !== '' ? ' per <strong>' . htmlspecialchars($searchQuery) . '</strong>' : '' ?>
-                        </p>
-                    <?php endif; ?>
-
                     <?php if (empty($professionisti)): ?>
                         <div class="empty-state">
                             <div class="empty-icon">🏢</div>
-                            <h3><?= $searchQuery !== '' ? 'Nessun professionista trovato per "' . htmlspecialchars($searchQuery) . '"' : 'Nessun professionista registrato' ?></h3>
+                            <h3>Nessun professionista registrato</h3>
                         </div>
                     <?php else: ?>
                         <div class="orders-table">
@@ -631,49 +617,7 @@ if ($section === 'panoramica') {
                                 </tbody>
                             </table>
                         </div>
-
-                        <!-- Paginazione -->
-                        <?php if ($totalPages > 1): ?>
-                            <nav class="pagination" aria-label="Paginazione professionisti">
-                                <?php
-                                $baseUrl = '/admin/professionisti' . ($searchQuery !== '' ? '?q=' . urlencode($searchQuery) . '&' : '?');
-                                ?>
-                                <?php if ($currentPage > 1): ?>
-                                    <a href="<?= $baseUrl ?>page=<?= $currentPage - 1 ?>" class="pagination__btn" aria-label="Pagina precedente">&#8249;</a>
-                                <?php else: ?>
-                                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8249;</span>
-                                <?php endif; ?>
-
-                                <?php
-                                $start = max(1, $currentPage - 2);
-                                $end   = min($totalPages, $currentPage + 2);
-                                if ($start > 1): ?>
-                                    <a href="<?= $baseUrl ?>page=1" class="pagination__btn">1</a>
-                                    <?php if ($start > 2): ?><span class="pagination__ellipsis">…</span><?php endif; ?>
-                                <?php endif; ?>
-
-                                <?php for ($p = $start; $p <= $end; $p++): ?>
-                                    <?php if ($p === $currentPage): ?>
-                                        <span class="pagination__btn pagination__btn--active" aria-current="page"><?= $p ?></span>
-                                    <?php else: ?>
-                                        <a href="<?= $baseUrl ?>page=<?= $p ?>" class="pagination__btn"><?= $p ?></a>
-                                    <?php endif; ?>
-                                <?php endfor; ?>
-
-                                <?php if ($end < $totalPages): ?>
-                                    <?php if ($end < $totalPages - 1): ?><span class="pagination__ellipsis">…</span><?php endif; ?>
-                                    <a href="<?= $baseUrl ?>page=<?= $totalPages ?>" class="pagination__btn"><?= $totalPages ?></a>
-                                <?php endif; ?>
-
-                                <?php if ($currentPage < $totalPages): ?>
-                                    <a href="<?= $baseUrl ?>page=<?= $currentPage + 1 ?>" class="pagination__btn" aria-label="Pagina successiva">&#8250;</a>
-                                <?php else: ?>
-                                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8250;</span>
-                                <?php endif; ?>
-
-                                <span class="pagination__info">Pagina <?= $currentPage ?> di <?= $totalPages ?></span>
-                            </nav>
-                        <?php endif; ?>
+                        <nav class="pagination" id="professionistiPagination" aria-label="Paginazione professionisti"></nav>
                     <?php endif; ?>
                 </div>
 
@@ -688,85 +632,189 @@ if ($section === 'panoramica') {
             (function() {
                 'use strict';
 
-                var PICKERS = {
-                    'tbl-utenti': {
-                        pickerId: 'colPicker-utenti',
-                        btnId: 'colPickerBtn-utenti',
-                        dropdownId: 'colPickerDropdown-utenti',
-                        storageKey: 'adminHiddenCols_utenti'
-                    },
-                    'tbl-professionisti': {
-                        pickerId: 'colPicker-professionisti',
-                        btnId: 'colPickerBtn-professionisti',
-                        dropdownId: 'colPickerDropdown-professionisti',
-                        storageKey: 'adminHiddenCols_professionisti'
-                    }
-                };
+                var PAGE_SIZE = 10;
 
-                function loadHidden(key) {
-                    try {
-                        return JSON.parse(localStorage.getItem(key) || '[]');
-                    } catch (e) {
-                        return [];
-                    }
-                }
+                /* Funzione riutilizzabile per ogni tabella */
+                function initTable(cfg) {
+                    var tbody = document.querySelector('#' + cfg.tableId + ' tbody');
+                    var paginationNav = document.getElementById(cfg.paginationId);
+                    var searchInput = document.getElementById(cfg.searchId);
+                    var searchClear = document.getElementById(cfg.searchClearId);
+                    var searchQuery = '';
+                    var currentPage = 1;
 
-                function saveHidden(key, arr) {
-                    try {
-                        localStorage.setItem(key, JSON.stringify(arr));
-                    } catch (e) {}
-                }
+                    if (!tbody) return;
 
-                function applyVisibility(tableId, hiddenCols) {
-                    var tbl = document.getElementById(tableId);
-                    if (!tbl) return;
-                    tbl.querySelectorAll('[data-col]').forEach(function(el) {
-                        el.style.display = hiddenCols.indexOf(el.getAttribute('data-col')) !== -1 ? 'none' : '';
-                    });
-                }
+                    /* ---- Col-picker ---- */
+                    var storageKey = 'adminHiddenCols_' + cfg.tableId;
+                    var tbl = document.getElementById(cfg.tableId);
+                    var pickerBtn = document.getElementById(cfg.pickerBtnId);
+                    var dropdown = document.getElementById(cfg.pickerDropdownId);
+                    var pickerWrap = document.getElementById(cfg.pickerId);
 
-                function initPicker(tableId, cfg) {
-                    var tbl = document.getElementById(tableId);
-                    var btn = document.getElementById(cfg.btnId);
-                    var dropdown = document.getElementById(cfg.dropdownId);
-                    if (!tbl || !btn || !dropdown) return;
-
-                    var hidden = loadHidden(cfg.storageKey);
-                    applyVisibility(tableId, hidden);
-
-                    // Sync checkboxes with saved state
-                    dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
-                        cb.checked = hidden.indexOf(cb.getAttribute('data-col')) === -1;
-                        cb.addEventListener('change', function() {
-                            var newHidden = [];
-                            dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(c) {
-                                if (!c.checked) newHidden.push(c.getAttribute('data-col'));
-                            });
-                            saveHidden(cfg.storageKey, newHidden);
-                            applyVisibility(tableId, newHidden);
-                        });
-                    });
-
-                    // Toggle dropdown
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        var wasHidden = dropdown.hidden;
-                        dropdown.hidden = !wasHidden;
-                        btn.setAttribute('aria-expanded', String(wasHidden));
-                    });
-
-                    // Close on outside click
-                    document.addEventListener('click', function(e) {
-                        var picker = document.getElementById(cfg.pickerId);
-                        if (picker && !picker.contains(e.target)) {
-                            dropdown.hidden = true;
-                            btn.setAttribute('aria-expanded', 'false');
+                    function loadHidden() {
+                        try {
+                            return JSON.parse(localStorage.getItem(storageKey) || '[]');
+                        } catch (e) {
+                            return [];
                         }
-                    });
+                    }
+
+                    function saveHidden(arr) {
+                        try {
+                            localStorage.setItem(storageKey, JSON.stringify(arr));
+                        } catch (e) {}
+                    }
+
+                    function applyVisibility(hiddenCols) {
+                        if (!tbl) return;
+                        tbl.querySelectorAll('[data-col]').forEach(function(el) {
+                            el.style.display = hiddenCols.indexOf(el.getAttribute('data-col')) !== -1 ? 'none' : '';
+                        });
+                    }
+                    if (tbl && pickerBtn && dropdown) {
+                        var hidden = loadHidden();
+                        applyVisibility(hidden);
+                        dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+                            cb.checked = hidden.indexOf(cb.getAttribute('data-col')) === -1;
+                            cb.addEventListener('change', function() {
+                                var newHidden = [];
+                                dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(c) {
+                                    if (!c.checked) newHidden.push(c.getAttribute('data-col'));
+                                });
+                                saveHidden(newHidden);
+                                applyVisibility(newHidden);
+                            });
+                        });
+                        pickerBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            var wasHidden = dropdown.hidden;
+                            dropdown.hidden = !wasHidden;
+                            pickerBtn.setAttribute('aria-expanded', String(wasHidden));
+                        });
+                        document.addEventListener('click', function(e) {
+                            if (pickerWrap && !pickerWrap.contains(e.target)) {
+                                dropdown.hidden = true;
+                                pickerBtn.setAttribute('aria-expanded', 'false');
+                            }
+                        });
+                    }
+
+                    /* ---- Filtra e paginazione ---- */
+                    function applyFilters() {
+                        var q = searchQuery.trim().toLowerCase();
+                        var rows = Array.from(tbody.querySelectorAll('tr'));
+                        rows.forEach(function(row) {
+                            row._filtered = !q || row.textContent.toLowerCase().indexOf(q) !== -1;
+                        });
+                        currentPage = 1;
+                        renderPage();
+                    }
+
+                    function renderPage() {
+                        var rows = Array.from(tbody.querySelectorAll('tr'));
+                        var visible = rows.filter(function(r) {
+                            return r._filtered !== false;
+                        });
+                        var total = visible.length;
+                        var totalPages = Math.ceil(total / PAGE_SIZE) || 1;
+                        if (currentPage > totalPages) currentPage = totalPages;
+                        var start = (currentPage - 1) * PAGE_SIZE;
+                        var end = start + PAGE_SIZE;
+
+                        rows.forEach(function(row) {
+                            row.style.display = 'none';
+                        });
+                        visible.slice(start, end).forEach(function(row) {
+                            row.style.display = '';
+                        });
+                        renderPagination(totalPages);
+                    }
+
+                    function renderPagination(totalPages) {
+                        if (!paginationNav) return;
+                        if (totalPages <= 1) {
+                            paginationNav.innerHTML = '';
+                            return;
+                        }
+                        var html = '';
+                        if (currentPage > 1) {
+                            html += '<button class="pagination__btn" data-page="' + (currentPage - 1) + '" aria-label="Pagina precedente">&#8249;</button>';
+                        } else {
+                            html += '<span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8249;</span>';
+                        }
+                        var s = Math.max(1, currentPage - 2);
+                        var e = Math.min(totalPages, currentPage + 2);
+                        if (s > 1) {
+                            html += '<button class="pagination__btn" data-page="1">1</button>';
+                            if (s > 2) html += '<span class="pagination__ellipsis">…</span>';
+                        }
+                        for (var p = s; p <= e; p++) {
+                            if (p === currentPage) {
+                                html += '<span class="pagination__btn pagination__btn--active" aria-current="page">' + p + '</span>';
+                            } else {
+                                html += '<button class="pagination__btn" data-page="' + p + '">' + p + '</button>';
+                            }
+                        }
+                        if (e < totalPages) {
+                            if (e < totalPages - 1) html += '<span class="pagination__ellipsis">…</span>';
+                            html += '<button class="pagination__btn" data-page="' + totalPages + '">' + totalPages + '</button>';
+                        }
+                        if (currentPage < totalPages) {
+                            html += '<button class="pagination__btn" data-page="' + (currentPage + 1) + '" aria-label="Pagina successiva">&#8250;</button>';
+                        } else {
+                            html += '<span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8250;</span>';
+                        }
+                        html += '<span class="pagination__info">Pagina ' + currentPage + ' di ' + totalPages + '</span>';
+                        paginationNav.innerHTML = html;
+                        paginationNav.querySelectorAll('button[data-page]').forEach(function(btn) {
+                            btn.addEventListener('click', function() {
+                                currentPage = parseInt(this.dataset.page, 10);
+                                renderPage();
+                            });
+                        });
+                    }
+
+                    /* ---- Ricerca ---- */
+                    if (searchInput) {
+                        searchInput.addEventListener('input', function() {
+                            searchQuery = this.value;
+                            if (searchClear) searchClear.style.display = searchQuery ? 'block' : 'none';
+                            applyFilters();
+                        });
+                    }
+                    if (searchClear) {
+                        searchClear.addEventListener('click', function() {
+                            searchQuery = '';
+                            if (searchInput) {
+                                searchInput.value = '';
+                                searchInput.focus();
+                            }
+                            this.style.display = 'none';
+                            applyFilters();
+                        });
+                    }
+
+                    applyFilters();
                 }
 
-                Object.keys(PICKERS).forEach(function(tableId) {
-                    initPicker(tableId, PICKERS[tableId]);
+                initTable({
+                    tableId: 'tbl-utenti',
+                    paginationId: 'utentiPagination',
+                    searchId: 'utentiSearch',
+                    searchClearId: 'utentiSearchClear',
+                    pickerId: 'colPicker-utenti',
+                    pickerBtnId: 'colPickerBtn-utenti',
+                    pickerDropdownId: 'colPickerDropdown-utenti'
+                });
+                initTable({
+                    tableId: 'tbl-professionisti',
+                    paginationId: 'professionistiPagination',
+                    searchId: 'professionistiSearch',
+                    searchClearId: 'professionistiSearchClear',
+                    pickerId: 'colPicker-professionisti',
+                    pickerBtnId: 'colPickerBtn-professionisti',
+                    pickerDropdownId: 'colPickerDropdown-professionisti'
                 });
             })();
         </script>
@@ -779,11 +827,16 @@ if ($section === 'panoramica') {
                 /* ---- Dati dal PHP ---- */
                 var COUNTS = <?= json_encode($calendarData ?? [], JSON_UNESCAPED_UNICODE) ?>;
 
+                /* ---- Costanti ---- */
+                var PAGE_SIZE = 10;
+
                 /* ---- Stato ---- */
                 var today = new Date();
                 var viewYear = today.getFullYear();
                 var viewMonth = today.getMonth(); // 0-based
                 var activeDate = null; // 'YYYY-MM-DD' selezionato
+                var searchQuery = '';
+                var currentPage = 1;
 
                 /* ---- Elementi DOM ---- */
                 var grid = document.getElementById('calGrid');
@@ -793,6 +846,9 @@ if ($section === 'panoramica') {
                 var btnReset = document.getElementById('calReset');
                 var tbody = document.getElementById('preventiviTbody');
                 var tableInfo = document.getElementById('calTableInfo');
+                var paginationNav = document.getElementById('preventiviPagination');
+                var searchInput = document.getElementById('preventiviSearch');
+                var searchClear = document.getElementById('preventiviSearchClear');
 
                 if (!grid) return;
 
@@ -806,7 +862,6 @@ if ($section === 'panoramica') {
                     label.textContent = MONTHS[viewMonth] + ' ' + viewYear;
                     grid.innerHTML = '';
 
-                    // Intestazioni giorni
                     DAYS.forEach(function(d) {
                         var h = document.createElement('div');
                         h.className = 'cal-day-name';
@@ -815,19 +870,15 @@ if ($section === 'panoramica') {
                     });
 
                     var firstDay = new Date(viewYear, viewMonth, 1).getDay();
-                    // domenica=0 → portala a 6 (lunedì come primo giorno)
                     firstDay = firstDay === 0 ? 6 : firstDay - 1;
-
                     var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
-                    // Celle vuote iniziali
                     for (var i = 0; i < firstDay; i++) {
                         var empty = document.createElement('div');
                         empty.className = 'cal-day cal-day--empty';
                         grid.appendChild(empty);
                     }
 
-                    // Celle con i giorni
                     for (var d = 1; d <= daysInMonth; d++) {
                         var mm = String(viewMonth + 1).padStart(2, '0');
                         var dd = String(d).padStart(2, '0');
@@ -852,7 +903,6 @@ if ($section === 'panoramica') {
                             var clickedIso = this.dataset.iso;
                             if (COUNTS[clickedIso] === undefined || COUNTS[clickedIso] === 0) return;
                             if (activeDate === clickedIso) {
-                                // deseleziona
                                 activeDate = null;
                                 filterTable(null);
                             } else {
@@ -861,38 +911,114 @@ if ($section === 'panoramica') {
                             }
                             render();
                             btnReset.style.display = activeDate ? 'inline-flex' : 'none';
+                            closeModal();
                         });
 
                         grid.appendChild(cell);
                     }
                 }
 
-                /* ---- Filtra tabella ---- */
-                function filterTable(isoDate) {
+                /* ---- Filtra + paginazione ---- */
+                function applyFilters() {
                     if (!tbody) return;
-                    var rows = tbody.querySelectorAll('tr');
-                    var shown = 0;
+                    var rows = Array.from(tbody.querySelectorAll('tr'));
+                    var q = searchQuery.trim().toLowerCase();
                     rows.forEach(function(row) {
-                        if (!isoDate || row.dataset.date === isoDate) {
-                            row.style.display = '';
-                            shown++;
-                        } else {
-                            row.style.display = 'none';
-                        }
+                        var matchDate = !activeDate || row.dataset.date === activeDate;
+                        var matchSearch = !q || row.textContent.toLowerCase().indexOf(q) !== -1;
+                        row._filtered = matchDate && matchSearch;
                     });
-                    if (tableInfo) {
-                        if (isoDate) {
-                            var parts = isoDate.split('-');
-                            var nicDate = parts[2] + '/' + parts[1] + '/' + parts[0];
-                            tableInfo.textContent = 'Mostrando ' + shown + ' preventivo/i per il ' + nicDate;
-                            tableInfo.style.display = 'block';
+                    currentPage = 1;
+                    renderPage();
+                }
+
+                function filterTable(isoDate) {
+                    applyFilters();
+                }
+
+                function renderPage() {
+                    if (!tbody) return;
+                    var rows = Array.from(tbody.querySelectorAll('tr'));
+                    var visible = rows.filter(function(r) {
+                        return r._filtered !== false;
+                    });
+                    var total = visible.length;
+                    var totalPages = Math.ceil(total / PAGE_SIZE) || 1;
+                    if (currentPage > totalPages) currentPage = totalPages;
+                    var start = (currentPage - 1) * PAGE_SIZE;
+                    var end = start + PAGE_SIZE;
+
+                    rows.forEach(function(row) {
+                        row.style.display = 'none';
+                    });
+                    visible.slice(start, end).forEach(function(row) {
+                        row.style.display = '';
+                    });
+
+                    renderPagination(totalPages);
+                    updateTableInfo(total);
+                }
+
+                function renderPagination(totalPages) {
+                    if (!paginationNav) return;
+                    if (totalPages <= 1) {
+                        paginationNav.innerHTML = '';
+                        return;
+                    }
+
+                    var html = '';
+                    if (currentPage > 1) {
+                        html += '<button class="pagination__btn" data-page="' + (currentPage - 1) + '" aria-label="Pagina precedente">&#8249;</button>';
+                    } else {
+                        html += '<span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8249;</span>';
+                    }
+
+                    var s = Math.max(1, currentPage - 2);
+                    var e = Math.min(totalPages, currentPage + 2);
+                    if (s > 1) {
+                        html += '<button class="pagination__btn" data-page="1">1</button>';
+                        if (s > 2) html += '<span class="pagination__ellipsis">…</span>';
+                    }
+                    for (var p = s; p <= e; p++) {
+                        if (p === currentPage) {
+                            html += '<span class="pagination__btn pagination__btn--active" aria-current="page">' + p + '</span>';
                         } else {
-                            tableInfo.style.display = 'none';
+                            html += '<button class="pagination__btn" data-page="' + p + '">' + p + '</button>';
                         }
+                    }
+                    if (e < totalPages) {
+                        if (e < totalPages - 1) html += '<span class="pagination__ellipsis">…</span>';
+                        html += '<button class="pagination__btn" data-page="' + totalPages + '">' + totalPages + '</button>';
+                    }
+                    if (currentPage < totalPages) {
+                        html += '<button class="pagination__btn" data-page="' + (currentPage + 1) + '" aria-label="Pagina successiva">&#8250;</button>';
+                    } else {
+                        html += '<span class="pagination__btn pagination__btn--disabled" aria-disabled="true">&#8250;</span>';
+                    }
+                    html += '<span class="pagination__info">Pagina ' + currentPage + ' di ' + totalPages + '</span>';
+
+                    paginationNav.innerHTML = html;
+                    paginationNav.querySelectorAll('button[data-page]').forEach(function(btn) {
+                        btn.addEventListener('click', function() {
+                            currentPage = parseInt(this.dataset.page, 10);
+                            renderPage();
+                        });
+                    });
+                }
+
+                function updateTableInfo(total) {
+                    if (!tableInfo) return;
+                    if (activeDate) {
+                        var parts = activeDate.split('-');
+                        var nicDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+                        tableInfo.textContent = total + ' preventivo/i per il ' + nicDate;
+                        tableInfo.style.display = 'block';
+                    } else {
+                        tableInfo.style.display = 'none';
                     }
                 }
 
-                /* ---- Navigazione ---- */
+                /* ---- Navigazione calendario ---- */
                 btnPrev.addEventListener('click', function() {
                     viewMonth--;
                     if (viewMonth < 0) {
@@ -911,21 +1037,126 @@ if ($section === 'panoramica') {
                 });
                 btnReset.addEventListener('click', function() {
                     activeDate = null;
-                    filterTable(null);
+                    applyFilters();
                     render();
                     this.style.display = 'none';
                 });
 
-                render();
+                /* ---- Ricerca testuale ---- */
+                if (searchInput) {
+                    searchInput.addEventListener('input', function() {
+                        searchQuery = this.value;
+                        if (searchClear) searchClear.style.display = searchQuery ? 'block' : 'none';
+                        applyFilters();
+                    });
+                }
+                if (searchClear) {
+                    searchClear.addEventListener('click', function() {
+                        searchQuery = '';
+                        if (searchInput) {
+                            searchInput.value = '';
+                            searchInput.focus();
+                        }
+                        this.style.display = 'none';
+                        applyFilters();
+                    });
+                }
 
-                // Se ci sono eventi nel mese corrente, naviga al primo mese con eventi
+                /* ---- Modale ---- */
+                var overlay = document.getElementById('calModalOverlay');
+                var modal = document.getElementById('calModal');
+                var btnOpen = document.getElementById('calOpenBtn');
+                var btnClose = document.getElementById('calModalClose');
+
+                function openModal() {
+                    overlay.hidden = false;
+                    btnClose.focus();
+                }
+
+                function closeModal() {
+                    overlay.hidden = true;
+                    btnOpen.focus();
+                }
+
+                btnOpen.addEventListener('click', openModal);
+                btnClose.addEventListener('click', closeModal);
+                overlay.addEventListener('click', function(e) {
+                    if (!modal.contains(e.target)) closeModal();
+                });
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && !overlay.hidden) closeModal();
+                });
+
+                /* ---- Col-picker preventivi ---- */
+                (function() {
+                    var storageKey = 'adminHiddenCols_preventivi';
+                    var tbl = document.getElementById('tbl-preventivi');
+                    var btn = document.getElementById('colPickerBtn-preventivi');
+                    var dropdown = document.getElementById('colPickerDropdown-preventivi');
+                    if (!tbl || !btn || !dropdown) return;
+
+                    function loadHidden() {
+                        try {
+                            return JSON.parse(localStorage.getItem(storageKey) || '[]');
+                        } catch (e) {
+                            return [];
+                        }
+                    }
+
+                    function saveHidden(arr) {
+                        try {
+                            localStorage.setItem(storageKey, JSON.stringify(arr));
+                        } catch (e) {}
+                    }
+
+                    function applyVisibility(hiddenCols) {
+                        tbl.querySelectorAll('[data-col]').forEach(function(el) {
+                            el.style.display = hiddenCols.indexOf(el.getAttribute('data-col')) !== -1 ? 'none' : '';
+                        });
+                    }
+
+                    var hidden = loadHidden();
+                    applyVisibility(hidden);
+
+                    dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+                        cb.checked = hidden.indexOf(cb.getAttribute('data-col')) === -1;
+                        cb.addEventListener('change', function() {
+                            var newHidden = [];
+                            dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(c) {
+                                if (!c.checked) newHidden.push(c.getAttribute('data-col'));
+                            });
+                            saveHidden(newHidden);
+                            applyVisibility(newHidden);
+                        });
+                    });
+
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        var wasHidden = dropdown.hidden;
+                        dropdown.hidden = !wasHidden;
+                        btn.setAttribute('aria-expanded', String(wasHidden));
+                    });
+                    document.addEventListener('click', function(e) {
+                        var picker = document.getElementById('colPicker-preventivi');
+                        if (picker && !picker.contains(e.target)) {
+                            dropdown.hidden = true;
+                            btn.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                })();
+
+                /* ---- Init ---- */
+                render();
+                applyFilters(); // prima pagina con tutte le righe visibili
+
+                // Naviga al primo mese con eventi
                 var keys = Object.keys(COUNTS);
                 if (keys.length > 0) {
                     keys.sort();
                     var firstIso = keys[0];
-                    var parts = firstIso.split('-');
-                    viewYear = parseInt(parts[0], 10);
-                    viewMonth = parseInt(parts[1], 10) - 1;
+                    var p0 = firstIso.split('-');
+                    viewYear = parseInt(p0[0], 10);
+                    viewMonth = parseInt(p0[1], 10) - 1;
                     render();
                 }
             }());
