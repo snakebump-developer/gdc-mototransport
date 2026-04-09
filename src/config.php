@@ -22,13 +22,15 @@ if (file_exists($envFile)) {
 }
 
 // Helper per leggere env vars in qualsiasi contesto PHP (getenv, $_ENV, $_SERVER)
-function env(string $key, $default = null)
-{
-    $val = getenv($key);
-    if ($val !== false) return $val;
-    if (isset($_ENV[$key])) return $_ENV[$key];
-    if (isset($_SERVER[$key])) return $_SERVER[$key];
-    return $default;
+if (!function_exists('env')) {
+    function env(string $key, $default = null)
+    {
+        $val = getenv($key);
+        if ($val !== false) return $val;
+        if (isset($_ENV[$key])) return $_ENV[$key];
+        if (isset($_SERVER[$key])) return $_SERVER[$key];
+        return $default;
+    }
 }
 
 return [
