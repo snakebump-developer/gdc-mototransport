@@ -1,10 +1,10 @@
 FROM php:8.2-cli
 
+# Installa dipendenze di sistema (ICU per intl, git/unzip per Composer)
+RUN apt-get update && apt-get install -y libicu-dev git unzip && rm -rf /var/lib/apt/lists/*
+
 # Estensioni PHP necessarie
 RUN docker-php-ext-install pdo pdo_mysql intl
-
-# Installa git e unzip (necessari per Composer)
-RUN apt-get update && apt-get install -y git unzip && rm -rf /var/lib/apt/lists/*
 
 # Installa Composer e le dipendenze PHP
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
