@@ -362,7 +362,8 @@ if ($section === 'panoramica') {
                                             <td data-col="data-ritiro" class="td-date">
                                                 <?php if (!empty($p['data_ritiro'])): ?>
                                                     <strong><?= date('d/m/Y', strtotime($p['data_ritiro'])) ?></strong>
-                                                    <span class="td-date__day"><?= (new IntlDateFormatter('it_IT', IntlDateFormatter::FULL, IntlDateFormatter::NONE, null, null, 'EEEE'))->format(strtotime($p['data_ritiro'])) ?></span>
+                                                    <?php $giorni = ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato']; ?>
+                                                    <span class="td-date__day"><?= $giorni[date('w', strtotime($p['data_ritiro']))] ?></span>
                                                 <?php else: ?>
                                                     <span class="text-muted">—</span>
                                                 <?php endif; ?>
