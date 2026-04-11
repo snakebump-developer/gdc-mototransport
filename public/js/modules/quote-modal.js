@@ -868,6 +868,16 @@ try {
 
       // Pagamento completato in-modal (no redirect)
       if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+        // Notifica il server per aggiornare il DB (fallback al webhook)
+        fetch('/api/confirm-payment', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({
+            payment_intent_id: result.paymentIntent.id,
+            preventivo_id:     currentPreventivoId,
+          }),
+        }).catch(function () { /* silenzioso: il webhook provvederà in prod */ });
+
         showSuccess();
       }
     });

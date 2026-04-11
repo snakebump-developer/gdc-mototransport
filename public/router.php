@@ -113,6 +113,7 @@ $routes = [
     '/api/run-seed'                 => ['file' => 'api/run-seed.php'],
     '/api/run-migrate'              => ['file' => 'api/run-migrate.php'],
     '/api/toggle-maintenance'       => ['file' => 'api/toggle-maintenance.php'],
+    '/api/confirm-payment'          => ['file' => 'api/confirm-payment.php'],
 
     // Manutenzione
     '/manutenzione'                 => ['file' => 'maintenance.php'],

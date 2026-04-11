@@ -1,5 +1,32 @@
 /* ===== MODALE PREVENTIVO MULTI-STEP ===== */
 
+/* Banner avviso zona di copertura (Step 2) */
+.quote-step__zone-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: .5rem;
+    padding: .75rem 1rem;
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: .625rem;
+    font-size: .82rem;
+    color: #92400e;
+    line-height: 1.4;
+    margin-bottom: 1.25rem;
+}
+
+.quote-step__zone-notice svg {
+    flex-shrink: 0;
+    margin-top: .1rem;
+    color: #d97706;
+}
+
+/* Testo indirizzo mappa in stato di errore */
+.quote-map__address--error {
+    color: var(--danger-color, #ef4444) !important;
+    font-weight: 600;
+}
+
 /* Overlay scuro */
 .quote-overlay {
     position: fixed;

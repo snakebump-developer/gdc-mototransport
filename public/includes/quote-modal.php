@@ -192,6 +192,17 @@
             <div class="quote-step quote-step--hidden" id="quoteStep2">
                 <h3 class="quote-step__title">Tragitto</h3>
                 <div class="quote-form">
+
+                    <!-- Avviso zona di copertura -->
+                    <div class="quote-step__zone-notice">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <span>Il servizio copre <strong>solo la penisola italiana</strong>. Non effettuiamo trasporti verso <strong>Sicilia</strong>, <strong>Sardegna</strong> e altre isole, né al di fuori dell'Italia.</span>
+                    </div>
+
                     <!-- Indirizzo di ritiro -->
                     <div class="quote-form__group">
                         <label class="quote-form__label" for="addressPickup">Indirizzo di ritiro <span class="quote-form__required">*</span></label>
