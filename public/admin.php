@@ -352,7 +352,7 @@ if ($section === 'panoramica') {
                                         <th data-col="prezzo">Prezzo</th>
                                         <th data-col="stato">Stato</th>
                                         <th data-col="pagamento">Pagamento</th>
-                                        <th data-col="ricevuto">Ricevuto</th>
+                                        <th data-col="richiesta">Richiesta il</th>
                                     </tr>
                                 </thead>
                                 <tbody id="preventiviTbody">
@@ -406,17 +406,27 @@ if ($section === 'panoramica') {
                                             </td>
                                             <td data-col="prezzo">&euro;<?= number_format((float)($p['prezzo_finale'] ?? 0), 2, ',', '.') ?></td>
                                             <td data-col="stato">
+                                                <?php
+                                                // Normalizza vecchi valori DB (bozza/inviato → nuovo)
+                                                $statoDisplay = in_array($p['stato'], ['bozza', 'inviato']) ? 'nuovo' : $p['stato'];
+                                                $statiLabels  = [
+                                                    'nuovo'          => 'Nuovo',
+                                                    'confermato'     => 'Confermato',
+                                                    'in_lavorazione' => 'In lavorazione',
+                                                    'completato'     => 'Completato',
+                                                    'annullato'      => 'Annullato',
+                                                ];
+                                                ?>
                                                 <form method="POST" class="inline-form">
                                                     <input type="hidden" name="action" value="update_preventivo_stato">
                                                     <input type="hidden" name="preventivo_id" value="<?= $p['id'] ?>">
                                                     <select name="stato" onchange="this.form.submit()" class="status-select">
-                                                        <?php foreach (['bozza', 'inviato', 'confermato', 'in_lavorazione', 'completato', 'annullato'] as $s): ?>
-                                                            <option value="<?= $s ?>" <?= $p['stato'] === $s ? 'selected' : '' ?>><?= ucfirst(str_replace('_', ' ', $s)) ?></option>
+                                                        <?php foreach ($statiLabels as $val => $label): ?>
+                                                            <option value="<?= $val ?>" <?= $statoDisplay === $val ? 'selected' : '' ?>><?= $label ?></option>
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </form>
                                             </td>
-                                            <td data-col="ricevuto"><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
                                             <td data-col="pagamento">
                                                 <?php
                                                 $pgStato = $p['pagamento_stato'] ?? 'non_pagato';
@@ -437,7 +447,7 @@ if ($section === 'panoramica') {
                                                     <?= $pgLabel[$pgStato] ?? htmlspecialchars($pgStato) ?>
                                                 </span>
                                             </td>
-                                            <td data-col="ricevuto"><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                            <td data-col="richiesta"><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

@@ -147,8 +147,7 @@ function getPreventiviStats(): array
         SELECT
             COUNT(*) as totale_preventivi,
             COALESCE(SUM(prezzo_finale), 0)                                                        as totale_fatturato,
-            COUNT(CASE WHEN stato = 'bozza'        THEN 1 END)                                    as preventivi_bozza,
-            COUNT(CASE WHEN stato = 'inviato'      THEN 1 END)                                    as preventivi_inviati,
+            COUNT(CASE WHEN stato IN ('nuovo','bozza','inviato') THEN 1 END)                      as preventivi_nuovi,
             COUNT(CASE WHEN stato = 'confermato'   THEN 1 END)                                    as preventivi_confermati,
             COUNT(CASE WHEN stato = 'in_lavorazione' THEN 1 END)                                  as preventivi_in_lavorazione,
             COUNT(CASE WHEN stato = 'completato'   THEN 1 END)                                    as preventivi_completati,
@@ -228,9 +227,9 @@ function getPreventivoById($id)
 function updatePreventivoStato($id, $stato)
 {
     global $pdo;
-    $stati = ['bozza', 'inviato', 'confermato', 'in_lavorazione', 'completato', 'annullato'];
+    $stati = ['nuovo', 'confermato', 'in_lavorazione', 'completato', 'annullato'];
     if (!in_array($stato, $stati)) {
-        throw new Exception("Stato preventivo non valido");
+        throw new Exception("Stato preventivo non valido: " . htmlspecialchars($stato));
     }
     $stmt = $pdo->prepare("UPDATE preventivi SET stato = ?, aggiornato_il = CURRENT_TIMESTAMP WHERE id = ?");
     return $stmt->execute([$stato, $id]);
