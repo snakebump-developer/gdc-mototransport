@@ -29,10 +29,42 @@ function initGoogleMaps() {
   var routeSummary = document.getElementById('routeSummary');
   var routePreviewDiv = document.getElementById('routePreviewMap');
 
+  // --- Restrizioni zona di copertura ---
+  var ISLANDS_REGIONS = ['sicilia', 'sardegna'];
+
+  function isOnItalianIsland(components) {
+    if (!components) return false;
+    for (var i = 0; i < components.length; i++) {
+      var c = components[i];
+      if (c.types && c.types.indexOf('administrative_area_level_1') !== -1) {
+        var region = c.long_name.toLowerCase();
+        for (var j = 0; j < ISLANDS_REGIONS.length; j++) {
+          if (region.indexOf(ISLANDS_REGIONS[j]) !== -1) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function isOutsideItaly(components) {
+    if (!components) return false;
+    for (var i = 0; i < components.length; i++) {
+      var c = components[i];
+      if (c.types && c.types.indexOf('country') !== -1) {
+        return c.short_name !== 'IT';
+      }
+    }
+    return false;
+  }
+
+  function isZoneBlocked(components) {
+    return isOutsideItaly(components) || isOnItalianIsland(components);
+  }
+
   // --- Google Places Autocomplete ---
   var autocompleteOptions = {
     componentRestrictions: { country: 'it' },
-    fields: ['formatted_address', 'geometry']
+    fields: ['formatted_address', 'geometry', 'address_components']
   };
 
   var pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput, autocompleteOptions);
@@ -41,6 +73,16 @@ function initGoogleMaps() {
   pickupAutocomplete.addListener('place_changed', function () {
     var place = pickupAutocomplete.getPlace();
     if (place && place.geometry) {
+      if (isZoneBlocked(place.address_components)) {
+        var errEl = document.getElementById('addressPickup-error');
+        if (errEl) errEl.textContent = 'Zona non coperta: Sicilia, Sardegna e località fuori dall\'Italia non sono servite.';
+        pickupInput.classList.add('is-error');
+        pickupInput.value = '';
+        window._quotePickupCoords = null;
+        return;
+      }
+      var errEl = document.getElementById('addressPickup-error');
+      if (errEl) errEl.textContent = '';
       window._quotePickupCoords = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng()
@@ -54,6 +96,16 @@ function initGoogleMaps() {
   deliveryAutocomplete.addListener('place_changed', function () {
     var place = deliveryAutocomplete.getPlace();
     if (place && place.geometry) {
+      if (isZoneBlocked(place.address_components)) {
+        var errEl = document.getElementById('addressDelivery-error');
+        if (errEl) errEl.textContent = 'Zona non coperta: Sicilia, Sardegna e località fuori dall\'Italia non sono servite.';
+        deliveryInput.classList.add('is-error');
+        deliveryInput.value = '';
+        window._quoteDeliveryCoords = null;
+        return;
+      }
+      var errEl = document.getElementById('addressDelivery-error');
+      if (errEl) errEl.textContent = '';
       window._quoteDeliveryCoords = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng()
@@ -67,6 +119,9 @@ function initGoogleMaps() {
   window._quotePickupCoords = null;
   window._quoteDeliveryCoords = null;
 
+  // Componenti indirizzo corrente dalla mappa (per controllo zona)
+  var currentMapAddressComponents = null;
+
   // --- Mappa interattiva per selezione indirizzo ---
   geocoder = new google.maps.Geocoder();
 
@@ -74,6 +129,9 @@ function initGoogleMaps() {
     activeField = field;
     mapLabel.textContent = field === 'pickup' ? 'Seleziona indirizzo di ritiro' : 'Seleziona indirizzo di consegna';
     mapAddress.textContent = 'Sposta la mappa per selezionare l\'indirizzo';
+    mapAddress.classList.remove('quote-map__address--error');
+    mapConfirmBtn.disabled = false;
+    currentMapAddressComponents = null;
     mapContainer.style.display = 'block';
 
     if (!map) {
@@ -123,9 +181,21 @@ function initGoogleMaps() {
   function reverseGeocode(latlng) {
     geocoder.geocode({ location: latlng }, function (results, status) {
       if (status === 'OK' && results[0]) {
-        mapAddress.textContent = results[0].formatted_address;
+        currentMapAddressComponents = results[0].address_components;
+        if (isZoneBlocked(currentMapAddressComponents)) {
+          mapAddress.textContent = 'Zona non coperta — Sicilia, Sardegna e destinazioni fuori dall\'Italia non sono servite';
+          mapAddress.classList.add('quote-map__address--error');
+          mapConfirmBtn.disabled = true;
+        } else {
+          mapAddress.textContent = results[0].formatted_address;
+          mapAddress.classList.remove('quote-map__address--error');
+          mapConfirmBtn.disabled = false;
+        }
       } else {
+        currentMapAddressComponents = null;
         mapAddress.textContent = 'Indirizzo non trovato — sposta la mappa';
+        mapAddress.classList.remove('quote-map__address--error');
+        mapConfirmBtn.disabled = false;
       }
     });
   }
@@ -136,6 +206,10 @@ function initGoogleMaps() {
     var address = mapAddress.textContent;
 
     if (address === 'Sposta la mappa per selezionare l\'indirizzo' || address === 'Indirizzo non trovato — sposta la mappa') {
+      return;
+    }
+
+    if (isZoneBlocked(currentMapAddressComponents)) {
       return;
     }
 
