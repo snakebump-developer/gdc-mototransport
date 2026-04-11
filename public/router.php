@@ -17,6 +17,42 @@ if ($uri !== '/' && is_file(__DIR__ . $uri)) {
     return false;
 }
 
+// ── Modalità manutenzione ─────────────────────────────────────────────────────
+// Le rotte /admin, /manutenzione e le API di sistema restano sempre accessibili.
+$_maintExempt = (
+    str_starts_with($uri, '/admin') ||
+    str_starts_with($uri, '/api/')  ||
+    $uri === '/manutenzione'        ||
+    $uri === '/login'               ||
+    $uri === '/logout'
+);
+
+if (!$_maintExempt) {
+    $_maintActive = false;
+    try {
+        $_mcfg = require __DIR__ . '/../src/config.php';
+        $_md   = $_mcfg['db'];
+        $_mpdo = new PDO(
+            "mysql:host={$_md['host']};port={$_md['port']};dbname={$_md['name']};charset={$_md['charset']}",
+            $_md['user'], $_md['password'],
+            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+        );
+        $_row = $_mpdo->query("SELECT setting_value FROM app_settings WHERE setting_key='maintenance_mode' LIMIT 1")->fetch(PDO::FETCH_NUM);
+        $_maintActive = ($_row && $_row[0] === '1');
+    } catch (\Exception $_me) { /* in caso di errore DB non blocchiamo */ }
+
+    if ($_maintActive) {
+        // Controlla cookie bypass admin
+        $_mcfg   = $_mcfg ?? require __DIR__ . '/../src/config.php';
+        $_expect = hash_hmac('sha256', 'gdcm_bypass_v1', $_mcfg['maintenance_password'] ?? '');
+        if (($_COOKIE['gdcm_access'] ?? '') !== $_expect) {
+            header('Location: /manutenzione');
+            exit;
+        }
+    }
+    unset($_maintExempt, $_maintActive, $_mcfg, $_md, $_mpdo, $_row, $_me, $_expect);
+}
+
 // ── Rotte dinamiche (con parametro numerico) ──────────────────────────────────
 
 // /admin/utente/{id}
@@ -73,6 +109,10 @@ $routes = [
     '/api/webhook-stripe'           => ['file' => 'api/webhook-stripe.php'],
     '/api/moto-catalogo'            => ['file' => 'api/moto-catalogo.php'],
     '/api/run-seed'                 => ['file' => 'api/run-seed.php'],
+    '/api/toggle-maintenance'       => ['file' => 'api/toggle-maintenance.php'],
+
+    // Manutenzione
+    '/manutenzione'                 => ['file' => 'maintenance.php'],
 ];
 
 if (isset($routes[$uri])) {

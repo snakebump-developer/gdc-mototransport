@@ -65,5 +65,8 @@ return [
     ],
 
     // Google Maps
-    'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', '')
+    'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', ''),
+
+    // Password bypass modalità manutenzione (impostabile via env MAINTENANCE_PASSWORD su Railway)
+    'maintenance_password' => env('MAINTENANCE_PASSWORD', 'GDC@Maint9076!')
 ];

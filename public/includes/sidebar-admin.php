@@ -41,6 +41,47 @@ $section = $section ?? 'panoramica';
             ?>
         </a>
         <hr>
+        <?php
+        // Legge stato manutenzione corrente
+        $_maintOn = false;
+        try {
+            require_once __DIR__ . '/../../src/db.php';
+            $pdo->exec("CREATE TABLE IF NOT EXISTS app_settings (setting_key VARCHAR(100) PRIMARY KEY, setting_value TEXT NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $pdo->exec("INSERT IGNORE INTO app_settings (setting_key, setting_value) VALUES ('maintenance_mode', '0')");
+            $_maintRow = $pdo->query("SELECT setting_value FROM app_settings WHERE setting_key='maintenance_mode' LIMIT 1")->fetch(PDO::FETCH_NUM);
+            $_maintOn  = ($_maintRow && $_maintRow[0] === '1');
+        } catch (\Exception $_e) {}
+        ?>
+        <button id="maintenanceToggle"
+                class="sidebar-link sidebar-link--maint <?= $_maintOn ? 'sidebar-link--maint-on' : '' ?>"
+                title="Attiva/disattiva modalità manutenzione">
+            <span class="icon" id="maintIcon"><?= $_maintOn ? '🔴' : '🟢' ?></span>
+            <span id="maintText">Manutenzione <?= $_maintOn ? 'ON' : 'OFF' ?></span>
+        </button>
+        <script>
+        document.getElementById('maintenanceToggle').addEventListener('click', function () {
+            const btn = this;
+            btn.disabled = true;
+            fetch('/api/toggle-maintenance', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(d => {
+                if (d.success) {
+                    const on = d.maintenance_mode;
+                    document.getElementById('maintIcon').textContent = on ? '🔴' : '🟢';
+                    document.getElementById('maintText').textContent = 'Manutenzione ' + (on ? 'ON' : 'OFF');
+                    btn.classList.toggle('sidebar-link--maint-on', on);
+                } else {
+                    alert('Errore: ' + (d.error || 'sconosciuto'));
+                }
+            })
+            .catch(() => alert('Errore di rete.'))
+            .finally(() => { btn.disabled = false; });
+        });
+        </script>
+        <hr>
         <a href="/" class="sidebar-link">
             <span class="icon">🏠</span> Home
         </a>

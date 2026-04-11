@@ -177,6 +177,17 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS moto_bozze (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
 // =========================================================
+// IMPOSTAZIONI APPLICAZIONE
+// =========================================================
+$pdo->exec("CREATE TABLE IF NOT EXISTS app_settings (
+    setting_key   VARCHAR(100) PRIMARY KEY,
+    setting_value TEXT NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+// Valore iniziale: manutenzione disattivata
+$pdo->exec("INSERT IGNORE INTO app_settings (setting_key, setting_value) VALUES ('maintenance_mode', '0')");
+
+// =========================================================
 // ADMIN DI DEFAULT
 // Credenziali: username=admin_gdc | password=GDC@Admin2024!
 // =========================================================
