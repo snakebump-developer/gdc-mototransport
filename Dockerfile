@@ -20,4 +20,4 @@ ENV PORT=8080
 EXPOSE 8080
 
 # Usa il server PHP built-in con il router già esistente
-CMD php src/seed-moto.php && php -S 0.0.0.0:${PORT} -t public public/router.php
+CMD php -S 0.0.0.0:${PORT} -t public public/router.php

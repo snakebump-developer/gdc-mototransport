@@ -72,6 +72,7 @@ $routes = [
     '/api/create-payment-intent'    => ['file' => 'api/create-payment-intent.php'],
     '/api/webhook-stripe'           => ['file' => 'api/webhook-stripe.php'],
     '/api/moto-catalogo'            => ['file' => 'api/moto-catalogo.php'],
+    '/api/run-seed'                 => ['file' => 'api/run-seed.php'],
 ];
 
 if (isset($routes[$uri])) {
