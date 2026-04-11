@@ -1,4 +1,16 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
+
+# Create a configuration to disable conflicting MPMs
+RUN echo "# Disable conflicting MPMs\n\
+<IfModule mpm_event_module>\n\
+  # mpm_event disabled\n\
+</IfModule>\n\
+<IfModule mpm_worker_module>\n\
+  # mpm_worker disabled\n\
+</IfModule>" > /etc/apache2/conf-available/disable-mpm.conf && \
+a2enconf disable-mpm && \
+a2dismod mpm_event mpm_worker || true && \
+a2enmod mpm_prefork rewrite
 
 # Installa dipendenze di sistema (ICU per intl, git/unzip per Composer)
 RUN apt-get update && apt-get install -y libicu-dev git unzip && rm -rf /var/lib/apt/lists/*
@@ -6,18 +18,21 @@ RUN apt-get update && apt-get install -y libicu-dev git unzip && rm -rf /var/lib
 # Estensioni PHP necessarie
 RUN docker-php-ext-install pdo pdo_mysql intl
 
-# Installa Composer e le dipendenze PHP
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-COPY composer.json composer.lock* /var/www/html/
-RUN composer install --no-dev --optimize-autoloader --working-dir=/var/www/html
-
 # Copia tutto il progetto
 COPY . /var/www/html/
-WORKDIR /var/www/html
 
-# Railway assegna la porta via $PORT, default 8080
-ENV PORT=8080
-EXPOSE 8080
+# Imposta la document root su /public
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' \
+ /etc/apache2/sites-available/000-default.conf
 
-# Usa il server PHP built-in con il router già esistente
-CMD php src/seed-moto.php && php -S 0.0.0.0:${PORT} -t public public/router.php
+# Permetti .htaccess nella public root
+RUN echo '<Directory /var/www/html/public>\n\
+ AllowOverride All\n\
+ Require all granted\n\
+</Directory>' >> /etc/apache2/apache2.conf
+
+# Installa Composer e le dipendenze PHP
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN composer install --no-dev --optimize-autoloader --working-dir=/var/www/html
+
+EXPOSE 80
