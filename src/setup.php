@@ -181,7 +181,7 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS moto_bozze (
 // =========================================================
 $pdo->exec("CREATE TABLE IF NOT EXISTS app_settings (
     setting_key   VARCHAR(100) PRIMARY KEY,
-    setting_value TEXT NOT NULL DEFAULT ''
+    setting_value VARCHAR(500) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
 // Valore iniziale: manutenzione disattivata

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * API: attiva/disattiva la modalità manutenzione.
  * Solo admin autenticati possono chiamarla.
@@ -23,7 +24,7 @@ try {
     // Assicura che la tabella esista (sicuro nei deploy in cui setup non è stato rieseguito)
     $pdo->exec("CREATE TABLE IF NOT EXISTS app_settings (
         setting_key   VARCHAR(100) PRIMARY KEY,
-        setting_value TEXT NOT NULL DEFAULT ''
+        setting_value VARCHAR(500) NOT NULL DEFAULT ''
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
     $pdo->exec("INSERT IGNORE INTO app_settings (setting_key, setting_value) VALUES ('maintenance_mode', '0')");
