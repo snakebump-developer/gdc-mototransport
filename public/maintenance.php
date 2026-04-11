@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pagina di manutenzione.
  * Mostrata a tutti quando la modalità manutenzione è attiva.
@@ -30,13 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
 ?>
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manutenzione — GDC MotoTransport</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -58,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
             max-width: 480px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
         .maint-icon {
@@ -67,10 +75,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
             display: block;
             animation: spin 4s linear infinite;
         }
+
         @keyframes spin {
-            0%,100% { transform: rotate(0deg); }
-            25%      { transform: rotate(-8deg); }
-            75%      { transform: rotate(8deg); }
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-8deg);
+            }
+
+            75% {
+                transform: rotate(8deg);
+            }
         }
 
         .maint-logo {
@@ -109,15 +128,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
             font-size: 0.85rem;
             color: #666;
         }
+
         .status-dot {
-            width: 8px; height: 8px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #e85252;
             animation: pulse 1.5s ease-in-out infinite;
         }
+
         @keyframes pulse {
-            0%,100% { opacity: 1; }
-            50%      { opacity: 0.3; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
         }
 
         /* Form bypass - nascosto di default */
@@ -137,13 +166,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
             text-underline-offset: 3px;
             transition: color 0.2s;
         }
-        .bypass-toggle:hover { color: #666; }
+
+        .bypass-toggle:hover {
+            color: #666;
+        }
 
         .bypass-form {
             display: none;
             margin-top: 1rem;
         }
-        .bypass-form.visible { display: block; }
+
+        .bypass-form.visible {
+            display: block;
+        }
 
         .bypass-form label {
             display: block;
@@ -164,6 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
             outline: none;
             transition: border-color 0.2s;
         }
+
         .bypass-form input[type="password"]:focus {
             border-color: #e85252;
         }
@@ -181,7 +217,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
             cursor: pointer;
             transition: background 0.2s;
         }
-        .bypass-form button[type="submit"]:hover { background: #d43e3e; }
+
+        .bypass-form button[type="submit"]:hover {
+            background: #d43e3e;
+        }
 
         .error-msg {
             color: #e85252;
@@ -191,6 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
         }
     </style>
 </head>
+
 <body>
     <div class="maint-card">
         <span class="maint-icon">🔧</span>
@@ -212,10 +252,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
                 Accesso riservato
             </button>
             <form id="bypassForm" class="bypass-form <?= $bypassError ? 'visible' : '' ?>"
-                  method="POST" action="/manutenzione">
+                method="POST" action="/manutenzione">
                 <label for="bypass_password">Password amministratore</label>
                 <input type="password" id="bypass_password" name="bypass_password"
-                       placeholder="••••••••" autocomplete="current-password" required>
+                    placeholder="••••••••" autocomplete="current-password" required>
                 <?php if ($bypassError): ?>
                     <p class="error-msg"><?= htmlspecialchars($bypassError) ?></p>
                 <?php endif; ?>
@@ -224,4 +264,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bypass_password'])) {
         </div>
     </div>
 </body>
+
 </html>

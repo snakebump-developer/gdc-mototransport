@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Migrazione: aggiorna l'ENUM degli stati preventivo.
  * - 'bozza' e 'inviato' → 'nuovo'
