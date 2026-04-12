@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
-require_once __DIR__ . '/../src/orders.php';
-require_once __DIR__ . '/../src/users.php';
+require_once __DIR__ . '/../../../src/auth.php';
+require_once __DIR__ . '/../../../src/orders.php';
+require_once __DIR__ . '/../../../src/users.php';
 
 requireAdmin();
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             updateProfessionalDiscount((int)$_POST['user_id'], $sconto);
             $success = "Sconto aggiornato!";
         } elseif ($_POST['action'] === 'approve_moto_bozza') {
-            require_once __DIR__ . '/../src/db.php';
+            require_once __DIR__ . '/../../../src/db.php';
             $bId = (int)$_POST['bozza_id'];
             $bozza = $pdo->prepare("SELECT * FROM moto_bozze WHERE id=? AND stato='in_attesa'")->execute([$bId]) ? $pdo->query("SELECT * FROM moto_bozze WHERE id=$bId AND stato='in_attesa'")->fetch() : null;
             if ($bozza) {
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $success = "Moto approvata e aggiunta al catalogo!";
             }
         } elseif ($_POST['action'] === 'reject_moto_bozza') {
-            require_once __DIR__ . '/../src/db.php';
+            require_once __DIR__ . '/../../../src/db.php';
             $bId = (int)$_POST['bozza_id'];
             $pdo->prepare("UPDATE moto_bozze SET stato='rifiutata', note_admin=? WHERE id=?")->execute([
                 htmlspecialchars(strip_tags($_POST['nota'] ?? ''), ENT_QUOTES, 'UTF-8'),
@@ -82,7 +82,7 @@ if ($section === 'panoramica') {
 } elseif ($section === 'professionisti') {
     $professionisti = getAllProfessionals(PHP_INT_MAX, 0);
 } elseif ($section === 'moto-bozze') {
-    require_once __DIR__ . '/../src/db.php';
+    require_once __DIR__ . '/../../../src/db.php';
     $motoBozze = $pdo->query("SELECT * FROM moto_bozze ORDER BY stato='in_attesa' DESC, creato_il DESC")->fetchAll();
 }
 ?>
@@ -90,18 +90,18 @@ if ($section === 'panoramica') {
 <html lang="it">
 
 <head>
-    <?php include 'includes/head.php'; ?>
+    <?php include __DIR__ . '/../../includes/head.php'; ?>
 </head>
 
 <body>
-    <?php include 'includes/navbar-dashboard.php'; ?>
+    <?php include __DIR__ . '/../../includes/navbar-dashboard.php'; ?>
 
     <div class="dashboard-container">
-        <?php include 'includes/sidebar-admin.php'; ?>
+        <?php include __DIR__ . '/../../includes/sidebar-admin.php'; ?>
 
         <!-- Main Content -->
         <main class="dashboard-main">
-            <?php include 'includes/alerts.php'; ?>
+            <?php include __DIR__ . '/../../includes/alerts.php'; ?>
 
             <?php if ($section === 'panoramica'): ?>
                 <!-- Panoramica -->
@@ -1410,7 +1410,7 @@ if ($section === 'panoramica') {
             }());
         </script>
     <?php endif; ?>
-    <?php include 'includes/whatsapp-button.php'; ?>
+    <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

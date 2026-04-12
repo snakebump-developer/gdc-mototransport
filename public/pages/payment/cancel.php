@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
+require_once __DIR__ . '/../../../src/auth.php';
 $pageTitle = 'Pagamento Annullato - MotoTransport';
 $noFontAwesome = true;
 $extraCss = ['css/modules/auth.css'];
@@ -8,7 +8,7 @@ $extraCss = ['css/modules/auth.css'];
 <html lang="it">
 
 <head>
-    <?php include 'includes/head.php'; ?>
+    <?php include __DIR__ . '/../../includes/head.php'; ?>
 </head>
 
 <body>
@@ -26,7 +26,7 @@ $extraCss = ['css/modules/auth.css'];
             </div>
         </div>
     </div>
-    <?php include 'includes/whatsapp-button.php'; ?>
+    <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

@@ -5,7 +5,7 @@
  * Mostrata a tutti quando la modalità manutenzione è attiva.
  * L'admin può sbloccare il sito inserendo la password corretta.
  */
-$config = require __DIR__ . '/../src/config.php';
+$config = require __DIR__ . '/../../src/config.php';
 
 // Gestione form bypass (POST)
 $bypassError = '';

@@ -188,22 +188,25 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS app_settings (
 $pdo->exec("INSERT IGNORE INTO app_settings (setting_key, setting_value) VALUES ('maintenance_mode', '0')");
 
 // =========================================================
-// ADMIN DI DEFAULT
-// Credenziali: username=admin_gdc | password=GDC@Admin2024!
+// ADMIN DI DEFAULT — credenziali da .env (ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_EMAIL)
 // =========================================================
+$adminUsername = env('ADMIN_USERNAME', 'admin_gdc');
+$adminPassword = env('ADMIN_PASSWORD', 'GDC@Admin2024!');
+$adminEmail    = env('ADMIN_EMAIL',    'admin@gdcmototransport.it');
+
 try {
     $check = $pdo->query("SELECT COUNT(*) AS cnt FROM utenti WHERE ruolo='admin'")->fetch();
     if ((int)$check['cnt'] === 0) {
-        $hash = password_hash('GDC@Admin2024!', PASSWORD_DEFAULT);
+        $hash = password_hash($adminPassword, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("
             INSERT INTO utenti (username, email, password, nome, cognome, ruolo, gdpr_accettato)
             VALUES (?, ?, ?, ?, ?, 'admin', 1)
         ");
-        $stmt->execute(['admin_gdc', 'admin@gdcmototransport.it', $hash, 'Admin', 'GDC']);
+        $stmt->execute([$adminUsername, $adminEmail, $hash, 'Admin', 'GDC']);
         echo "Admin creato!\n";
-        echo "  Username : admin_gdc\n";
-        echo "  Password : GDC@Admin2024!\n";
-        echo "  Email    : admin@gdcmototransport.it\n";
+        echo "  Username : {$adminUsername}\n";
+        echo "  Password : (quella impostata in .env → ADMIN_PASSWORD)\n";
+        echo "  Email    : {$adminEmail}\n";
         echo "  ⚠️  Cambia la password al primo accesso!\n";
     }
 } catch (Exception $e) {

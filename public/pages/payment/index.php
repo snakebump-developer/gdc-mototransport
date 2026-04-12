@@ -5,8 +5,8 @@
  * Questo file mostra come integrare Stripe e PayPal nel tuo progetto
  */
 
-require_once __DIR__ . '/../src/auth.php';
-require_once __DIR__ . '/../src/orders.php';
+require_once __DIR__ . '/../../../src/auth.php';
+require_once __DIR__ . '/../../../src/orders.php';
 
 requireLogin();
 
@@ -36,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_payment'])) {
 
     try {
         if ($metodoPagamento === 'stripe') {
-            require_once __DIR__ . '/../src/payments/stripe.php';
+            require_once __DIR__ . '/../../../src/payments/stripe.php';
             $session = createStripeCheckout($ordineId, $totale, 'eur', $successUrl, $cancelUrl);
             // Reindirizza a Stripe Checkout
             header('Location: ' . $session->url);
             exit;
         } elseif ($metodoPagamento === 'paypal') {
-            require_once __DIR__ . '/../src/payments/paypal.php';
+            require_once __DIR__ . '/../../../src/payments/paypal.php';
             $payment = createPayPalPayment($ordineId, $totale, 'EUR', $successUrl, $cancelUrl);
             // Reindirizza a PayPal
             foreach ($payment->getLinks() as $link) {
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_payment'])) {
 <html lang="it">
 
 <head>
-    <?php include 'includes/head.php'; ?>
+    <?php include __DIR__ . '/../../includes/head.php'; ?>
 </head>
 
 <body>
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_payment'])) {
         <div class="auth-box">
             <h2>Procedi al Pagamento</h2>
 
-            <?php include 'includes/alerts.php'; ?>
+            <?php include __DIR__ . '/../../includes/alerts.php'; ?>
 
             <form method="POST" class="auth-form">
                 <input type="hidden" name="create_payment" value="1">
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_payment'])) {
             </div>
         </div>
     </div>
-    <?php include 'includes/whatsapp-button.php'; ?>
+    <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

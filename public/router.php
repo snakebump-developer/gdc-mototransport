@@ -60,14 +60,14 @@ if (!$_maintExempt) {
 // /admin/utente/{id}
 if (preg_match('#^/admin/utente/(\d+)$#', $uri, $m)) {
     $_GET['id'] = (int) $m[1];
-    include __DIR__ . '/admin-utente.php';
+    include __DIR__ . '/pages/admin/utente.php';
     return true;
 }
 
 // /admin/preventivo/{id}
 if (preg_match('#^/admin/preventivo/(\d+)$#', $uri, $m)) {
     $_GET['id'] = (int) $m[1];
-    include __DIR__ . '/admin-preventivo.php';
+    include __DIR__ . '/pages/admin/preventivo.php';
     return true;
 }
 
@@ -75,33 +75,33 @@ if (preg_match('#^/admin/preventivo/(\d+)$#', $uri, $m)) {
 //   'uri' => [ 'file' => '...', 'get' => [...] ]
 $routes = [
     // Pubblica
-    '/'                      => ['file' => 'index.php'],
-    '/login'                 => ['file' => 'login.php'],
-    '/logout'                => ['file' => 'logout.php'],
-    '/registrati'            => ['file' => 'register.php'],
-    '/pagamento'             => ['file' => 'payment.php'],
-    '/pagamento/successo'    => ['file' => 'payment-success.php'],
-    '/pagamento/annullato'   => ['file' => 'payment-cancel.php'],
+    '/'                      => ['file' => 'pages/index.php'],
+    '/login'                 => ['file' => 'pages/auth/login.php'],
+    '/logout'                => ['file' => 'pages/auth/logout.php'],
+    '/registrati'            => ['file' => 'pages/auth/register.php'],
+    '/pagamento'             => ['file' => 'pages/payment/index.php'],
+    '/pagamento/successo'    => ['file' => 'pages/payment/success.php'],
+    '/pagamento/annullato'   => ['file' => 'pages/payment/cancel.php'],
 
     // Dashboard utente
-    '/dashboard'             => ['file' => 'dashboard.php'],
-    '/dashboard/profilo'     => ['file' => 'dashboard.php',     'get' => ['section' => 'profile']],
-    '/dashboard/moto'        => ['file' => 'dashboard.php',     'get' => ['section' => 'motorcycles']],
-    '/dashboard/ordini'      => ['file' => 'dashboard.php',     'get' => ['section' => 'orders']],
+    '/dashboard'             => ['file' => 'pages/dashboard/index.php'],
+    '/dashboard/profilo'     => ['file' => 'pages/dashboard/index.php', 'get' => ['section' => 'profile']],
+    '/dashboard/moto'        => ['file' => 'pages/dashboard/index.php', 'get' => ['section' => 'motorcycles']],
+    '/dashboard/ordini'      => ['file' => 'pages/dashboard/index.php', 'get' => ['section' => 'orders']],
 
     // Dashboard professionista
-    '/dashboard/pro'         => ['file' => 'dashboard-pro.php'],
-    '/dashboard/pro/profilo' => ['file' => 'dashboard-pro.php', 'get' => ['section' => 'profile']],
-    '/dashboard/pro/moto'    => ['file' => 'dashboard-pro.php', 'get' => ['section' => 'motorcycles']],
-    '/dashboard/pro/ordini'  => ['file' => 'dashboard-pro.php', 'get' => ['section' => 'orders']],
+    '/dashboard/pro'         => ['file' => 'pages/dashboard/pro.php'],
+    '/dashboard/pro/profilo' => ['file' => 'pages/dashboard/pro.php',   'get' => ['section' => 'profile']],
+    '/dashboard/pro/moto'    => ['file' => 'pages/dashboard/pro.php',   'get' => ['section' => 'motorcycles']],
+    '/dashboard/pro/ordini'  => ['file' => 'pages/dashboard/pro.php',   'get' => ['section' => 'orders']],
 
     // Admin
-    '/admin'                 => ['file' => 'admin.php',         'get' => ['sezione' => 'panoramica']],
-    '/admin/panoramica'      => ['file' => 'admin.php',         'get' => ['sezione' => 'panoramica']],
-    '/admin/utenti'          => ['file' => 'admin.php',         'get' => ['sezione' => 'utenti']],
-    '/admin/professionisti'  => ['file' => 'admin.php',         'get' => ['sezione' => 'professionisti']],
-    '/admin/preventivi'      => ['file' => 'admin.php',         'get' => ['sezione' => 'preventivi']],
-    '/admin/moto-bozze'      => ['file' => 'admin.php',         'get' => ['sezione' => 'moto-bozze']],
+    '/admin'                 => ['file' => 'pages/admin/index.php',     'get' => ['sezione' => 'panoramica']],
+    '/admin/panoramica'      => ['file' => 'pages/admin/index.php',     'get' => ['sezione' => 'panoramica']],
+    '/admin/utenti'          => ['file' => 'pages/admin/index.php',     'get' => ['sezione' => 'utenti']],
+    '/admin/professionisti'  => ['file' => 'pages/admin/index.php',     'get' => ['sezione' => 'professionisti']],
+    '/admin/preventivi'      => ['file' => 'pages/admin/index.php',     'get' => ['sezione' => 'preventivi']],
+    '/admin/moto-bozze'      => ['file' => 'pages/admin/index.php',     'get' => ['sezione' => 'moto-bozze']],
 
     // API
     '/api/percorso'                 => ['file' => 'api/route-calc.php'],
@@ -116,7 +116,7 @@ $routes = [
     '/api/confirm-payment'          => ['file' => 'api/confirm-payment.php'],
 
     // Manutenzione
-    '/manutenzione'                 => ['file' => 'maintenance.php'],
+    '/manutenzione'                 => ['file' => 'pages/maintenance.php'],
 ];
 
 if (isset($routes[$uri])) {

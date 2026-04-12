@@ -45,8 +45,18 @@ return [
     ],
 
     // Configurazione app
-    'app_name' => 'GDC MotoTransport',
-    'app_url' => 'http://localhost:8888',
+    'app_name' => env('APP_NAME', 'GDC MotoTransport'),
+    'app_url'  => env('APP_URL',  'http://localhost:8888'),
+
+    // Dati aziendali — footer, WhatsApp, link "Chiama Ora" (modificare via .env)
+    'company' => [
+        'name'      => env('COMPANY_NAME',      'MotoTransport Italia'),
+        'address'   => env('COMPANY_ADDRESS',   'Via Example 123, 20100 Milano (MI)'),
+        'phone'     => env('COMPANY_PHONE',     '+39 012 345 6789'),
+        'phone_tel' => env('COMPANY_PHONE_TEL', '+390123456789'),
+        'email'     => env('COMPANY_EMAIL',     'info@mototransport.it'),
+        'whatsapp'  => env('COMPANY_WHATSAPP',  '393282669228'),
+    ],
 
     // Impostazioni sicurezza
     'session_timeout' => 3600, // 1 ora in secondi
@@ -67,6 +77,6 @@ return [
     // Google Maps
     'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', ''),
 
-    // Password bypass modalità manutenzione (impostabile via env MAINTENANCE_PASSWORD su Railway)
-    'maintenance_password' => env('MAINTENANCE_PASSWORD', 'GDC@Maint9076!')
+    // Password bypass modalità manutenzione
+    'maintenance_password' => env('MAINTENANCE_PASSWORD', 'GDC@Maint2026!')
 ];
