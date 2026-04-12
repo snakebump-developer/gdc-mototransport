@@ -246,6 +246,58 @@ function initGoogleMaps() {
     mapCloseBtn.addEventListener('click', function () { mapContainer.style.display = 'none'; });
   }
 
+  // --- Geolocalizzazione rapida per il ritiro ---
+  var useMyLocationBtn   = document.getElementById('useMyLocationBtn');
+  var useMyLocationLabel = document.getElementById('useMyLocationLabel');
+
+  if (useMyLocationBtn) {
+    if (!navigator.geolocation) {
+      useMyLocationBtn.style.display = 'none';
+    } else {
+      useMyLocationBtn.addEventListener('click', function () {
+        var errEl = document.getElementById('addressPickup-error');
+        useMyLocationBtn.disabled = true;
+        if (useMyLocationLabel) useMyLocationLabel.textContent = 'Rilevamento in corso…';
+        if (errEl) errEl.textContent = '';
+
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            var latlng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            geocoder.geocode({ location: latlng }, function (results, status) {
+              useMyLocationBtn.disabled = false;
+              if (useMyLocationLabel) useMyLocationLabel.textContent = 'Usa la mia posizione attuale';
+              if (status === 'OK' && results[0]) {
+                if (isZoneBlocked(results[0].address_components)) {
+                  if (errEl) errEl.textContent = 'Posizione rilevata in zona non coperta (Sicilia, Sardegna o fuori Italia).';
+                  pickupInput.classList.add('is-error');
+                  window._quotePickupCoords = null;
+                  return;
+                }
+                pickupInput.value = results[0].formatted_address;
+                pickupInput.classList.remove('is-error');
+                window._quotePickupCoords = latlng;
+                if (errEl) errEl.textContent = '';
+                tryCalculateRoute();
+              }
+            });
+          },
+          function (err) {
+            useMyLocationBtn.disabled = false;
+            if (useMyLocationLabel) useMyLocationLabel.textContent = 'Usa la mia posizione attuale';
+            if (errEl) {
+              if (err.code === err.PERMISSION_DENIED) {
+                errEl.textContent = 'Permesso di localizzazione negato. Abilitalo nelle impostazioni del browser.';
+              } else {
+                errEl.textContent = 'Impossibile rilevare la posizione. Inserisci l\'indirizzo manualmente.';
+              }
+            }
+          },
+          { timeout: 8000, enableHighAccuracy: true }
+        );
+      });
+    }
+  }
+
   // --- Calcolo rotta ---
   function tryCalculateRoute() {
     var pCoords = window._quotePickupCoords;
