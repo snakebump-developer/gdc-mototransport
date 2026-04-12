@@ -229,9 +229,14 @@ function updateProfessionalProfile($userId, $data)
     global $pdo;
 
     $allowed = [
-        'nome', 'cognome', 'telefono',
-        'pec', 'codice_sdi',
-        'indirizzo_fatturazione', 'citta_fatturazione', 'cap_fatturazione',
+        'nome',
+        'cognome',
+        'telefono',
+        'pec',
+        'codice_sdi',
+        'indirizzo_fatturazione',
+        'citta_fatturazione',
+        'cap_fatturazione',
     ];
     $fields = [];
     $values = [];
