@@ -728,6 +728,44 @@ function initGoogleMaps() {
     mapCloseBtn.addEventListener('click', function () { mapContainer.style.display = 'none'; });
   }
 
+  // --- Geolocalizzazione rapida per il ritiro ---
+  var useMyLocationBtn   = document.getElementById('useMyLocationBtn');
+  var useMyLocationLabel = document.getElementById('useMyLocationLabel');
+
+  if (useMyLocationBtn) {
+    if (!navigator.geolocation) {
+      useMyLocationBtn.style.display = 'none';
+    } else {
+      useMyLocationBtn.addEventListener('click', function () {
+        useMyLocationBtn.disabled = true;
+        if (useMyLocationLabel) useMyLocationLabel.textContent = 'Rilevamento in corso…';
+
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            var latlng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            geocoder.geocode({ location: latlng }, function (results, status) {
+              useMyLocationBtn.disabled = false;
+              if (useMyLocationLabel) useMyLocationLabel.textContent = 'Usa la mia posizione attuale';
+              if (status === 'OK' && results[0]) {
+                pickupInput.value = results[0].formatted_address;
+                pickupInput.classList.remove('is-error');
+                window._quotePickupCoords = latlng;
+                var errEl = document.getElementById('addressPickup-error');
+                if (errEl) errEl.textContent = '';
+                tryCalculateRoute();
+              }
+            });
+          },
+          function () {
+            useMyLocationBtn.disabled = false;
+            if (useMyLocationLabel) useMyLocationLabel.textContent = 'Usa la mia posizione attuale';
+          },
+          { timeout: 8000, enableHighAccuracy: true }
+        );
+      });
+    }
+  }
+
   // --- Calcolo rotta ---
   function tryCalculateRoute() {
     var pCoords = window._quotePickupCoords;

@@ -219,6 +219,17 @@
                                 </svg>
                             </button>
                         </div>
+                        <button type="button" class="quote-form__geolocate-btn" id="useMyLocationBtn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <circle cx="12" cy="12" r="8"></circle>
+                                <line x1="12" y1="2" x2="12" y2="4"></line>
+                                <line x1="12" y1="20" x2="12" y2="22"></line>
+                                <line x1="2" y1="12" x2="4" y2="12"></line>
+                                <line x1="20" y1="12" x2="22" y2="12"></line>
+                            </svg>
+                            <span id="useMyLocationLabel">Usa la mia posizione attuale</span>
+                        </button>
                         <span class="quote-form__error" id="addressPickup-error" role="alert"></span>
                     </div>
                     <!-- Indirizzo di consegna -->
