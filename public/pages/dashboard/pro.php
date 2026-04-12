@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
-require_once __DIR__ . '/../src/orders.php';
-require_once __DIR__ . '/../src/motorcycles.php';
+require_once __DIR__ . '/../../../src/auth.php';
+require_once __DIR__ . '/../../../src/orders.php';
+require_once __DIR__ . '/../../../src/motorcycles.php';
 
 requireLogin();
 if (!isProfessional() && !isAdmin()) {
@@ -16,7 +16,7 @@ $error   = '';
 $pageTitle     = 'Dashboard Professionista - GDC MotoTransport';
 $noFontAwesome = true;
 $extraCss = ['css/modules/dashboard.css', 'css/modules/quote-modal.css'];
-$config   = require __DIR__ . '/../src/config.php';
+$config   = require __DIR__ . '/../../../src/config.php';
 $stripePk = htmlspecialchars($config['stripe']['public_key'] ?? '', ENT_QUOTES, 'UTF-8');
 $quoteUserData = [
     'nome'     => trim(($user['nome'] ?? '') . ' ' . ($user['cognome'] ?? '')),
@@ -46,12 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!isset($allowed[$mime])) {
                     throw new Exception("Formato non supportato. Usa JPG, PNG, GIF o WebP.");
                 }
-                $uploadDir = __DIR__ . '/uploads/avatars/';
+                $uploadDir = __DIR__ . '/../../uploads/avatars/';
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
                 }
                 if (!empty($user['avatar'])) {
-                    $old = __DIR__ . '/' . $user['avatar'];
+                    $old = __DIR__ . '/../../' . $user['avatar'];
                     if (is_file($old)) unlink($old);
                 }
                 $filename = 'avatar_' . $user['id'] . '_' . bin2hex(random_bytes(8)) . '.' . $allowed[$mime];
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Rimozione avatar
             if (isset($_POST['remove_avatar'])) {
                 if (!empty($user['avatar'])) {
-                    $old = __DIR__ . '/' . $user['avatar'];
+                    $old = __DIR__ . '/../../' . $user['avatar'];
                     if (is_file($old)) unlink($old);
                 }
                 removeUserAvatar($user['id']);
@@ -109,17 +109,17 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
 <html lang="it">
 
 <head>
-    <?php include 'includes/head.php'; ?>
+    <?php include __DIR__ . '/../../includes/head.php'; ?>
 </head>
 
 <body>
-    <?php include 'includes/navbar-dashboard.php'; ?>
+    <?php include __DIR__ . '/../../includes/navbar-dashboard.php'; ?>
 
     <div class="dashboard-container">
-        <?php include 'includes/sidebar-pro.php'; ?>
+        <?php include __DIR__ . '/../../includes/sidebar-pro.php'; ?>
 
         <main class="dashboard-main">
-            <?php include 'includes/alerts.php'; ?>
+            <?php include __DIR__ . '/../../includes/alerts.php'; ?>
 
             <!-- Banner sconto professionista -->
             <div class="discount-banner">
@@ -298,7 +298,7 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
                         <form method="POST" class="profile-form" novalidate>
                             <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
                             <input type="hidden" name="add_moto" value="1">
-                            <?php include 'includes/moto-fields.php'; ?>
+                            <?php include __DIR__ . '/../../includes/moto-fields.php'; ?>
                             <div class="moto-form-card__actions">
                                 <button type="submit" class="btn btn-primary">Salva</button>
                                 <button type="button" class="btn btn-secondary" id="btnCancelMoto">Annulla</button>
@@ -364,7 +364,7 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
                                 <form method="POST" novalidate>
                                     <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
                                     <input type="hidden" name="edit_moto_id" id="edit_moto_id">
-                                    <?php include 'includes/moto-fields.php'; ?>
+                                    <?php include __DIR__ . '/../../includes/moto-fields.php'; ?>
                                     <div class="modal-box__actions">
                                         <button type="submit" class="btn btn-primary">Aggiorna</button>
                                         <button type="button" class="btn btn-secondary"
@@ -477,7 +477,7 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
     <script src="/js/modules/nav.js"></script>
     <?php if ($section === 'orders' && !empty($bozze)): ?>
         <!-- Quote modal per riprendere bozze -->
-        <?php include 'includes/quote-modal.php'; ?>
+        <?php include __DIR__ . '/../../includes/quote-modal.php'; ?>
         <script src="https://js.stripe.com/v3/"></script>
         <script>
             window.STRIPE_PUBLIC_KEY = <?= json_encode($stripePk, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
@@ -537,7 +537,7 @@ $sconto = (float)($user['sconto_percentuale'] ?? 10);
             });
         }
     </script>
-    <?php include 'includes/whatsapp-button.php'; ?>
+    <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
-require_once __DIR__ . '/../src/motorcycles.php';
-$config   = require __DIR__ . '/../src/config.php';
+require_once __DIR__ . '/../../src/auth.php';
+require_once __DIR__ . '/../../src/motorcycles.php';
+$config   = require __DIR__ . '/../../src/config.php';
 $user     = isLogged() ? getCurrentUser() : null;
 $gmapsKey = htmlspecialchars($config['google_maps_api_key'] ?? '', ENT_QUOTES, 'UTF-8');
 $stripePk = htmlspecialchars($config['stripe']['public_key'] ?? '', ENT_QUOTES, 'UTF-8');
@@ -25,11 +25,11 @@ if ($user) {
 <html lang="it">
 
 <head>
-    <?php include 'includes/head.php'; ?>
+    <?php include __DIR__ . '/../includes/head.php'; ?>
 </head>
 
 <body>
-    <?php include 'includes/navbar.php'; ?>
+    <?php include __DIR__ . '/../includes/navbar.php'; ?>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -404,9 +404,9 @@ if ($user) {
         </div>
     </section>
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 
-    <?php include 'includes/quote-modal.php'; ?>
+    <?php include __DIR__ . '/../includes/quote-modal.php'; ?>
 
     <script src="/js/modules/nav.js"></script>
     <script src="/js/modules/gallery.js"></script>
@@ -428,7 +428,7 @@ if ($user) {
     <?php if ($gmapsKey): ?>
         <script src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapsKey ?>&libraries=places,geometry&callback=initGoogleMaps" async defer></script>
     <?php endif; ?>
-    <?php include 'includes/whatsapp-button.php'; ?>
+    <?php include __DIR__ . '/../includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

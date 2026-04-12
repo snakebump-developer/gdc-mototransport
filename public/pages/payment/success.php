@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
-require_once __DIR__ . '/../src/orders.php';
+require_once __DIR__ . '/../../../src/auth.php';
+require_once __DIR__ . '/../../../src/orders.php';
 
 $sessionId       = $_GET['session_id']       ?? null;
 $paymentId       = $_GET['PayerID']           ?? null;
@@ -16,9 +16,9 @@ $extraCss = ['css/modules/auth.css'];
 // Flusso Stripe Payment Element con redirect (es. 3DS)
 if ($paymentIntentId && $redirectStatus === 'succeeded' && $preventivoId > 0) {
     try {
-        require_once __DIR__ . '/../vendor/autoload.php';
-        require_once __DIR__ . '/../src/payments/stripe.php';
-        require_once __DIR__ . '/../src/db.php';
+        require_once __DIR__ . '/../../../vendor/autoload.php';
+        require_once __DIR__ . '/../../../src/payments/stripe.php';
+        require_once __DIR__ . '/../../../src/db.php';
 
         $intent = retrievePaymentIntent($paymentIntentId);
 
@@ -76,7 +76,7 @@ if ($paymentIntentId && $redirectStatus === 'succeeded' && $preventivoId > 0) {
 <html lang="it">
 
 <head>
-    <?php include 'includes/head.php'; ?>
+    <?php include __DIR__ . '/../../includes/head.php'; ?>
 </head>
 
 <body>
@@ -107,7 +107,7 @@ if ($paymentIntentId && $redirectStatus === 'succeeded' && $preventivoId > 0) {
             <?php endif; ?>
         </div>
     </div>
-    <?php include 'includes/whatsapp-button.php'; ?>
+    <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

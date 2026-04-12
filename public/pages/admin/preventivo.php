@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
-require_once __DIR__ . '/../src/orders.php';
-require_once __DIR__ . '/../src/users.php';
+require_once __DIR__ . '/../../../src/auth.php';
+require_once __DIR__ . '/../../../src/orders.php';
+require_once __DIR__ . '/../../../src/users.php';
 
 requireAdmin();
 
@@ -69,14 +69,14 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
 <html lang="it">
 
 <head>
-    <?php include 'includes/head.php'; ?>
+    <?php include __DIR__ . '/../../includes/head.php'; ?>
 </head>
 
 <body>
-    <?php include 'includes/navbar-dashboard.php'; ?>
+    <?php include __DIR__ . '/../../includes/navbar-dashboard.php'; ?>
 
     <div class="dashboard-container">
-        <?php include 'includes/sidebar-admin.php'; ?>
+        <?php include __DIR__ . '/../../includes/sidebar-admin.php'; ?>
 
         <main class="dashboard-main">
 
@@ -86,7 +86,7 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
                     style="color:inherit;text-decoration:none;">&larr; Torna ai Preventivi</a>
             </p>
 
-            <?php include 'includes/alerts.php'; ?>
+            <?php include __DIR__ . '/../../includes/alerts.php'; ?>
 
             <!-- Header preventivo -->
             <div class="ud-header">
@@ -308,7 +308,7 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
     </div>
 
     <script src="/js/modules/nav.js"></script>
-    <?php include 'includes/whatsapp-button.php'; ?>
+    <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
 </body>
 
 </html>

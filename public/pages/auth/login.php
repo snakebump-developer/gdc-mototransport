@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
+require_once __DIR__ . '/../../../src/auth.php';
 
 if (isLogged()) {
     header('Location: /');
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="it">
 
 <head>
-    <?php include 'includes/head.php'; ?>
+    <?php include __DIR__ . '/../../includes/head.php'; ?>
 </head>
 
 <body>
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p>Benvenuto! Inserisci le tue credenziali</p>
             </div>
 
-            <?php include 'includes/alerts.php'; ?>
+            <?php include __DIR__ . '/../../includes/alerts.php'; ?>
 
             <form method="POST" class="auth-form">
                 <div class="form-group">
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
-    <?php include 'includes/whatsapp-button.php'; ?>
+    <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
 </body>
 
 </html>
