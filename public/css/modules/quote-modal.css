@@ -843,6 +843,33 @@
     background: rgba(91, 139, 245, 0.08);
 }
 
+/* Bottone geolocalizzazione ritiro */
+.quote-form__geolocate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.4rem;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s;
+}
+
+.quote-form__geolocate-btn:hover {
+    opacity: 0.75;
+}
+
+.quote-form__geolocate-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Google Places Autocomplete dropdown */
 .pac-container {
     z-index: 100001 !important;
