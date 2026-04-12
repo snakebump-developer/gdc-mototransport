@@ -398,7 +398,7 @@ if ($user) {
                 <p class="cta-final__subtitle">Richiedi ora il tuo preventivo gratuito e personalizzato.</p>
                 <div class="cta-final__buttons">
                     <a href="#" class="cta-btn cta-btn--dark open-quote-modal">Preventivo Gratuito &rarr;</a>
-                    <a href="tel:+390000000000" class="cta-btn cta-btn--white">Chiama Ora <i class="fa-solid fa-phone"></i></a>
+                    <a href="tel:<?= htmlspecialchars(env('COMPANY_PHONE_TEL', '+390000000000'), ENT_QUOTES, 'UTF-8') ?>" class="cta-btn cta-btn--white">Chiama Ora <i class="fa-solid fa-phone"></i></a>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 <!-- WhatsApp Floating Button -->
-<a href="https://wa.me/393282669228?text=Ciao%2C%20vorrei%20informazioni%20sul%20trasporto%20moto"
+<a href="https://wa.me/<?= htmlspecialchars(env('COMPANY_WHATSAPP', '393282669228'), ENT_QUOTES, 'UTF-8') ?>?text=Ciao%2C%20vorrei%20informazioni%20sul%20trasporto%20moto"
     class="whatsapp-float"
     target="_blank"
     rel="noopener noreferrer"
