@@ -224,6 +224,39 @@ function updateUserProfile($userId, $data)
     return $stmt->execute($values);
 }
 
+function updateProfessionalProfile($userId, $data)
+{
+    global $pdo;
+
+    $allowed = [
+        'nome', 'cognome', 'telefono',
+        'pec', 'codice_sdi',
+        'indirizzo_fatturazione', 'citta_fatturazione', 'cap_fatturazione',
+    ];
+    $fields = [];
+    $values = [];
+
+    foreach ($allowed as $field) {
+        if (array_key_exists($field, $data)) {
+            $val = trim((string)$data[$field]);
+            if ($field === 'pec' && $val !== '' && !validateEmail($val)) {
+                throw new Exception("Indirizzo PEC non valido.");
+            }
+            if ($field === 'codice_sdi' && $val !== '' && !preg_match('/^[A-Z0-9]{6,7}$/i', $val)) {
+                throw new Exception("Codice SDI non valido (6-7 caratteri alfanumerici).");
+            }
+            $fields[] = "$field = ?";
+            $values[] = $val !== '' ? $val : null;
+        }
+    }
+
+    if (empty($fields)) return false;
+
+    $values[] = $userId;
+    $sql = "UPDATE utenti SET " . implode(', ', $fields) . ", aggiornato_il = CURRENT_TIMESTAMP WHERE id = ?";
+    return $pdo->prepare($sql)->execute($values);
+}
+
 function updateUserAvatar($userId, $avatarPath)
 {
     global $pdo;
