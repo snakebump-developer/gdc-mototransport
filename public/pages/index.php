@@ -426,7 +426,7 @@ if ($user) {
     <script src="/js/modules/quote-modal.js" defer></script>
     <script src="/js/modules/google-maps.js"></script>
     <?php if ($gmapsKey): ?>
-        <script src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapsKey ?>&libraries=places,geometry&callback=initGoogleMaps" async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapsKey ?>&loading=async&libraries=places,geometry&callback=initGoogleMaps" async defer></script>
     <?php endif; ?>
     <?php include __DIR__ . '/../includes/whatsapp-button.php'; ?>
 </body>
