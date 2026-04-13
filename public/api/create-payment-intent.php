@@ -141,6 +141,7 @@ $required = [
     'marca_moto',
     'modello_moto',
     'cilindrata',
+    'targa',
     'indirizzo_ritiro',
     'indirizzo_consegna',
     'nome_cliente',
@@ -158,6 +159,7 @@ foreach ($required as $field) {
             'marca_moto'              => 'La marca della moto è obbligatoria',
             'modello_moto'            => 'Il modello della moto è obbligatorio',
             'cilindrata'              => 'La cilindrata è obbligatoria',
+            'targa'                   => 'La targa della moto è obbligatoria',
             'indirizzo_ritiro'        => "L'indirizzo di ritiro è obbligatorio",
             'indirizzo_consegna'      => "L'indirizzo di consegna è obbligatorio",
             'nome_cliente'            => 'Il nome del cliente è obbligatorio',
@@ -298,10 +300,14 @@ try {
         $chk->execute([$userId, $marca, $modello]);
         if (!$chk->fetch()) {
             try {
+                $annoMoto = !empty($data['anno_moto']) ? (int)$data['anno_moto'] : null;
+                $targaMoto = !empty($data['targa']) ? strtoupper(trim($data['targa'])) : null;
                 saveMotorcycle((int)$userId, [
                     'marca'      => $marca,
                     'modello'    => $modello,
                     'cilindrata' => $cc,
+                    'anno'       => $annoMoto,
+                    'targa'      => $targaMoto,
                 ]);
             } catch (Exception $e) {
                 error_log('[create-payment-intent] Salvataggio moto fallito: ' . $e->getMessage());

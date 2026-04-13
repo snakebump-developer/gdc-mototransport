@@ -29,6 +29,7 @@ $required = [
     'marca_moto',
     'modello_moto',
     'cilindrata',
+    'targa',
     'indirizzo_ritiro',
     'indirizzo_consegna',
     'nome_cliente',
@@ -45,6 +46,7 @@ foreach ($required as $field) {
             'marca_moto'              => 'La marca della moto è obbligatoria',
             'modello_moto'            => 'Il modello della moto è obbligatorio',
             'cilindrata'              => 'La cilindrata è obbligatoria',
+            'targa'                   => 'La targa della moto è obbligatoria',
             'indirizzo_ritiro'        => "L'indirizzo di ritiro è obbligatorio",
             'indirizzo_consegna'      => "L'indirizzo di consegna è obbligatorio",
             'nome_cliente'            => 'Il nome del cliente è obbligatorio',
@@ -87,6 +89,14 @@ $ccNum = isset($ccMatches[1]) ? (int)$ccMatches[1] : 0;
 if ($ccNum < 50 || $ccNum > 2999) {
     http_response_code(422);
     echo json_encode(['error' => 'Cilindrata non valida — inserisci un valore tra 50 e 2999 (es. 1000 o 1000cc)']);
+    exit;
+}
+
+// Validazione targa (formato italiano: AA000AA oppure AA00000)
+$targaInput = strtoupper(trim($data['targa']));
+if (!preg_match('/^[A-Z]{2}[0-9]{3}[A-Z]{2}$|^[A-Z]{2}[0-9]{5}$/', $targaInput)) {
+    http_response_code(422);
+    echo json_encode(['error' => 'Targa non valida — formato atteso: AB123CD (auto) o AB12345 (vecchio formato)']);
     exit;
 }
 
@@ -143,11 +153,11 @@ try {
         INSERT INTO preventivi
             (user_id, nome_cliente, email_cliente, telefono_cliente,
              codice_fiscale_cliente, indirizzo_ritiro, indirizzo_consegna,
-             distanza_km, marca_moto, modello_moto, cilindrata,
+             distanza_km, marca_moto, modello_moto, anno_moto, cilindrata, targa,
              borse_laterali, tipo_consegna, data_ritiro,
              prezzo_base, prezzo_finale, stato)
         VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'inviato')
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'inviato')
     ");
 
     $stmt->execute([
@@ -161,7 +171,9 @@ try {
         $distanzaKm,
         htmlspecialchars(strip_tags($data['marca_moto']), ENT_QUOTES, 'UTF-8'),
         htmlspecialchars(strip_tags($data['modello_moto']), ENT_QUOTES, 'UTF-8'),
+        !empty($data['anno_moto']) ? (int)$data['anno_moto'] : null,
         htmlspecialchars(strip_tags($data['cilindrata']), ENT_QUOTES, 'UTF-8'),
+        $targaInput,
         $borseLaterali,
         $tipoConsegna,
         $dataRitiro,

@@ -235,7 +235,7 @@ try {
   }
 
   /* --- Modelli --- */
-  function loadModelliForBrand(marca) {
+  function loadModelliForBrand(marca, prefillModello) {
     _allModelli = [];
     const inp = document.getElementById('motoModelInput');
     if (inp) { inp.value = ''; inp.disabled = true; inp.placeholder = 'Caricamento…'; }
@@ -246,10 +246,18 @@ try {
         if (data.success && Array.isArray(data.modelli)) {
           _allModelli = data.modelli;
         }
-        if (inp) { inp.disabled = false; inp.placeholder = 'Scrivi il modello…'; }
+        if (inp) {
+          inp.disabled = false;
+          inp.placeholder = 'Scrivi il modello…';
+          if (prefillModello) { inp.value = prefillModello; inp.classList.remove('is-error'); syncMotoHiddenFields(); }
+        }
       })
       .catch(function() {
-        if (inp) { inp.disabled = false; inp.placeholder = 'Scrivi il modello…'; }
+        if (inp) {
+          inp.disabled = false;
+          inp.placeholder = 'Scrivi il modello…';
+          if (prefillModello) { inp.value = prefillModello; inp.classList.remove('is-error'); syncMotoHiddenFields(); }
+        }
       });
   }
 
@@ -339,10 +347,68 @@ try {
     currentStep = 1;
     renderStep(currentStep);
     prefillFromUserData();
+    renderSavedMotoBar();
     loadMarche();
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+  }
+
+  /* Renderizza la select di selezione moto salvate (se disponibili) */
+  function renderSavedMotoBar() {
+    var bar    = document.getElementById('quoteSavedMotoBar');
+    var select = document.getElementById('quoteSavedMotoSelect');
+    if (!bar || !select) return;
+
+    var motos = window.QUOTE_USER_MOTORCYCLES;
+    if (!Array.isArray(motos) || motos.length === 0) { bar.style.display = 'none'; return; }
+
+    // Reset opzioni (mantieni solo il placeholder iniziale)
+    while (select.options.length > 1) select.remove(1);
+    motos.forEach(function (m, idx) {
+      var label = m.marca + ' ' + m.modello;
+      if (m.anno)  label += ' (' + m.anno + ')';
+      if (m.targa) label += ' — ' + m.targa.toUpperCase();
+      var opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = label;
+      select.appendChild(opt);
+    });
+    select.value = '';
+
+    select.onchange = function () {
+      var idx = select.value;
+      if (idx === '') return;
+      var m = motos[parseInt(idx, 10)];
+      if (!m) return;
+
+      // Pre-compila marca
+      var brandInp = document.getElementById('motoBrandInput');
+      var modelGrp = document.getElementById('motoModelGroup');
+      if (brandInp) { brandInp.value = m.marca; brandInp.classList.remove('is-error'); }
+      if (modelGrp) modelGrp.style.display = '';
+
+      _selectedBrandConfirmed = true;
+      _selectedModelConfirmed = true;
+      syncMotoHiddenFields();
+
+      // Pre-compila cilindrata
+      var ccEl = document.getElementById('motoCc');
+      if (ccEl) { ccEl.value = m.cilindrata ? m.cilindrata + 'cc' : ''; ccEl.classList.remove('is-error'); }
+
+      // Pre-compila anno
+      var annoEl = document.getElementById('motoAnno');
+      if (annoEl) { annoEl.value = m.anno || ''; annoEl.classList.remove('is-error'); }
+
+      // Pre-compila targa
+      var targaEl = document.getElementById('motoTarga');
+      if (targaEl) { targaEl.value = m.targa ? m.targa.toUpperCase() : ''; targaEl.classList.remove('is-error'); }
+
+      // Carica modelli per la marca e pre-popola il modello dopo il fetch
+      loadModelliForBrand(m.marca, m.modello);
+    };
+
+    bar.style.display = '';
   }
 
   /* Prefill campi da dati utente loggato (solo se il campo è vuoto) */
@@ -387,7 +453,7 @@ try {
       if (el) el.hidden = true;
     });
 
-    ['motoBrand', 'motoModel', 'motoCc', 'motoBags', 'addressPickup', 'addressDelivery',
+    ['motoBrand', 'motoModel', 'motoCc', 'motoAnno', 'motoTarga', 'motoBags', 'addressPickup', 'addressDelivery',
       'pickupDate', 'clientName', 'clientEmail', 'clientPhone', 'clientFiscal'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) { el.value = ''; el.classList.remove('is-error'); }
@@ -505,6 +571,11 @@ try {
 
     const motoDesc = [brand, model, cc].filter(Boolean).join(' ');
     setText('summaryMoto', motoDesc || '—');
+    // Dettagli secondari: anno e targa se presenti
+    var anno  = val('motoAnno');
+    var targa = val('motoTarga');
+    var motoDetails = [anno ? 'Anno ' + anno : '', targa ? 'Targa ' + targa.toUpperCase() : ''].filter(Boolean).join(' · ');
+    setText('summaryMotoDetails', motoDetails);
     setText('summaryMotoType', BAGS_LABELS[bags] || '—');
     setText('summaryRoute', pickup && delivery ? pickup + ' → ' + delivery : '—');
     setText('summaryPickup', pickup || '—');
@@ -601,6 +672,36 @@ try {
         valid = false;
       } else {
         clearFieldError('motoCc');
+      }
+
+      // Anno (opzionale, ma se compilato deve essere valido)
+      var annoEl = document.getElementById('motoAnno');
+      if (annoEl && annoEl.value.trim()) {
+        var annoVal = parseInt(annoEl.value.trim(), 10);
+        var annoMax = new Date().getFullYear() + 1;
+        if (isNaN(annoVal) || annoVal < 1900 || annoVal > annoMax) {
+          showFieldError('motoAnno', 'Anno non valido (es. 2020)');
+          valid = false;
+        } else {
+          clearFieldError('motoAnno');
+        }
+      } else if (annoEl) {
+        clearFieldError('motoAnno');
+      }
+
+      // Targa (obbligatoria, formato italiano AA000AA o AA00000)
+      var targaEl = document.getElementById('motoTarga');
+      if (!targaEl || !targaEl.value.trim()) {
+        showFieldError('motoTarga', 'La targa è obbligatoria');
+        valid = false;
+      } else {
+        var t = targaEl.value.trim().toUpperCase();
+        if (!/^[A-Z]{2}[0-9]{3}[A-Z]{2}$|^[A-Z]{2}[0-9]{5}$/.test(t)) {
+          showFieldError('motoTarga', 'Formato targa non valido (es. AB123CD)');
+          valid = false;
+        } else {
+          clearFieldError('motoTarga');
+        }
       }
 
     } else if (step === 2) {
@@ -750,6 +851,8 @@ try {
       marca_moto:             val('motoBrand'),
       modello_moto:           val('motoModel'),
       cilindrata:             val('motoCc'),
+      anno_moto:              val('motoAnno') || null,
+      targa:                  val('motoTarga') ? val('motoTarga').toUpperCase() : null,
       borse_laterali:         bagsPrice,
       indirizzo_ritiro:       val('addressPickup'),
       indirizzo_consegna:     val('addressDelivery'),
@@ -905,6 +1008,8 @@ try {
       marca_moto:             val('motoBrand'),
       modello_moto:           val('motoModel'),
       cilindrata:             val('motoCc'),
+      anno_moto:              val('motoAnno') || null,
+      targa:                  val('motoTarga') ? val('motoTarga').toUpperCase() : null,
       borse_laterali:         bagsPrice,
       indirizzo_ritiro:       val('addressPickup'),
       indirizzo_consegna:     val('addressDelivery'),
@@ -1014,6 +1119,31 @@ try {
         showFieldError('motoCc', 'Formato non valido — inserisci un numero tra 50 e 2999 (es. 1000 o 1000cc)');
       } else {
         clearFieldError('motoCc');
+      }
+    });
+
+    // Anno
+    var annoEl = document.getElementById('motoAnno');
+    if (annoEl) annoEl.addEventListener('blur', function () {
+      if (!this.value.trim()) { clearFieldError('motoAnno'); return; }
+      var v = parseInt(this.value.trim(), 10);
+      var maxY = new Date().getFullYear() + 1;
+      if (isNaN(v) || v < 1900 || v > maxY) {
+        showFieldError('motoAnno', 'Anno non valido (es. 2020)');
+      } else {
+        clearFieldError('motoAnno');
+      }
+    });
+
+    // Targa
+    var targaEl = document.getElementById('motoTarga');
+    if (targaEl) targaEl.addEventListener('blur', function () {
+      if (!this.value.trim()) { showFieldError('motoTarga', 'La targa è obbligatoria'); return; }
+      var t = this.value.trim().toUpperCase();
+      if (!/^[A-Z]{2}[0-9]{3}[A-Z]{2}$|^[A-Z]{2}[0-9]{5}$/.test(t)) {
+        showFieldError('motoTarga', 'Formato targa non valido (es. AB123CD)');
+      } else {
+        clearFieldError('motoTarga');
       }
     });
 

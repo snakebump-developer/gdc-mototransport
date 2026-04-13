@@ -36,14 +36,4 @@
             maxlength="10" style="text-transform:uppercase" autocomplete="off"
             placeholder="AB123CD">
     </div>
-    <div class="form-group">
-        <label class="form-group__label" for="mf-colore">Colore</label>
-        <input class="form-group__input" type="text" id="mf-colore" name="colore"
-            maxlength="30" autocomplete="off">
-    </div>
-</div>
-<div class="form-group">
-    <label class="form-group__label" for="mf-note">Note</label>
-    <textarea class="form-group__input form-group__textarea"
-        id="mf-note" name="note" maxlength="500" rows="2"></textarea>
 </div>

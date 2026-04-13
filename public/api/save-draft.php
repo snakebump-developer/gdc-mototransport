@@ -37,7 +37,7 @@ if (!is_array($data)) {
 }
 
 // Campi obbligatori
-$required = ['marca_moto', 'modello_moto', 'cilindrata', 'indirizzo_ritiro', 'indirizzo_consegna', 'data_ritiro'];
+$required = ['marca_moto', 'modello_moto', 'cilindrata', 'targa', 'indirizzo_ritiro', 'indirizzo_consegna', 'data_ritiro'];
 foreach ($required as $f) {
     if (empty($data[$f])) {
         http_response_code(422);
@@ -117,7 +117,7 @@ try {
         // Aggiorna la bozza esistente
         $stmt = $pdo->prepare("
             UPDATE preventivi SET
-                cilindrata = ?, tipo_consegna = ?, data_ritiro = ?,
+                cilindrata = ?, anno_moto = ?, targa = ?, tipo_consegna = ?, data_ritiro = ?,
                 distanza_km = ?, borse_laterali = ?,
                 prezzo_base = ?, prezzo_finale = ?,
                 nome_cliente = ?, email_cliente = ?, telefono_cliente = ?,
@@ -129,6 +129,8 @@ try {
         ");
         $stmt->execute([
             $cc,
+            !empty($data['anno_moto']) ? (int)$data['anno_moto'] : null,
+            !empty($data['targa']) ? strtoupper(trim($data['targa'])) : null,
             $tipoConsegna,
             $dataRitiro,
             $distanzaKm,
@@ -148,14 +150,14 @@ try {
         // Inserisce nuova bozza
         $stmt = $pdo->prepare("
             INSERT INTO preventivi
-                (user_id, stato, marca_moto, modello_moto, cilindrata,
+                (user_id, stato, marca_moto, modello_moto, cilindrata, anno_moto, targa,
                  tipo_consegna, data_ritiro,
                  indirizzo_ritiro, indirizzo_consegna,
                  distanza_km, borse_laterali,
                  prezzo_base, prezzo_finale,
                  nome_cliente, email_cliente, telefono_cliente, codice_fiscale_cliente,
                  route_data_json, scadenza_il)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         ");
         $stmt->execute([
             $userId,
@@ -163,6 +165,8 @@ try {
             $marca,
             $modello,
             $cc,
+            !empty($data['anno_moto']) ? (int)$data['anno_moto'] : null,
+            !empty($data['targa']) ? strtoupper(trim($data['targa'])) : null,
             $tipoConsegna,
             $dataRitiro,
             $ritiro,

@@ -327,3 +327,26 @@
     border: none;
     border-top: 1px solid var(--border-color);
 }
+
+/* Avatar circolare nella navbar (usato sia nella navbar principale che in navbar-dashboard) */
+.nav-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: middle;
+    border: 2px solid var(--primary-color);
+    flex-shrink: 0;
+}
+
+.nav-avatar--initials {
+    background-color: var(--primary-color);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}

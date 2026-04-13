@@ -1514,3 +1514,105 @@
 }
 .quote-draft-saved__link:hover { text-decoration: underline; }
 
+/* ===== SELEZIONE MOTO SALVATE nella modale preventivo ===== */
+.quote-saved-moto-bar {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+}
+.quote-saved-moto-bar .quote-form__label {
+    font-size: 0.8rem;
+    color: #0369a1;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: block;
+}
+
+/* Header sezione con titolo + pulsante azione */
+.dashboard-section__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+.dashboard-section__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem;
+}
+
+/* Card inline per aggiunta moto */
+.moto-form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+}
+.moto-form-card__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1.25rem;
+}
+.moto-form-card__actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+/* Colonna azioni nella tabella moto */
+.td-actions {
+    white-space: nowrap;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Modal overlay + box */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+.modal-box {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalIn .18s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+}
+.modal-box__title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem;
+}
+.modal-box__actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+
