@@ -364,78 +364,88 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
     </div>
 
     <script>
-    (function () {
-        var _preventivoId = 0;
-        var _selectEl     = null;
-        var _prevVal      = '';
+        (function() {
+            var _preventivoId = 0;
+            var _selectEl = null;
+            var _prevVal = '';
 
-        window.handleStatoChange = function (sel, isPagato, preventivoId) {
-            if (sel.value === 'annullato' && isPagato) {
-                _selectEl    = sel;
-                _prevVal     = '<?= htmlspecialchars($statoAttivo) ?>';
-                _preventivoId = preventivoId;
-                openRefundModal();
-            } else {
-                document.getElementById('formStatoPreventivo').submit();
-            }
-        };
-
-        function openRefundModal () {
-            var m = document.getElementById('refundModal');
-            m.style.display = 'flex';
-            document.getElementById('refundModalMsg').style.display = 'none';
-        }
-
-        window.closeRefundModal = function () {
-            document.getElementById('refundModal').style.display = 'none';
-            if (_selectEl) { _selectEl.value = _prevVal; }
-        };
-
-        window.doCancel = function (withRefund) {
-            var btn = document.getElementById('btnConfirmRefund');
-            btn.disabled = true;
-            btn.textContent = 'Elaborazione…';
-
-            fetch('/api/refund-payment', {
-                method:  'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify({
-                    preventivo_id: _preventivoId,
-                    motivo:        withRefund ? 'requested_by_customer' : null,
-                    skip_refund:   !withRefund
-                })
-            })
-            .then(function (r) { return r.json(); })
-            .then(function (data) {
-                if (data.success) {
-                    showMsg('success', '✔ ' + data.message);
-                    setTimeout(function () { location.reload(); }, 1500);
+            window.handleStatoChange = function(sel, isPagato, preventivoId) {
+                if (sel.value === 'annullato' && isPagato) {
+                    _selectEl = sel;
+                    _prevVal = '<?= htmlspecialchars($statoAttivo) ?>';
+                    _preventivoId = preventivoId;
+                    openRefundModal();
                 } else {
-                    showMsg('error', '✖ ' + (data.error || 'Errore sconosciuto'));
-                    btn.disabled    = false;
-                    btn.textContent = 'Annulla & Rimborsa';
+                    document.getElementById('formStatoPreventivo').submit();
                 }
-            })
-            .catch(function () {
-                showMsg('error', '✖ Errore di rete. Riprova.');
-                btn.disabled    = false;
-                btn.textContent = 'Annulla & Rimborsa';
+            };
+
+            function openRefundModal() {
+                var m = document.getElementById('refundModal');
+                m.style.display = 'flex';
+                document.getElementById('refundModalMsg').style.display = 'none';
+            }
+
+            window.closeRefundModal = function() {
+                document.getElementById('refundModal').style.display = 'none';
+                if (_selectEl) {
+                    _selectEl.value = _prevVal;
+                }
+            };
+
+            window.doCancel = function(withRefund) {
+                var btn = document.getElementById('btnConfirmRefund');
+                btn.disabled = true;
+                btn.textContent = 'Elaborazione…';
+
+                fetch('/api/refund-payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            preventivo_id: _preventivoId,
+                            motivo: withRefund ? 'requested_by_customer' : null,
+                            skip_refund: !withRefund
+                        })
+                    })
+                    .then(function(r) {
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        if (data.success) {
+                            showMsg('success', '✔ ' + data.message);
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            showMsg('error', '✖ ' + (data.error || 'Errore sconosciuto'));
+                            btn.disabled = false;
+                            btn.textContent = 'Annulla & Rimborsa';
+                        }
+                    })
+                    .catch(function() {
+                        showMsg('error', '✖ Errore di rete. Riprova.');
+                        btn.disabled = false;
+                        btn.textContent = 'Annulla & Rimborsa';
+                    });
+            };
+
+            function showMsg(type, text) {
+                var el = document.getElementById('refundModalMsg');
+                el.style.display = 'block';
+                el.style.background = type === 'success' ? '#d1fae5' : '#fee2e2';
+                el.style.color = type === 'success' ? '#065f46' : '#991b1b';
+                el.textContent = text;
+            }
+
+            // Chiudi cliccando fuori dalla card
+            document.getElementById('refundModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    window.closeRefundModal();
+                }
             });
-        };
-
-        function showMsg (type, text) {
-            var el = document.getElementById('refundModalMsg');
-            el.style.display    = 'block';
-            el.style.background = type === 'success' ? '#d1fae5' : '#fee2e2';
-            el.style.color      = type === 'success' ? '#065f46'  : '#991b1b';
-            el.textContent      = text;
-        }
-
-        // Chiudi cliccando fuori dalla card
-        document.getElementById('refundModal').addEventListener('click', function (e) {
-            if (e.target === this) { window.closeRefundModal(); }
-        });
-    }());
+        }());
     </script>
 </body>
 
