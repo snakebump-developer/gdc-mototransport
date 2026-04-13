@@ -114,6 +114,7 @@ $routes = [
     '/api/run-migrate'              => ['file' => 'api/run-migrate.php'],
     '/api/toggle-maintenance'       => ['file' => 'api/toggle-maintenance.php'],
     '/api/confirm-payment'          => ['file' => 'api/confirm-payment.php'],
+    '/api/lettera-vettura'          => ['file' => 'api/lettera-vettura.php'],
 
     // Manutenzione
     '/manutenzione'                 => ['file' => 'pages/maintenance.php'],
