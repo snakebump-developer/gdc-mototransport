@@ -21,8 +21,15 @@ if (!isAdmin()) {
 }
 
 try {
-    // 1. Aggiorna i record con vecchi stati
+    // 1. Normalizza 'bozza' e 'inviato' → 'nuovo'
     $updated = $pdo->exec("UPDATE preventivi SET stato = 'nuovo' WHERE stato IN ('bozza', 'inviato')");
+
+    // 1b. Sicurezza: qualunque valore non nel nuovo ENUM → 'nuovo'
+    //     (cattura NULL, stringhe vuote o stati obsoleti non previsti)
+    $pdo->exec("UPDATE preventivi
+        SET stato = 'nuovo'
+        WHERE stato IS NULL
+           OR stato NOT IN ('nuovo','confermato','in_lavorazione','completato','annullato')");
 
     // 2. Altera l'ENUM della colonna (aggiunge 'nuovo', rimuove 'bozza' e 'inviato')
     $pdo->exec("ALTER TABLE preventivi
