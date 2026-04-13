@@ -1,10 +1,18 @@
 FROM php:8.2-cli
 
-# Installa dipendenze di sistema (ICU per intl, git/unzip per Composer)
-RUN apt-get update && apt-get install -y libicu-dev git unzip && rm -rf /var/lib/apt/lists/*
+# Installa dipendenze di sistema (ICU per intl, GD per mPDF, git/unzip per Composer)
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    git \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
 # Estensioni PHP necessarie
-RUN docker-php-ext-install pdo pdo_mysql intl
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql intl gd
 
 # Installa Composer e le dipendenze PHP
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
