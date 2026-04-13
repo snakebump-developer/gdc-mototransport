@@ -353,6 +353,7 @@ if ($section === 'panoramica') {
                                         <th data-col="stato">Stato</th>
                                         <th data-col="pagamento">Pagamento</th>
                                         <th data-col="richiesta">Richiesta il</th>
+                                        <th data-col="doc-trasporto">Doc. Trasporto</th>
                                     </tr>
                                 </thead>
                                 <tbody id="preventiviTbody">
@@ -448,6 +449,19 @@ if ($section === 'panoramica') {
                                                 </span>
                                             </td>
                                             <td data-col="richiesta"><?= date('d/m/Y', strtotime($p['creato_il'])) ?></td>
+                                            <td data-col="doc-trasporto" style="white-space:nowrap;">
+                                                <?php if (($p['pagamento_stato'] ?? '') === 'pagato'): ?>
+                                                    <a href="/api/lettera-vettura?id=<?= $p['id'] ?>"
+                                                        target="_blank"
+                                                        title="Scarica Lettera di Vettura PDF"
+                                                        class="btn-ldv"
+                                                        aria-label="Scarica lettera di vettura preventivo #<?= $p['id'] ?>">
+                                                        &#x1F4E5; Lettera Vettura
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span class="text-muted" title="Disponibile solo dopo il pagamento">—</span>
+                                                <?php endif; ?>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

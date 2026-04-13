@@ -78,5 +78,44 @@ return [
     'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', ''),
 
     // Password bypass modalità manutenzione
-    'maintenance_password' => env('MAINTENANCE_PASSWORD', 'GDC@Maint2026!')
+    'maintenance_password' => env('MAINTENANCE_PASSWORD', 'GDC@Maint2026!'),
+
+    // ── Lettera di Vettura — Dati Vettore ────────────────────────────────────
+    'vettore' => [
+        'ragione_sociale' => env('VETTORE_RAGIONE_SOCIALE', 'GDC MotoTransport S.r.l.'),
+        'piva'            => env('VETTORE_PIVA',            'IT12345678901'),
+        'indirizzo'       => env('VETTORE_INDIRIZZO',       'Via del Trasporto 1'),
+        'cap'             => env('VETTORE_CAP',             '20100'),
+        'citta'           => env('VETTORE_CITTA',           'Milano'),
+        'provincia'       => env('VETTORE_PROVINCIA',       'MI'),
+        'telefono'        => env('VETTORE_TELEFONO',        '+39 02 1234 5678'),
+        'email'           => env('VETTORE_EMAIL',           'info@gdcmototransport.it'),
+        'ren'             => env('VETTORE_REN',             'REN-123456-IT'),
+    ],
+
+    // ── Lettera di Vettura — Conducente ──────────────────────────────────────
+    'conducente' => [
+        'nome'         => env('CONDUCENTE_NOME',        'Mario'),
+        'cognome'      => env('CONDUCENTE_COGNOME',     'Rossi'),
+        'patente'      => env('CONDUCENTE_PATENTE',     'IT-A1B2C3D4E5'),
+        'patente_cat'  => env('CONDUCENTE_PATENTE_CAT', 'CE'),
+        'telefono'     => env('CONDUCENTE_TELEFONO',    '+39 333 000 1111'),
+    ],
+
+    // ── Lettera di Vettura — Mezzo di Trasporto ───────────────────────────────
+    'mezzo' => [
+        'tipo'             => env('MEZZO_TIPO',             'Furgone chiuso'),
+        'targa'            => env('MEZZO_TARGA',            'AB123CD'),
+        'marca'            => env('MEZZO_MARCA',            'Mercedes-Benz'),
+        'modello'          => env('MEZZO_MODELLO',          'Sprinter 316 CDI'),
+        'rimorchio_targa'  => env('MEZZO_RIMORCHIO_TARGA',  ''),
+    ],
+
+    // ── Lettera di Vettura — Assicurazione RC Merci ───────────────────────────
+    'assicurazione' => [
+        'compagnia'   => env('ASSICURAZIONE_COMPAGNIA',  'Sara Assicurazioni S.p.A.'),
+        'polizza'     => env('ASSICURAZIONE_POLIZZA',    'RC-MERCI-00123456'),
+        'scadenza'    => env('ASSICURAZIONE_SCADENZA',   '31/12/2026'),
+        'massimale'   => env('ASSICURAZIONE_MASSIMALE',  '€ 1.000.000,00'),
+    ],
 ];

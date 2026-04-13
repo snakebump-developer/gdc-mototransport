@@ -6,7 +6,8 @@
         "php": ">=7.4",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
-        "stripe/stripe-php": "^20.0"
+        "stripe/stripe-php": "^20.0",
+        "mpdf/mpdf": "^8.3"
     },
     "suggest": {
         "stripe/stripe-php": "Per integrazione pagamenti Stripe",
