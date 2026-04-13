@@ -68,11 +68,11 @@ function val(mixed $v, string $empty = '—'): string
 }
 
 $statiColori = [
-    'bozza'         => ['bg' => '#f3f4f6', 'fg' => '#374151'],
-    'inviato'       => ['bg' => '#dbeafe', 'fg' => '#1e40af'],
-    'confermato'    => ['bg' => '#fef3c7', 'fg' => '#92400e'],
+    'bozza'          => ['bg' => '#f3f4f6', 'fg' => '#374151'],
+    'nuovo'          => ['bg' => '#dbeafe', 'fg' => '#1e40af'],
+    'confermato'     => ['bg' => '#fef3c7', 'fg' => '#92400e'],
     'in_lavorazione' => ['bg' => '#ede9fe', 'fg' => '#5b21b6'],
-    'completato'    => ['bg' => '#d1fae5', 'fg' => '#065f46'],
+    'completato'     => ['bg' => '#d1fae5', 'fg' => '#065f46'],
     'annullato'     => ['bg' => '#fee2e2', 'fg' => '#991b1b'],
 ];
 $statoAttivo = $preventivo['stato'] ?? 'bozza';

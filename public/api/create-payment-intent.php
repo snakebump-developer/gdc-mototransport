@@ -57,7 +57,7 @@ if (!empty($data['preventivo_id'])) {
         $draftId = (int) $data['preventivo_id'];
         $stmt = $pdo->prepare("
             SELECT * FROM preventivi
-            WHERE id = ? AND stato = 'bozza' AND user_id = ?
+            WHERE id = ? AND stato IN ('bozza','nuovo') AND user_id = ?
               AND (scadenza_il IS NULL OR scadenza_il > CURRENT_TIMESTAMP)
             LIMIT 1
         ");
@@ -95,8 +95,8 @@ if (!empty($data['preventivo_id'])) {
         $prezzoFinale = round($prezzoBase + $DELIVERY_SURCHARGE[$tipoConsegna] + $borse, 2);
         $emailCliente = $draft['email_cliente'];
 
-        // Promuovi la bozza a 'inviato'
-        $pdo->prepare("UPDATE preventivi SET stato='inviato', aggiornato_il=CURRENT_TIMESTAMP WHERE id=?")
+        // Promuovi la bozza a 'nuovo'
+        $pdo->prepare("UPDATE preventivi SET stato='nuovo', aggiornato_il=CURRENT_TIMESTAMP WHERE id=?")
             ->execute([$draftId]);
         $preventivoId = $draftId;
 
@@ -266,7 +266,7 @@ try {
              distanza_km, marca_moto, modello_moto, cilindrata,
              borse_laterali, tipo_consegna, data_ritiro,
              prezzo_base, prezzo_finale, stato, pagamento_stato)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'inviato','non_pagato')
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'nuovo','non_pagato')
     ");
     $stmt->execute([
         $userId,
