@@ -25,19 +25,20 @@ try {
     //    vengano trattati come eccezioni da PDO durante l'ALTER TABLE
     $pdo->exec("SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION'");
 
-    // 1. Normalizza 'bozza' e 'inviato' → 'nuovo'
-    $updated = $pdo->exec("UPDATE preventivi SET stato = 'nuovo' WHERE stato IN ('bozza', 'inviato')");
+    // 1. Converte solo 'inviato' → 'nuovo' (bozza rimane bozza: stato funzionale per le bozze)
+    $updated = $pdo->exec("UPDATE preventivi SET stato = 'nuovo' WHERE stato = 'inviato'");
 
     // 1b. Sicurezza: forza a 'nuovo' qualsiasi valore fuori dall'ENUM target
     //     (cattura NULL, stringhe vuote, stati obsoleti non previsti)
+    //     Nota: 'bozza' è incluso nella lista valida perché ancora in uso dal codice
     $pdo->exec("UPDATE preventivi
         SET stato = 'nuovo'
         WHERE stato IS NULL
-           OR stato NOT IN ('nuovo','confermato','in_lavorazione','completato','annullato')");
+           OR stato NOT IN ('bozza','nuovo','confermato','in_lavorazione','completato','annullato')");
 
-    // 2. Altera l'ENUM della colonna
+    // 2. Altera l'ENUM: include 'bozza' (necessario per save-draft) e 'nuovo'
     $pdo->exec("ALTER TABLE preventivi
-        MODIFY COLUMN stato ENUM('nuovo','confermato','in_lavorazione','completato','annullato')
+        MODIFY COLUMN stato ENUM('bozza','nuovo','confermato','in_lavorazione','completato','annullato')
         NOT NULL DEFAULT 'nuovo'");
 
     // 3. Aggiunge colonna stripe_refund_id se non esiste (compatibile MySQL 5.7)
