@@ -109,6 +109,17 @@
             <!-- STEP 1: Dettagli Moto -->
             <div class="quote-step" id="quoteStep1">
                 <h3 class="quote-step__title">Dettagli della moto</h3>
+
+                <!-- Selezione rapida moto salvate (visibile solo se l'utente ha moto in dashboard) -->
+                <div id="quoteSavedMotoBar" style="display:none;" class="quote-saved-moto-bar">
+                    <label class="quote-form__label" for="quoteSavedMotoSelect">Le tue moto salvate</label>
+                    <div class="quote-form__select-wrapper">
+                        <select class="quote-form__select" id="quoteSavedMotoSelect">
+                            <option value="">— Seleziona per compilare automaticamente —</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="quote-form">
 
                     <!-- Combobox marca -->
@@ -167,6 +178,21 @@
                         <label class="quote-form__label" for="motoCc">Cilindrata <span class="quote-form__required">*</span></label>
                         <input class="quote-form__input" type="text" id="motoCc" name="motoCc" placeholder="Es. 1103cc">
                         <span class="quote-form__error" id="motoCc-error" role="alert"></span>
+                    </div>
+
+                    <div class="quote-form__row">
+                        <div class="quote-form__group">
+                            <label class="quote-form__label" for="motoAnno">Anno</label>
+                            <input class="quote-form__input" type="number" id="motoAnno" name="motoAnno"
+                                placeholder="Es. 2020" min="1900" max="<?= (int)date('Y') + 1 ?>" step="1">
+                            <span class="quote-form__error" id="motoAnno-error" role="alert"></span>
+                        </div>
+                        <div class="quote-form__group">
+                            <label class="quote-form__label" for="motoTarga">Targa <span class="quote-form__required">*</span></label>
+                            <input class="quote-form__input" type="text" id="motoTarga" name="motoTarga"
+                                placeholder="Es. AB123CD" maxlength="10" style="text-transform:uppercase" autocomplete="off">
+                            <span class="quote-form__error" id="motoTarga-error" role="alert"></span>
+                        </div>
                     </div>
 
                     <div class="quote-form__separator"></div>
@@ -442,6 +468,7 @@
                             <div class="quote-summary__info">
                                 <span class="quote-summary__sublabel">Moto</span>
                                 <strong class="quote-summary__value" id="summaryMoto">&mdash;</strong>
+                                <span class="quote-summary__desc" id="summaryMotoDetails"></span>
                                 <span class="quote-summary__desc" id="summaryMotoType">&mdash;</span>
                             </div>
                         </div>

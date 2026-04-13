@@ -78,6 +78,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $section === 'profile') {
     }
 }
 
+// Gestione CRUD moto
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $section === 'motorcycles') {
+    try {
+        validateCsrfToken($_POST['csrf_token'] ?? '');
+        if (isset($_POST['add_moto'])) {
+            saveMotorcycle((int)$user['id'], $_POST);
+            $success = "Moto aggiunta con successo!";
+        } elseif (isset($_POST['edit_moto_id'])) {
+            updateMotorcycle((int)$_POST['edit_moto_id'], (int)$user['id'], $_POST);
+            $success = "Moto aggiornata con successo!";
+        } elseif (isset($_POST['delete_moto_id'])) {
+            deleteMotorcycle((int)$_POST['delete_moto_id'], (int)$user['id']);
+            $success = "Moto rimossa.";
+        }
+    } catch (Exception $e) {
+        $error = $e->getMessage();
+    }
+}
+
 // Carica dati della sezione attiva
 $preventivi = [];
 $bozze = [];
@@ -88,6 +107,7 @@ if ($section === 'orders') {
 } elseif ($section === 'motorcycles') {
     $moto = getUserMotorcycles((int)$user['id']);
 }
+$csrf = generateCsrfToken();
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -218,14 +238,33 @@ if ($section === 'orders') {
             <?php elseif ($section === 'motorcycles'): ?>
                 <!-- Sezione Le Mie Moto -->
                 <div class="dashboard-section">
-                    <h1>Le Mie Moto</h1>
-                    <p class="section-description">Le moto associate ai tuoi preventivi di trasporto</p>
+                    <div class="dashboard-section__header">
+                        <div>
+                            <h1 class="dashboard-section__title">Le Mie Moto</h1>
+                            <p class="section-description">Gestisci le moto da usare nei preventivi di trasporto</p>
+                        </div>
+                        <button class="btn btn-primary" id="btnAddMoto">+ Aggiungi Moto</button>
+                    </div>
+
+                    <!-- Form aggiunta moto (inline, nascosto di default) -->
+                    <div class="moto-form-card" id="addMotoCard" style="display:none;">
+                        <h3 class="moto-form-card__title">Aggiungi nuova moto</h3>
+                        <form method="POST" class="profile-form" novalidate>
+                            <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
+                            <input type="hidden" name="add_moto" value="1">
+                            <?php include __DIR__ . '/../../includes/moto-fields.php'; ?>
+                            <div class="moto-form-card__actions">
+                                <button type="submit" class="btn btn-primary">Salva</button>
+                                <button type="button" class="btn btn-secondary" id="btnCancelMoto">Annulla</button>
+                            </div>
+                        </form>
+                    </div>
 
                     <?php if (empty($moto)): ?>
                         <div class="empty-state">
                             <div class="empty-icon">🏍️</div>
                             <h3>Nessuna moto salvata</h3>
-                            <p>Le moto che inserisci nei preventivi vengono salvate automaticamente qui. <a href="/" class="link">Richiedi un trasporto →</a></p>
+                            <p>Aggiungi la tua prima moto con il pulsante qui sopra, oppure verrà salvata automaticamente al primo preventivo.</p>
                         </div>
                     <?php else: ?>
                         <div class="orders-table">
@@ -239,6 +278,7 @@ if ($section === 'orders') {
                                         <th>Anno</th>
                                         <th>Targa</th>
                                         <th>Aggiunta il</th>
+                                        <th>Azioni</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -251,10 +291,38 @@ if ($section === 'orders') {
                                             <td><?= $m['anno'] ? (int)$m['anno'] : '—' ?></td>
                                             <td><?= $m['targa'] ? htmlspecialchars(strtoupper($m['targa']), ENT_QUOTES, 'UTF-8') : '—' ?></td>
                                             <td><?= date('d/m/Y', strtotime($m['creato_il'])) ?></td>
+                                            <td class="td-actions">
+                                                <button class="btn btn-secondary btn-small js-edit-moto"
+                                                    data-moto='<?= htmlspecialchars(json_encode($m, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') ?>'>
+                                                    &#9999;&#65039; Modifica
+                                                </button>
+                                                <form method="POST" style="display:inline;"
+                                                    onsubmit="return confirm('Eliminare questa moto?')">
+                                                    <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
+                                                    <input type="hidden" name="delete_moto_id" value="<?= (int)$m['id'] ?>">
+                                                    <button type="submit" class="btn btn-danger btn-small">Elimina</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!-- Modal modifica moto -->
+                        <div class="modal-overlay" id="editMotoModal" aria-hidden="true" style="display:none;">
+                            <div class="modal-box">
+                                <h3 class="modal-box__title">Modifica Moto</h3>
+                                <form method="POST" novalidate>
+                                    <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
+                                    <input type="hidden" name="edit_moto_id" id="edit_moto_id">
+                                    <?php include __DIR__ . '/../../includes/moto-fields.php'; ?>
+                                    <div class="modal-box__actions">
+                                        <button type="submit" class="btn btn-primary">Aggiorna</button>
+                                        <button type="button" class="btn btn-secondary" id="closeEditModal">Annulla</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -412,6 +480,56 @@ if ($section === 'orders') {
                 }
             });
         }
+    </script>
+    <script>
+        (function() {
+            // ---- Add moto card ----
+            var addCard = document.getElementById('addMotoCard');
+            var btnAdd = document.getElementById('btnAddMoto');
+            var btnCancel = document.getElementById('btnCancelMoto');
+            if (btnAdd) btnAdd.addEventListener('click', function() {
+                addCard.style.display = 'block';
+                btnAdd.style.display = 'none';
+            });
+            if (btnCancel) btnCancel.addEventListener('click', function() {
+                addCard.style.display = 'none';
+                btnAdd.style.display = '';
+            });
+
+            // ---- Edit moto modal ----
+            var modal = document.getElementById('editMotoModal');
+            var closeBtn = document.getElementById('closeEditModal');
+
+            document.querySelectorAll('.js-edit-moto').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var m = JSON.parse(btn.dataset.moto);
+                    document.getElementById('edit_moto_id').value = m.id;
+                    ['marca', 'modello', 'anno', 'cilindrata', 'targa', 'colore', 'note'].forEach(function(f) {
+                        var el = modal.querySelector('[name="' + f + '"]');
+                        if (el) el.value = m[f] !== null ? m[f] : '';
+                    });
+                    modal.style.display = 'flex';
+                    modal.setAttribute('aria-hidden', 'false');
+                });
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                    modal.setAttribute('aria-hidden', 'true');
+                });
+            }
+
+            // Chiudi modal cliccando sull'overlay
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                });
+            }
+        }());
     </script>
     <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
 </body>

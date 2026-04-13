@@ -12,8 +12,8 @@ function saveMotorcycle(int $userId, array $data): int
     _validateMotorcycleData($data);
 
     $stmt = $pdo->prepare("
-        INSERT INTO moto_salvate (user_id, marca, modello, anno, cilindrata, targa, colore, note)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO moto_salvate (user_id, marca, modello, anno, cilindrata, targa)
+        VALUES (?, ?, ?, ?, ?, ?)
     ");
     $stmt->execute([
         $userId,
@@ -22,8 +22,6 @@ function saveMotorcycle(int $userId, array $data): int
         !empty($data['anno'])       ? (int)$data['anno']       : null,
         !empty($data['cilindrata']) ? (int)$data['cilindrata'] : null,
         !empty($data['targa'])      ? strtoupper(trim($data['targa'])) : null,
-        $data['colore'] ?? null,
-        $data['note']   ?? null,
     ]);
 
     return (int)$pdo->lastInsertId();
@@ -67,8 +65,6 @@ function updateMotorcycle(int $id, int $userId, array $data): bool
             anno        = ?,
             cilindrata  = ?,
             targa       = ?,
-            colore      = ?,
-            note        = ?,
             aggiornato_il = CURRENT_TIMESTAMP
         WHERE id = ? AND user_id = ?
     ");
@@ -78,8 +74,6 @@ function updateMotorcycle(int $id, int $userId, array $data): bool
         !empty($data['anno'])       ? (int)$data['anno']       : null,
         !empty($data['cilindrata']) ? (int)$data['cilindrata'] : null,
         !empty($data['targa'])      ? strtoupper(trim($data['targa'])) : null,
-        $data['colore'] ?? null,
-        $data['note']   ?? null,
         $id,
         $userId,
     ]);
