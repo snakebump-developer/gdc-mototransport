@@ -148,6 +148,7 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS pagamenti (
     stripe_ultimi_4          VARCHAR(4),
     stripe_brand             VARCHAR(30),
     stripe_receipt_url       VARCHAR(500),
+    stripe_refund_id         VARCHAR(255),
     creato_il                DATETIME DEFAULT CURRENT_TIMESTAMP,
     aggiornato_il            DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (preventivo_id) REFERENCES preventivi(id) ON DELETE CASCADE

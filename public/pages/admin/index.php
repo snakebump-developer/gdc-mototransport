@@ -421,7 +421,9 @@ if ($section === 'panoramica') {
                                                 <form method="POST" class="inline-form">
                                                     <input type="hidden" name="action" value="update_preventivo_stato">
                                                     <input type="hidden" name="preventivo_id" value="<?= $p['id'] ?>">
-                                                    <select name="stato" onchange="this.form.submit()" class="status-select">
+                                                    <select name="stato"
+                                                        onchange="adminHandleStatoChange(this, '<?= htmlspecialchars($p['pagamento_stato'] ?? '', ENT_QUOTES) ?>', <?= (int)$p['id'] ?>)"
+                                                        class="status-select">
                                                         <?php foreach ($statiLabels as $val => $label): ?>
                                                             <option value="<?= $val ?>" <?= $statoDisplay === $val ? 'selected' : '' ?>><?= $label ?></option>
                                                         <?php endforeach; ?>
@@ -1425,6 +1427,125 @@ if ($section === 'panoramica') {
         </script>
     <?php endif; ?>
     <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
+
+    <!-- ── Modale rimborso (lista preventivi) ─────────────────────────── -->
+    <div id="adminRefundModal" role="dialog" aria-modal="true" aria-labelledby="adminRefundTitle"
+        style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.55);
+               align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:12px;padding:2rem;max-width:440px;width:90%;
+                    box-shadow:0 8px 40px rgba(0,0,0,.18);">
+            <h2 id="adminRefundTitle" style="margin:0 0 .5rem;font-size:1.15rem;color:#111827;">
+                ⚠️ Annullamento preventivo pagato
+            </h2>
+            <p style="color:#4b5563;margin:.5rem 0 1.5rem;font-size:.9rem;line-height:1.5;">
+                Questo preventivo risulta <strong>già pagato</strong>.<br>
+                Vuoi avviare il <strong>rimborso automatico su Stripe</strong> contestualmente all'annullamento,
+                oppure annullare senza rimborsare?
+            </p>
+            <div id="adminRefundMsg" style="display:none;padding:.6rem .9rem;border-radius:6px;
+                 margin-bottom:1rem;font-size:.875rem;font-weight:500;"></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-top:.25rem;">
+                <button type="button" onclick="adminCloseRefundModal()"
+                    style="padding:.6rem .9rem;border:1px solid #d1d5db;border-radius:7px;
+                           background:#fff;color:#374151;cursor:pointer;font-size:.875rem;
+                           white-space:nowrap;text-align:center;">
+                    Annulla operazione
+                </button>
+                <button type="button" onclick="adminDoCancel(false)"
+                    style="padding:.6rem .9rem;border:0;border-radius:7px;
+                           background:#f3f4f6;color:#374151;cursor:pointer;font-size:.875rem;
+                           white-space:nowrap;text-align:center;">
+                    Annulla senza rimborso
+                </button>
+                <button type="button" onclick="adminDoCancel(true)" id="adminBtnConfirmRefund"
+                    style="padding:.6rem .9rem;border:0;border-radius:7px;
+                           background:#e85252;color:#fff;cursor:pointer;font-size:.875rem;font-weight:600;
+                           white-space:nowrap;text-align:center;">
+                    Annulla &amp; Rimborsa
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        var _preventivoId = 0;
+        var _selectEl     = null;
+        var _prevVal      = '';
+
+        window.adminHandleStatoChange = function (sel, pgStato, preventivoId) {
+            if (sel.value === 'annullato' && pgStato === 'pagato') {
+                _selectEl     = sel;
+                _prevVal      = sel.querySelector('option[selected]') ? sel.querySelector('option[selected]').value : '';
+                _preventivoId = preventivoId;
+                openAdminRefundModal();
+            } else {
+                sel.closest('form').submit();
+            }
+        };
+
+        function openAdminRefundModal () {
+            var m = document.getElementById('adminRefundModal');
+            m.style.display = 'flex';
+            document.getElementById('adminRefundMsg').style.display = 'none';
+        }
+
+        window.adminCloseRefundModal = function () {
+            document.getElementById('adminRefundModal').style.display = 'none';
+            if (_selectEl) {
+                // Ripristina il valore selezionato prima della modifica
+                var opts = _selectEl.options;
+                for (var i = 0; i < opts.length; i++) {
+                    if (opts[i].defaultSelected) { _selectEl.selectedIndex = i; break; }
+                }
+            }
+        };
+
+        window.adminDoCancel = function (withRefund) {
+            var btn = document.getElementById('adminBtnConfirmRefund');
+            btn.disabled = true;
+            btn.textContent = 'Elaborazione…';
+
+            fetch('/api/refund-payment', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({
+                    preventivo_id: _preventivoId,
+                    motivo:        withRefund ? 'requested_by_customer' : null,
+                    skip_refund:   !withRefund
+                })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    showAdminMsg('success', '✔ ' + data.message);
+                    setTimeout(function () { location.reload(); }, 1500);
+                } else {
+                    showAdminMsg('error', '✖ ' + (data.error || 'Errore sconosciuto'));
+                    btn.disabled    = false;
+                    btn.textContent = 'Annulla & Rimborsa';
+                }
+            })
+            .catch(function () {
+                showAdminMsg('error', '✖ Errore di rete. Riprova.');
+                btn.disabled    = false;
+                btn.textContent = 'Annulla & Rimborsa';
+            });
+        };
+
+        function showAdminMsg (type, text) {
+            var el = document.getElementById('adminRefundMsg');
+            el.style.display    = 'block';
+            el.style.background = type === 'success' ? '#d1fae5' : '#fee2e2';
+            el.style.color      = type === 'success' ? '#065f46'  : '#991b1b';
+            el.textContent      = text;
+        }
+
+        document.getElementById('adminRefundModal').addEventListener('click', function (e) {
+            if (e.target === this) { window.adminCloseRefundModal(); }
+        });
+    }());
+    </script>
 </body>
 
 </html>
