@@ -21,17 +21,21 @@ if (!isAdmin()) {
 }
 
 try {
+    // 0. Disabilita strict mode di sessione: evita che i warning MySQL
+    //    vengano trattati come eccezioni da PDO durante l'ALTER TABLE
+    $pdo->exec("SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION'");
+
     // 1. Normalizza 'bozza' e 'inviato' → 'nuovo'
     $updated = $pdo->exec("UPDATE preventivi SET stato = 'nuovo' WHERE stato IN ('bozza', 'inviato')");
 
-    // 1b. Sicurezza: qualunque valore non nel nuovo ENUM → 'nuovo'
-    //     (cattura NULL, stringhe vuote o stati obsoleti non previsti)
+    // 1b. Sicurezza: forza a 'nuovo' qualsiasi valore fuori dall'ENUM target
+    //     (cattura NULL, stringhe vuote, stati obsoleti non previsti)
     $pdo->exec("UPDATE preventivi
         SET stato = 'nuovo'
         WHERE stato IS NULL
            OR stato NOT IN ('nuovo','confermato','in_lavorazione','completato','annullato')");
 
-    // 2. Altera l'ENUM della colonna (aggiunge 'nuovo', rimuove 'bozza' e 'inviato')
+    // 2. Altera l'ENUM della colonna
     $pdo->exec("ALTER TABLE preventivi
         MODIFY COLUMN stato ENUM('nuovo','confermato','in_lavorazione','completato','annullato')
         NOT NULL DEFAULT 'nuovo'");
