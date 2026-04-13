@@ -29,7 +29,11 @@ try {
         MODIFY COLUMN stato ENUM('nuovo','confermato','in_lavorazione','completato','annullato')
         NOT NULL DEFAULT 'nuovo'");
 
-    // 3. Verifica risultato
+    // 3. Aggiunge colonna stripe_refund_id se non esiste
+    $pdo->exec("ALTER TABLE pagamenti ADD COLUMN IF NOT EXISTS
+        stripe_refund_id VARCHAR(255) NULL AFTER stripe_receipt_url");
+
+    // 4. Verifica risultato
     $counts = $pdo->query("
         SELECT stato, COUNT(*) AS cnt
         FROM preventivi

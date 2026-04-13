@@ -57,6 +57,30 @@ function retrievePaymentIntent(string $paymentIntentId): ?\Stripe\PaymentIntent
 }
 
 /**
+ * Esegue il rimborso completo (o parziale) di un PaymentIntent Stripe.
+ * Restituisce l'oggetto Refund oppure lancia un'eccezione in caso di errore.
+ *
+ * @param  string   $paymentIntentId  ID del PaymentIntent da rimborsare
+ * @param  int|null $importoCentesimi Importo in centesimi; null = rimborso totale
+ * @param  string   $motivo           Motivo del rimborso (duplicate|fraudulent|requested_by_customer)
+ * @return \Stripe\Refund
+ * @throws \Stripe\Exception\ApiErrorException
+ */
+function processRefund(string $paymentIntentId, ?int $importoCentesimi = null, string $motivo = 'requested_by_customer'): \Stripe\Refund
+{
+    $params = [
+        'payment_intent' => $paymentIntentId,
+        'reason'         => $motivo,
+    ];
+
+    if ($importoCentesimi !== null) {
+        $params['amount'] = $importoCentesimi;
+    }
+
+    return \Stripe\Refund::create($params);
+}
+
+/**
  * Verifica e decodifica un evento webhook Stripe.
  * Ritorna l'evento oppure null se la firma non è valida.
  *

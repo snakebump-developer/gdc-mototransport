@@ -31,6 +31,15 @@ if (!empty($preventivo['user_id'])) {
     $cliente = getUserById((int)$preventivo['user_id']);
 }
 
+// Recupera anche i dati pagamento
+$stmtPg = $pdo->prepare("SELECT * FROM pagamenti WHERE preventivo_id = ? LIMIT 1");
+$stmtPg->execute([$preventivoId]);
+$pagamentoRow = $stmtPg->fetch() ?: null;
+
+// Preventivo pagato? (per mostrare opzione rimborso)
+$isPagato = !empty($pagamentoRow['stripe_payment_intent_id'])
+    && in_array($pagamentoRow['stato'] ?? '', ['paid', 'pagato'], true);
+
 // Gestione aggiornamento stato via POST
 $success = '';
 $error   = '';
@@ -39,6 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'updat
         updatePreventivoStato($preventivoId, $_POST['stato']);
         $success  = 'Stato preventivo aggiornato!';
         $preventivo['stato'] = $_POST['stato'];
+        // Aggiorna flag pagato in base al nuovo stato
+        if ($_POST['stato'] === 'annullato') {
+            $isPagato = false;
+        }
     } catch (Exception $e) {
         $error = 'Errore: ' . $e->getMessage();
     }
@@ -117,9 +130,10 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
                 </div>
                 <!-- Cambio stato rapido -->
                 <div class="ud-header__actions">
-                    <form method="POST" style="display:flex;align-items:center;gap:.5rem;">
+                    <form method="POST" id="formStatoPreventivo" style="display:flex;align-items:center;gap:.5rem;">
                         <input type="hidden" name="action" value="update_preventivo_stato">
-                        <select name="stato" class="status-select" onchange="this.form.submit()">
+                        <select name="stato" class="status-select"
+                            onchange="handleStatoChange(this, <?= $isPagato ? 'true' : 'false' ?>, <?= $preventivoId ?>)">
                             <?php foreach (array_keys($statiColori) as $s): ?>
                                 <option value="<?= $s ?>" <?= $statoAttivo === $s ? 'selected' : '' ?>>
                                     <?= ucfirst(str_replace('_', ' ', $s)) ?>
@@ -309,6 +323,130 @@ $statoColore = $statiColori[$statoAttivo] ?? $statiColori['bozza'];
 
     <script src="/js/modules/nav.js"></script>
     <?php include __DIR__ . '/../../includes/whatsapp-button.php'; ?>
+
+    <!-- ── Modale rimborso ───────────────────────────────────────────── -->
+    <div id="refundModal" role="dialog" aria-modal="true" aria-labelledby="refundModalTitle"
+        style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.55);
+               align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:12px;padding:2rem;max-width:440px;width:90%;
+                    box-shadow:0 8px 40px rgba(0,0,0,.18);">
+            <h2 id="refundModalTitle" style="margin:0 0 .5rem;font-size:1.15rem;color:#111827;">
+                ⚠️ Annullamento preventivo pagato
+            </h2>
+            <p style="color:#4b5563;margin:.5rem 0 1.5rem;font-size:.9rem;line-height:1.5;">
+                Questo preventivo risulta <strong>già pagato</strong>.<br>
+                Vuoi avviare il <strong>rimborso automatico su Stripe</strong> contestualmente all'annullamento,
+                oppure annullare senza rimborsare?
+            </p>
+            <div id="refundModalMsg" style="display:none;padding:.6rem .9rem;border-radius:6px;
+                 margin-bottom:1rem;font-size:.875rem;font-weight:500;"></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-top:.25rem;">
+                <button type="button" onclick="closeRefundModal()"
+                    style="padding:.6rem .9rem;border:1px solid #d1d5db;border-radius:7px;
+                           background:#fff;color:#374151;cursor:pointer;font-size:.875rem;
+                           white-space:nowrap;text-align:center;">
+                    Annulla operazione
+                </button>
+                <button type="button" onclick="doCancel(false)"
+                    style="padding:.6rem .9rem;border:0;border-radius:7px;
+                           background:#f3f4f6;color:#374151;cursor:pointer;font-size:.875rem;
+                           white-space:nowrap;text-align:center;">
+                    Annulla senza rimborso
+                </button>
+                <button type="button" onclick="doCancel(true)" id="btnConfirmRefund"
+                    style="padding:.6rem .9rem;border:0;border-radius:7px;
+                           background:#e85252;color:#fff;cursor:pointer;font-size:.875rem;font-weight:600;
+                           white-space:nowrap;text-align:center;">
+                    Annulla &amp; Rimborsa
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            var _preventivoId = 0;
+            var _selectEl = null;
+            var _prevVal = '';
+
+            window.handleStatoChange = function(sel, isPagato, preventivoId) {
+                if (sel.value === 'annullato' && isPagato) {
+                    _selectEl = sel;
+                    _prevVal = '<?= htmlspecialchars($statoAttivo) ?>';
+                    _preventivoId = preventivoId;
+                    openRefundModal();
+                } else {
+                    document.getElementById('formStatoPreventivo').submit();
+                }
+            };
+
+            function openRefundModal() {
+                var m = document.getElementById('refundModal');
+                m.style.display = 'flex';
+                document.getElementById('refundModalMsg').style.display = 'none';
+            }
+
+            window.closeRefundModal = function() {
+                document.getElementById('refundModal').style.display = 'none';
+                if (_selectEl) {
+                    _selectEl.value = _prevVal;
+                }
+            };
+
+            window.doCancel = function(withRefund) {
+                var btn = document.getElementById('btnConfirmRefund');
+                btn.disabled = true;
+                btn.textContent = 'Elaborazione…';
+
+                fetch('/api/refund-payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            preventivo_id: _preventivoId,
+                            motivo: withRefund ? 'requested_by_customer' : null,
+                            skip_refund: !withRefund
+                        })
+                    })
+                    .then(function(r) {
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        if (data.success) {
+                            showMsg('success', '✔ ' + data.message);
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            showMsg('error', '✖ ' + (data.error || 'Errore sconosciuto'));
+                            btn.disabled = false;
+                            btn.textContent = 'Annulla & Rimborsa';
+                        }
+                    })
+                    .catch(function() {
+                        showMsg('error', '✖ Errore di rete. Riprova.');
+                        btn.disabled = false;
+                        btn.textContent = 'Annulla & Rimborsa';
+                    });
+            };
+
+            function showMsg(type, text) {
+                var el = document.getElementById('refundModalMsg');
+                el.style.display = 'block';
+                el.style.background = type === 'success' ? '#d1fae5' : '#fee2e2';
+                el.style.color = type === 'success' ? '#065f46' : '#991b1b';
+                el.textContent = text;
+            }
+
+            // Chiudi cliccando fuori dalla card
+            document.getElementById('refundModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    window.closeRefundModal();
+                }
+            });
+        }());
+    </script>
 </body>
 
 </html>
